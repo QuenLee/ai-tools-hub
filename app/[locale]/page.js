@@ -4,11 +4,11 @@ import { useState } from 'react';
 import { tools, categories, getToolsByCategory, getScoreColor } from '@/lib/data';
 import { t } from '@/lib/i18n';
 import Favicon from '@/components/Favicon';
-import { IconStar, IconFire, IconFree, IconPaid, IconChevronRight, categoryIcons } from '@/components/icons/Icons';
+import { IconStar, IconFire, IconFree, IconPaid, IconChevronRight, IconGift, categoryIcons } from '@/components/icons/Icons';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 
-// SEO热点新闻——覆盖用户常搜关键词
+// SEO热点新闻
 const newsItems = [
   { title: 'DeepSeek R2 开源发布：推理能力再破纪录，完全免费使用', time: '2小时前', tag: 'hot' },
   { title: 'ChatGPT o3 模型上线：推理能力超越人类专家水平', time: '3小时前', tag: 'new' },
@@ -20,18 +20,9 @@ const newsItems = [
   { title: '通义千问 Qwen3 开源：编程能力超越GPT-4o', time: '2天前', tag: 'new' },
 ];
 
-// SEO热门话题——覆盖搜索热词
-const seoTopics = [
-  { title: '2026年最好用的AI工具排行榜', desc: '深度评测34+主流AI工具，帮你选出最值得用的', badge: '排行榜' },
-  { title: 'DeepSeek vs ChatGPT vs 豆包：三大AI助手横评', desc: '从推理、写作、编程、多模态四大维度全面对比', badge: '横评' },
-  { title: '免费AI工具大全：不花钱也能用上顶级AI', desc: '30+完全免费的AI工具，写作/绘画/编程/视频全覆盖', badge: '免费' },
-  { title: 'AI赚钱实操指南：6种方法从0到日入500', desc: '内容创作、SaaS开发、自媒体运营等真实案例分享', badge: '变现' },
-];
-
 export default function Home() {
   const { locale } = useParams();
   const [activeCat, setActiveCat] = useState('all');
-
   const filteredTools = activeCat === 'all' ? tools : getToolsByCategory(activeCat);
   const totalTools = tools.length;
   const freeTools = tools.filter(tool => tool.pricing.free).length;
@@ -52,6 +43,7 @@ export default function Home() {
 
   return (
     <div className="page">
+      {/* Hero */}
       <section className="hero">
         <h1>{t(locale, 'site.name')}</h1>
         <p>{t(locale, 'site.slogan')}</p>
@@ -72,24 +64,91 @@ export default function Home() {
         </div>
       </section>
 
-      {/* SEO热门专题 */}
+      {/* ==================== 变现区（最上方核心位置）==================== */}
       <section className="section">
         <div className="section-header">
-          <h2 className="section-title"><IconStar size={18} style={{ color: '#fbbf24' }} /> 热门专题</h2>
-          <Link href={`/${locale}/tutorials`} className="section-more">{t(locale, 'home.viewMore')} <IconChevronRight size={12} /></Link>
+          <h2 className="section-title"><IconFire size={18} style={{ color: 'var(--red)' }} /> AI赚钱实战</h2>
+          <Link href={`/${locale}/tutorials`} className="section-more">更多教程 <IconChevronRight size={12} /></Link>
         </div>
-        <div className="topic-grid">
-          {seoTopics.map((topic, i) => (
-            <Link key={i} href={i === 1 ? `/${locale}/compare/china-ai` : `/${locale}/tutorials`} className="topic-card">
-              <div className="topic-badge">{topic.badge}</div>
-              <div className="topic-title">{topic.title}</div>
-              <div className="topic-desc">{topic.desc}</div>
+        <div className="money-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))' }}>
+          <Link href={`/${locale}/tutorials`} className="money-card" style={{ borderLeft: '3px solid var(--pink)' }}>
+            <div className="money-badge" style={{ background: 'rgba(244,114,182,0.1)', color: 'var(--pink)' }}>内容创作</div>
+            <div className="money-title">AI二创IP变现：从流量爆款到实物变现</div>
+            <div className="money-views">12.3K 阅读 · 入门级</div>
+          </Link>
+          <Link href={`/${locale}/tutorials`} className="money-card" style={{ borderLeft: '3px solid var(--cyan)' }}>
+            <div className="money-badge" style={{ background: 'rgba(34,211,238,0.1)', color: 'var(--cyan)' }}>开发变现</div>
+            <div className="money-title">利用AI自动化搭建SaaS，实现日入$200</div>
+            <div className="money-views">49.0K 阅读 · 专业级</div>
+          </Link>
+          <Link href={`/${locale}/tutorials`} className="money-card" style={{ borderLeft: '3px solid var(--yellow)' }}>
+            <div className="money-badge" style={{ background: 'rgba(251,191,36,0.1)', color: 'var(--yellow)' }}>自媒体</div>
+            <div className="money-title">AI视频起号：零粉到万粉爆款玩法</div>
+            <div className="money-views">32.6K 阅读 · 入门级</div>
+          </Link>
+          <Link href={`/${locale}/tutorials`} className="money-card" style={{ borderLeft: '3px solid var(--accent2)' }}>
+            <div className="money-badge" style={{ background: 'rgba(124,92,252,0.1)', color: 'var(--accent2)' }}>自由职业</div>
+            <div className="money-title">用Cursor做自由职业：接单实战攻略</div>
+            <div className="money-views">22.8K 阅读 · 进阶级</div>
+          </Link>
+        </div>
+      </section>
+
+      {/* ==================== 省钱优惠（变现的另一半：少花=多赚）==================== */}
+      <section className="section">
+        <div className="section-header">
+          <h2 className="section-title"><IconGift size={18} style={{ color: 'var(--green)' }} /> 省钱优惠</h2>
+          <Link href={`/${locale}/deals`} className="section-more">全部优惠 <IconChevronRight size={12} /></Link>
+        </div>
+        <div className="deals-preview">
+          {[
+            { name: 'DeepSeek', domain: 'chat.deepseek.com', price: '完全免费', id: 'deepseek' },
+            { name: '豆包', domain: 'www.doubao.com', price: '完全免费', id: 'doubao' },
+            { name: 'TRAE', domain: 'www.trae.ai', price: '完全免费', id: null },
+            { name: 'Cursor', domain: 'cursor.com', price: '免费2000次/月', id: 'cursor' },
+            { name: '通义千问', domain: 'tongyi.aliyun.com', price: 'API送100万tokens', id: 'qwen' },
+            { name: 'Suno', domain: 'suno.com', price: '免费10首/天', id: 'suno' },
+          ].map(deal => (
+            <Link key={deal.name} href={deal.id ? `/${locale}/tool/${deal.id}` : `/${locale}/deals`} className="deal-mini">
+              <Favicon domain={deal.domain} name={deal.name} size={22} />
+              <span style={{ fontWeight: 600, fontSize: '0.88rem' }}>{deal.name}</span>
+              <span style={{ color: 'var(--green)', fontSize: '0.78rem', marginLeft: 'auto' }}>{deal.price}</span>
             </Link>
           ))}
         </div>
       </section>
 
-      {/* AI今日要闻 */}
+      {/* ==================== 热门专题（SEO+引流）==================== */}
+      <section className="section">
+        <div className="section-header">
+          <h2 className="section-title"><IconStar size={18} style={{ color: '#fbbf24' }} /> 热门专题</h2>
+          <Link href={`/${locale}/compare`} className="section-more">更多专题 <IconChevronRight size={12} /></Link>
+        </div>
+        <div className="topic-grid">
+          <Link href={`/${locale}/compare/china-ai`} className="topic-card">
+            <div className="topic-badge"><IconFire size={12} /> 热门专题</div>
+            <div className="topic-title">DeepSeek vs 豆包 vs Kimi — 2026国产AI助手横评</div>
+            <div className="topic-desc">8大场景深度对比，看完你就知道选哪个 →</div>
+          </Link>
+          <Link href={`/${locale}/tools`} className="topic-card">
+            <div className="topic-badge" style={{ background: 'rgba(124,92,252,0.1)', color: 'var(--accent2)' }}>实用工具</div>
+            <div className="topic-title">AI模型选型器 + API费用计算器</div>
+            <div className="topic-desc">选场景→推荐模型，算成本→比价格，一键搞定 →</div>
+          </Link>
+          <Link href={`/${locale}/models`} className="topic-card">
+            <div className="topic-badge" style={{ background: 'rgba(96,165,250,0.1)', color: 'var(--blue)' }}>模型对比</div>
+            <div className="topic-title">2026年AI大模型排行榜：15个模型横评</div>
+            <div className="topic-desc">MMLU/代码能力/价格全维度对比 →</div>
+          </Link>
+          <Link href={`/${locale}/tutorials`} className="topic-card">
+            <div className="topic-badge" style={{ background: 'rgba(52,211,153,0.1)', color: 'var(--green)' }}>免费合集</div>
+            <div className="topic-title">免费AI工具大全：不花钱也能用上顶级AI</div>
+            <div className="topic-desc">30+完全免费的AI工具，写作/绘画/编程/视频全覆盖 →</div>
+          </Link>
+        </div>
+      </section>
+
+      {/* ==================== AI今日要闻 ==================== */}
       <section className="section">
         <div className="section-header">
           <h2 className="section-title"><IconFire size={18} style={{ color: 'var(--red)' }} /> AI今日要闻</h2>
@@ -107,29 +166,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 月排行榜 */}
+      {/* ==================== 大家都在用（热门工具快速入口）==================== */}
       <section className="section">
         <div className="section-header">
-          <h2 className="section-title">📊 月排行榜</h2>
-          <Link href={`/${locale}/products`} className="section-more">{t(locale, 'home.fullList')} <IconChevronRight size={12} /></Link>
-        </div>
-        <div className="ranking-grid">
-          <RankingColumn title="🏆 总排行" items={rankingData.overall} locale={locale} />
-          <RankingColumn title="🎨 图像工具" items={rankingData.image} locale={locale} />
-          <RankingColumn title="🎬 视频工具" items={rankingData.video} locale={locale} />
-          <RankingColumn title="💻 开发工具" items={rankingData.dev} locale={locale} />
-        </div>
-      </section>
-
-      {/* 大家都在用 */}
-      <section className="section">
-        <div className="section-header">
-          <h2 className="section-title">🔥 大家都在用</h2>
-        </div>
-        <div className="usage-tabs">
-          {['热门', '办公', '自媒体', '教育', '设计'].map((tab, i) => (
-            <button key={tab} className={`usage-tab ${i === 0 ? 'active' : ''}`}>{tab}</button>
-          ))}
+          <h2 className="section-title"><IconFire size={18} style={{ color: 'var(--red)' }} /> 大家都在用</h2>
         </div>
         <div className="usage-grid">
           {hotTools.map(tool => (
@@ -144,7 +184,21 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 近期热门推荐 */}
+      {/* ==================== 月排行榜 ==================== */}
+      <section className="section">
+        <div className="section-header">
+          <h2 className="section-title"><IconStar size={18} style={{ color: '#fbbf24' }} /> 月排行榜</h2>
+          <Link href={`/${locale}/products`} className="section-more">{t(locale, 'home.fullList')} <IconChevronRight size={12} /></Link>
+        </div>
+        <div className="ranking-grid">
+          <RankingColumn title="总排行" items={rankingData.overall} locale={locale} />
+          <RankingColumn title="图像工具" items={rankingData.image} locale={locale} />
+          <RankingColumn title="视频工具" items={rankingData.video} locale={locale} />
+          <RankingColumn title="开发工具" items={rankingData.dev} locale={locale} />
+        </div>
+      </section>
+
+      {/* ==================== 近期热门推荐（工具评测卡）==================== */}
       <section className="section">
         <div className="section-header">
           <h2 className="section-title"><IconStar size={18} style={{ color: '#fbbf24' }} /> {t(locale, 'home.recentHot')}</h2>
@@ -157,11 +211,11 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 开发者必备 + 免费部署 + 模型训练 */}
+      {/* ==================== 三列卡（开发者+免费部署+模型训练）==================== */}
       <section className="section">
         <div className="three-col-grid">
           <div className="three-col-card">
-            <h3 className="three-col-title">💻 开发者必备</h3>
+            <h3 className="three-col-title">开发者必备</h3>
             {tools.filter(tool => tool.category === 'code').slice(0, 5).map(tool => (
               <Link key={tool.id} href={`/${locale}/tool/${tool.id}`} className="mini-tool-row">
                 <Favicon domain={tool.favicon} name={tool.name} size={22} />
@@ -171,11 +225,11 @@ export default function Home() {
             ))}
           </div>
           <div className="three-col-card">
-            <h3 className="three-col-title">🚀 免费部署平台</h3>
+            <h3 className="three-col-title">免费部署平台</h3>
             <FreeDeployList />
           </div>
           <div className="three-col-card">
-            <h3 className="three-col-title">🧠 模型训练</h3>
+            <h3 className="three-col-title">模型训练</h3>
             {[
               { name: 'Ollama', domain: 'ollama.com' },
               { name: 'Google Colab', domain: 'colab.research.google.com' },
@@ -189,48 +243,6 @@ export default function Home() {
               </a>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* AI变现指南 */}
-      <section className="section">
-        <div className="section-header">
-          <h2 className="section-title">💰 AI变现指南</h2>
-          <Link href={`/${locale}/tutorials`} className="section-more">{t(locale, 'home.viewMore')} <IconChevronRight size={12} /></Link>
-        </div>
-        <div className="money-grid">
-          <Link href={`/${locale}/tutorials`} className="money-card">
-            <div className="money-badge">内容创作</div>
-            <div className="money-title">AI二创IP变现：从流量爆款到实物变现</div>
-            <div className="money-views">12.3K 阅读</div>
-          </Link>
-          <Link href={`/${locale}/tutorials`} className="money-card">
-            <div className="money-badge">开发变现</div>
-            <div className="money-title">用AI自动化搭建SaaS，实现日入$200</div>
-            <div className="money-views">49.0K 阅读</div>
-          </Link>
-          <Link href={`/${locale}/tutorials`} className="money-card">
-            <div className="money-badge">自媒体</div>
-            <div className="money-title">AI视频起号：零粉到万粉爆款玩法</div>
-            <div className="money-views">32.6K 阅读</div>
-          </Link>
-        </div>
-      </section>
-
-      {/* 省钱指南 */}
-      <section className="section">
-        <div className="section-header">
-          <h2 className="section-title"><IconFree size={18} /> 省钱指南</h2>
-          <Link href={`/${locale}/deals`} className="section-more">{t(locale, 'home.viewMore')} <IconChevronRight size={12} /></Link>
-        </div>
-        <div className="deals-preview">
-          {tools.filter(tool => tool.pricing.free).slice(0, 6).map(tool => (
-            <Link key={tool.id} href={`/${locale}/tool/${tool.id}`} className="deal-mini">
-              <Favicon domain={tool.favicon} name={tool.name} size={22} />
-              <span style={{ fontWeight: 600, fontSize: '0.88rem' }}>{tool.name}</span>
-              <span style={{ color: 'var(--green)', fontSize: '0.78rem', marginLeft: 'auto' }}>{tool.pricing.price}</span>
-            </Link>
-          ))}
         </div>
       </section>
     </div>
