@@ -1,14 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { tools, categories, getToolsByCategory, getScoreColor } from '@/lib/data';
 import { t } from '@/lib/i18n';
 import Favicon from '@/components/Favicon';
-import { IconStar, IconFire, IconFree, IconPaid, IconChevronRight, IconGift, categoryIcons } from '@/components/icons/Icons';
+import { IconStar, IconFire, IconFree, IconPaid, IconChevronRight, IconGift, IconChevronLeft, categoryIcons } from '@/components/icons/Icons';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 
-// SEO热点新闻
 const newsItems = [
   { title: 'DeepSeek R2 开源发布：推理能力再破纪录，完全免费使用', time: '2小时前', tag: 'hot' },
   { title: 'ChatGPT o3 模型上线：推理能力超越人类专家水平', time: '3小时前', tag: 'new' },
@@ -23,6 +22,7 @@ const newsItems = [
 export default function Home() {
   const { locale } = useParams();
   const [activeCat, setActiveCat] = useState('all');
+  const scrollRef = useRef(null);
   const filteredTools = activeCat === 'all' ? tools : getToolsByCategory(activeCat);
   const totalTools = tools.length;
   const freeTools = tools.filter(tool => tool.pricing.free).length;
@@ -41,30 +41,39 @@ export default function Home() {
   const hotIds = ['deepseek', 'doubao', 'chatgpt', 'kimi', 'cursor', 'suno'];
   const hotTools = hotIds.map(id => tools.find(tool => tool.id === id)).filter(Boolean);
 
+  const scroll = (dir) => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollBy({ left: dir * 300, behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className="page">
-      {/* Hero */}
-      <section className="hero">
-        <h1>{t(locale, 'site.name')}</h1>
-        <p>{t(locale, 'site.slogan')}</p>
-        <p className="hero-sub">{t(locale, 'site.description')}</p>
-        <div className="hero-stats">
-          <div className="hero-stat">
-            <div className="hero-stat-num">{totalTools}+</div>
-            <div className="hero-stat-label">{t(locale, 'home.allReviews')}</div>
+      {/* ==================== 精简Hero：一行统计 + 标语 ==================== */}
+      <section style={{ marginBottom: 24 }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
+          <div>
+            <h1 style={{ fontSize: '1.3rem', fontWeight: 800, margin: 0 }}>{t(locale, 'site.name')}</h1>
+            <p style={{ color: 'var(--text2)', fontSize: '0.88rem', margin: '4px 0 0' }}>{t(locale, 'site.slogan')}</p>
           </div>
-          <div className="hero-stat">
-            <div className="hero-stat-num">{freeTools}</div>
-            <div className="hero-stat-label">{t(locale, 'home.freeUsable')}</div>
-          </div>
-          <div className="hero-stat">
-            <div className="hero-stat-num">{categories.length + 1}</div>
-            <div className="hero-stat-label">{t(locale, 'home.categories')}</div>
+          <div style={{ display: 'flex', gap: 20 }}>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '1.3rem', fontWeight: 800, color: 'var(--accent2)' }}>{totalTools}+</div>
+              <div style={{ fontSize: '0.68rem', color: 'var(--text3)' }}>工具评测</div>
+            </div>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '1.3rem', fontWeight: 800, color: 'var(--green)' }}>{freeTools}</div>
+              <div style={{ fontSize: '0.68rem', color: 'var(--text3)' }}>免费可用</div>
+            </div>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '1.3rem', fontWeight: 800, color: 'var(--yellow)' }}>{categories.length + 1}</div>
+              <div style={{ fontSize: '0.68rem', color: 'var(--text3)' }}>分类</div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ==================== 热门专题（SEO+引流）==================== */}
+      {/* ==================== 热门专题 ==================== */}
       <section className="section">
         <div className="section-header">
           <h2 className="section-title"><IconStar size={18} style={{ color: '#fbbf24' }} /> 热门专题</h2>
@@ -94,7 +103,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ==================== 大家都在用（热门工具快速入口）==================== */}
+      {/* ==================== 大家都在用 ==================== */}
       <section className="section">
         <div className="section-header">
           <h2 className="section-title"><IconFire size={18} style={{ color: 'var(--red)' }} /> 大家都在用</h2>
@@ -112,38 +121,88 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ==================== 三列卡（开发者+免费部署+模型训练）==================== */}
+      {/* ==================== 快捷入口三列卡（优化布局）==================== */}
       <section className="section">
-        <div className="three-col-grid">
-          <div className="three-col-card">
-            <h3 className="three-col-title">开发者必备</h3>
-            {tools.filter(tool => tool.category === 'code').slice(0, 5).map(tool => (
-              <Link key={tool.id} href={`/${locale}/tool/${tool.id}`} className="mini-tool-row">
-                <Favicon domain={tool.favicon} name={tool.name} size={22} />
-                <span>{tool.name}</span>
-                <span className="mini-tool-tag">{tool.pricing.free ? '免费' : '付费'}</span>
-              </Link>
-            ))}
-          </div>
-          <div className="three-col-card">
-            <h3 className="three-col-title">免费部署平台</h3>
-            <FreeDeployList />
-          </div>
-          <div className="three-col-card">
-            <h3 className="three-col-title">模型训练</h3>
-            {[
-              { name: 'Ollama', domain: 'ollama.com' },
-              { name: 'Google Colab', domain: 'colab.research.google.com' },
-              { name: '百度飞桨', domain: 'aistudio.baidu.com' },
-              { name: 'Hugging Face', domain: 'huggingface.co' },
-            ].map(p => (
-              <a key={p.domain} href={`https://${p.domain}`} target="_blank" rel="noopener noreferrer" className="mini-tool-row">
-                <Favicon domain={p.domain} name={p.name} size={22} />
-                <span>{p.name}</span>
-                <span className="mini-tool-tag free">免费</span>
-              </a>
-            ))}
-          </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14 }}>
+          <Link href={`/${locale}/products?cat=code`} style={{ textDecoration: 'none', color: 'var(--text)' }}>
+            <div style={{
+              background: 'var(--surface)', border: '1px solid var(--border)',
+              borderRadius: 'var(--radius-sm)', padding: '18px 20px',
+              boxShadow: 'var(--shadow-card)', transition: 'all 0.2s',
+              position: 'relative', overflow: 'hidden',
+            }}>
+              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: 'var(--cyan)' }} />
+              <h3 style={{ fontSize: '0.92rem', fontWeight: 700, marginBottom: 12 }}>💻 开发者必备</h3>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                {tools.filter(t => t.category === 'code').slice(0, 4).map(tool => (
+                  <span key={tool.id} style={{
+                    display: 'inline-flex', alignItems: 'center', gap: 4,
+                    background: 'var(--surface2)', padding: '4px 10px',
+                    borderRadius: 'var(--radius-2xs)', fontSize: '0.76rem',
+                  }}>
+                    <Favicon domain={tool.favicon} name={tool.name} size={14} />
+                    {tool.name}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </Link>
+          <a href={`/${locale}/deals`} style={{ textDecoration: 'none', color: 'var(--text)' }}>
+            <div style={{
+              background: 'var(--surface)', border: '1px solid var(--border)',
+              borderRadius: 'var(--radius-sm)', padding: '18px 20px',
+              boxShadow: 'var(--shadow-card)', transition: 'all 0.2s',
+              position: 'relative', overflow: 'hidden',
+            }}>
+              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: 'var(--green)' }} />
+              <h3 style={{ fontSize: '0.92rem', fontWeight: 700, marginBottom: 12 }}>🚀 免费部署平台</h3>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                {[
+                  { name: 'Vercel', domain: 'vercel.com' },
+                  { name: 'Hugging Face', domain: 'huggingface.co' },
+                  { name: 'Cloudflare', domain: 'pages.cloudflare.com' },
+                  { name: 'GitHub Pages', domain: 'pages.github.com' },
+                ].map(p => (
+                  <span key={p.domain} style={{
+                    display: 'inline-flex', alignItems: 'center', gap: 4,
+                    background: 'var(--surface2)', padding: '4px 10px',
+                    borderRadius: 'var(--radius-2xs)', fontSize: '0.76rem',
+                  }}>
+                    <Favicon domain={p.domain} name={p.name} size={14} />
+                    {p.name}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </a>
+          <a href={`/${locale}/models`} style={{ textDecoration: 'none', color: 'var(--text)' }}>
+            <div style={{
+              background: 'var(--surface)', border: '1px solid var(--border)',
+              borderRadius: 'var(--radius-sm)', padding: '18px 20px',
+              boxShadow: 'var(--shadow-card)', transition: 'all 0.2s',
+              position: 'relative', overflow: 'hidden',
+            }}>
+              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: 'var(--accent2)' }} />
+              <h3 style={{ fontSize: '0.92rem', fontWeight: 700, marginBottom: 12 }}>🧠 模型训练</h3>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                {[
+                  { name: 'Ollama', domain: 'ollama.com' },
+                  { name: 'Google Colab', domain: 'colab.research.google.com' },
+                  { name: '百度飞桨', domain: 'aistudio.baidu.com' },
+                  { name: 'Hugging Face', domain: 'huggingface.co' },
+                ].map(p => (
+                  <span key={p.name} style={{
+                    display: 'inline-flex', alignItems: 'center', gap: 4,
+                    background: 'var(--surface2)', padding: '4px 10px',
+                    borderRadius: 'var(--radius-2xs)', fontSize: '0.76rem',
+                  }}>
+                    <Favicon domain={p.domain} name={p.name} size={14} />
+                    {p.name}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </a>
         </div>
       </section>
 
@@ -233,20 +292,73 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ==================== 近期热门推荐（工具评测卡）==================== */}
+      {/* ==================== 热门推荐 — 横向轮播 ==================== */}
       <section className="section">
         <div className="section-header">
           <h2 className="section-title"><IconStar size={18} style={{ color: '#fbbf24' }} /> {t(locale, 'home.recentHot')}</h2>
           <Link href={`/${locale}/products`} className="section-more">{t(locale, 'home.fullList')} <IconChevronRight size={12} /></Link>
         </div>
-        <div className="tool-grid">
-          {filteredTools.slice(0, 12).map(tool => (
-            <ToolCard key={tool.id} tool={tool} locale={locale} />
-          ))}
+        <div style={{ position: 'relative' }}>
+          <button onClick={() => scroll(-1)} style={{
+            position: 'absolute', left: -8, top: '50%', transform: 'translateY(-50%)',
+            width: 36, height: 36, borderRadius: '50%', border: '1px solid var(--border)',
+            background: 'var(--surface)', color: 'var(--text2)', cursor: 'pointer',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            zIndex: 2, boxShadow: 'var(--shadow-card)',
+          }}>
+            <IconChevronLeft size={16} />
+          </button>
+          <button onClick={() => scroll(1)} style={{
+            position: 'absolute', right: -8, top: '50%', transform: 'translateY(-50%)',
+            width: 36, height: 36, borderRadius: '50%', border: '1px solid var(--border)',
+            background: 'var(--surface)', color: 'var(--text2)', cursor: 'pointer',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            zIndex: 2, boxShadow: 'var(--shadow-card)',
+          }}>
+            <IconChevronRight size={16} />
+          </button>
+          <div ref={scrollRef} style={{
+            display: 'flex', gap: 14, overflowX: 'auto', scrollSnapType: 'x mandatory',
+            padding: '4px 40px', scrollbarWidth: 'none', msOverflowStyle: 'none',
+          }}>
+            {tools.slice(0, 20).map(tool => (
+              <ScrollToolCard key={tool.id} tool={tool} locale={locale} />
+            ))}
+          </div>
         </div>
       </section>
-
     </div>
+  );
+}
+
+/* 横向轮播用的紧凑卡片 */
+function ScrollToolCard({ tool, locale }) {
+  const avg = Math.round((tool.scores.usefulness + tool.scores.value + tool.scores.ease) / 3);
+  return (
+    <Link href={`/${locale}/tool/${tool.id}`} style={{
+      flex: '0 0 200px', scrollSnapAlign: 'start', textDecoration: 'none', color: 'var(--text)',
+    }}>
+      <div style={{
+        background: 'var(--surface)', border: '1px solid var(--border)',
+        borderRadius: 'var(--radius-sm)', padding: '16px 14px',
+        boxShadow: 'var(--shadow-card)', transition: 'all 0.2s',
+        height: '100%', display: 'flex', flexDirection: 'column',
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+          <Favicon domain={tool.favicon} name={tool.name} size={28} />
+          <div style={{ fontWeight: 600, fontSize: '0.88rem', lineHeight: 1.3 }}>{tool.name}</div>
+        </div>
+        <div style={{ fontSize: '0.76rem', color: 'var(--text2)', marginBottom: 10, flex: 1, lineHeight: 1.4 }}>
+          {tool.tagline}
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span className={`tool-price ${tool.pricing.free ? 'free' : 'paid'}`} style={{ fontSize: '0.72rem' }}>
+            {tool.pricing.free ? <><IconFree size={10} /> 免费</> : <><IconPaid size={10} /> {tool.pricing.price}</>}
+          </span>
+          <span style={{ fontSize: '0.72rem', fontWeight: 700, color: getScoreColor(avg) }}>{avg}分</span>
+        </div>
+      </div>
+    </Link>
   );
 }
 
@@ -263,50 +375,5 @@ function RankingColumn({ title, items, locale }) {
       ))}
       <Link href={`/${locale}/products`} className="ranking-more">查看完整榜单 →</Link>
     </div>
-  );
-}
-
-function FreeDeployList() {
-  const platforms = [
-    { name: 'Vercel', domain: 'vercel.com' },
-    { name: 'Hugging Face', domain: 'huggingface.co' },
-    { name: 'Railway', domain: 'railway.app' },
-    { name: 'Render', domain: 'render.com' },
-    { name: 'Cloudflare Pages', domain: 'pages.cloudflare.com' },
-    { name: 'GitHub Pages', domain: 'pages.github.com' },
-  ];
-  return platforms.map(p => (
-    <a key={p.domain} href={`https://${p.domain}`} target="_blank" rel="noopener noreferrer" className="mini-tool-row">
-      <Favicon domain={p.domain} name={p.name} size={22} />
-      <span>{p.name}</span>
-      <span className="mini-tool-tag free">免费</span>
-    </a>
-  ));
-}
-
-function ToolCard({ tool, locale }) {
-  const avg = Math.round((tool.scores.usefulness + tool.scores.value + tool.scores.ease) / 3);
-  return (
-    <Link href={`/${locale}/tool/${tool.id}`} className="tool-card">
-      <div className="tool-header">
-        <Favicon domain={tool.favicon} name={tool.name} size={36} />
-        <span className="tool-name">
-          {tool.name}
-          {['deepseek', 'doubao', 'cursor', 'chatgpt', 'kimi'].includes(tool.id) && (
-            <span className="hot-tag"><IconFire size={9} /></span>
-          )}
-        </span>
-      </div>
-      <div className="tool-tagline">{tool.tagline}</div>
-      <div className="feature-tags">
-        {tool.features.slice(0, 3).map(f => <span key={f} className="feature-tag">{f}</span>)}
-      </div>
-      <div className="tool-meta">
-        <span className={`tool-price ${tool.pricing.free ? 'free' : 'paid'}`}>
-          {tool.pricing.free ? <><IconFree /> {tool.pricing.price}</> : <><IconPaid /> {tool.pricing.price}</>}
-        </span>
-        <span className="tool-score" style={{ color: getScoreColor(avg) }}>{avg}分</span>
-      </div>
-    </Link>
   );
 }
