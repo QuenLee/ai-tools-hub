@@ -58,6 +58,10 @@ export default function Sidebar() {
       </div>
 
       <div className="sidebar-nav">
+        <Link href="/compare/china-ai" className={`sidebar-item ${pathname === '/compare/china-ai' ? 'active' : ''}`}>
+          <span className="icon">🔥</span>
+          国产AI横评
+        </Link>
         <Link href="/compare" className={`sidebar-item ${pathname === '/compare' ? 'active' : ''}`}>
           <span className="icon">⚔️</span>
           横评对比
