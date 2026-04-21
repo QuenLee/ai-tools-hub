@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react';
 import { tools, categories, getToolsByCategory, getScoreColor } from '@/lib/data';
+import { topics } from '@/lib/topics';
 import { t } from '@/lib/i18n';
 import Favicon from '@/components/Favicon';
 import { IconStar, IconFire, IconFree, IconPaid, IconChevronRight, IconGift, IconChevronLeft, IconCode, IconRocket, IconBrain, IconImage, IconVideo, IconChat, IconSearch } from '@/components/icons/Icons';
@@ -120,34 +121,15 @@ export default function Home() {
             display: 'flex', gap: 14, overflowX: 'auto', scrollSnapType: 'x mandatory',
             padding: '4px 36px', scrollbarWidth: 'none', msOverflowStyle: 'none',
           }}>
-            <Link href={`/${locale}/compare/china-ai`} style={{ flex: '0 0 280px', scrollSnapAlign: 'start', textDecoration: 'none' }}>
-              <div className="topic-card" style={{ height: '100%', margin: 0 }}>
-                <div className="topic-badge"><IconFire size={12} /> 热门专题</div>
-                <div className="topic-title">DeepSeek vs 豆包 vs Kimi — 2026国产AI助手横评</div>
-                <div className="topic-desc">8大场景深度对比，看完你就知道选哪个 →</div>
-              </div>
-            </Link>
-            <Link href={`/${locale}/tools`} style={{ flex: '0 0 280px', scrollSnapAlign: 'start', textDecoration: 'none' }}>
-              <div className="topic-card" style={{ height: '100%', margin: 0, }}>
-                <div className="topic-badge" style={{ background: 'rgba(124,92,252,0.1)', color: 'var(--accent2)' }}>实用工具</div>
-                <div className="topic-title">AI模型选型器 + API费用计算器</div>
-                <div className="topic-desc">选场景→推荐模型，算成本→比价格 →</div>
-              </div>
-            </Link>
-            <Link href={`/${locale}/models`} style={{ flex: '0 0 280px', scrollSnapAlign: 'start', textDecoration: 'none' }}>
-              <div className="topic-card" style={{ height: '100%', margin: 0 }}>
-                <div className="topic-badge" style={{ background: 'rgba(96,165,250,0.1)', color: 'var(--blue)' }}>模型对比</div>
-                <div className="topic-title">2026年AI大模型排行榜：15个模型横评</div>
-                <div className="topic-desc">MMLU/代码能力/价格全维度对比 →</div>
-              </div>
-            </Link>
-            <Link href={`/${locale}/tutorials`} style={{ flex: '0 0 280px', scrollSnapAlign: 'start', textDecoration: 'none' }}>
-              <div className="topic-card" style={{ height: '100%', margin: 0 }}>
-                <div className="topic-badge" style={{ background: 'rgba(52,211,153,0.1)', color: 'var(--green)' }}>免费合集</div>
-                <div className="topic-title">免费AI工具大全：不花钱也能用上顶级AI</div>
-                <div className="topic-desc">30+免费工具，写作/绘画/编程/视频全覆盖 →</div>
-              </div>
-            </Link>
+            {topics.map(topic => (
+              <Link key={topic.id} href={`/${locale}/topic/${topic.slug}`} style={{ flex: '0 0 280px', scrollSnapAlign: 'start', textDecoration: 'none' }}>
+                <div className="topic-card" style={{ height: '100%', margin: 0 }}>
+                  <div className="topic-badge" style={{ background: topic.badgeBg, color: topic.badgeColor }}>{topic.badge}</div>
+                  <div className="topic-title">{topic.title}</div>
+                  <div className="topic-desc">{topic.desc.slice(0, 40)}… →</div>
+                </div>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
