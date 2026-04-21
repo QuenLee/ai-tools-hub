@@ -148,14 +148,14 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ==================== AI今日要闻 ==================== */}
+      {/* ==================== AI今日要闻（精简版，只显示3条）==================== */}
       <section className="section">
         <div className="section-header">
           <h2 className="section-title"><IconFire size={18} style={{ color: 'var(--red)' }} /> AI今日要闻</h2>
           <Link href={`/${locale}/news`} className="section-more">{t(locale, 'home.viewMore')} <IconChevronRight size={12} /></Link>
         </div>
         <div className="news-list">
-          {newsItems.map((item, i) => (
+          {newsItems.slice(0, 3).map((item, i) => (
             <div key={i} className="news-item">
               <span className="news-dot" />
               <span className="news-title">{item.title}</span>
@@ -184,34 +184,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ==================== 月排行榜 ==================== */}
-      <section className="section">
-        <div className="section-header">
-          <h2 className="section-title"><IconStar size={18} style={{ color: '#fbbf24' }} /> 月排行榜</h2>
-          <Link href={`/${locale}/products`} className="section-more">{t(locale, 'home.fullList')} <IconChevronRight size={12} /></Link>
-        </div>
-        <div className="ranking-grid">
-          <RankingColumn title="总排行" items={rankingData.overall} locale={locale} />
-          <RankingColumn title="图像工具" items={rankingData.image} locale={locale} />
-          <RankingColumn title="视频工具" items={rankingData.video} locale={locale} />
-          <RankingColumn title="开发工具" items={rankingData.dev} locale={locale} />
-        </div>
-      </section>
-
-      {/* ==================== 近期热门推荐（工具评测卡）==================== */}
-      <section className="section">
-        <div className="section-header">
-          <h2 className="section-title"><IconStar size={18} style={{ color: '#fbbf24' }} /> {t(locale, 'home.recentHot')}</h2>
-          <Link href={`/${locale}/products`} className="section-more">{t(locale, 'home.fullList')} <IconChevronRight size={12} /></Link>
-        </div>
-        <div className="tool-grid">
-          {filteredTools.slice(0, 12).map(tool => (
-            <ToolCard key={tool.id} tool={tool} locale={locale} />
-          ))}
-        </div>
-      </section>
-
-      {/* ==================== 三列卡（开发者+免费部署+模型训练）==================== */}
+      {/* ==================== 三列卡（开发者+免费部署+模型训练）移到这里 ==================== */}
       <section className="section">
         <div className="three-col-grid">
           <div className="three-col-card">
@@ -245,6 +218,34 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* ==================== 月排行榜 ==================== */}
+      <section className="section">
+        <div className="section-header">
+          <h2 className="section-title"><IconStar size={18} style={{ color: '#fbbf24' }} /> 月排行榜</h2>
+          <Link href={`/${locale}/products`} className="section-more">{t(locale, 'home.fullList')} <IconChevronRight size={12} /></Link>
+        </div>
+        <div className="ranking-grid">
+          <RankingColumn title="总排行" items={rankingData.overall} locale={locale} />
+          <RankingColumn title="图像工具" items={rankingData.image} locale={locale} />
+          <RankingColumn title="视频工具" items={rankingData.video} locale={locale} />
+          <RankingColumn title="开发工具" items={rankingData.dev} locale={locale} />
+        </div>
+      </section>
+
+      {/* ==================== 近期热门推荐（工具评测卡）==================== */}
+      <section className="section">
+        <div className="section-header">
+          <h2 className="section-title"><IconStar size={18} style={{ color: '#fbbf24' }} /> {t(locale, 'home.recentHot')}</h2>
+          <Link href={`/${locale}/products`} className="section-more">{t(locale, 'home.fullList')} <IconChevronRight size={12} /></Link>
+        </div>
+        <div className="tool-grid">
+          {filteredTools.slice(0, 12).map(tool => (
+            <ToolCard key={tool.id} tool={tool} locale={locale} />
+          ))}
+        </div>
+      </section>
+
     </div>
   );
 }
