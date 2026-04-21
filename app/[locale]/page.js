@@ -8,12 +8,24 @@ import { IconStar, IconFire, IconFree, IconPaid, IconChevronRight, IconRobot, ca
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 
+// SEO热点新闻——覆盖用户常搜关键词
 const newsItems = [
-  { title: '华为硬核上新：Pura90 系列领衔，AI眼镜与阔折叠手机齐亮相', time: '2小时前' },
-  { title: '阿里开源 Qwen3.6-35B：30亿激活参数实现编程能力跨越式升级', time: '5小时前' },
-  { title: 'Anthropic 发布全新 Claude Opus 4.7，功能显著提升', time: '8小时前' },
-  { title: 'Midjourney V8.1 重磅发布：原生2K高清渲染速度成本双降3倍', time: '12小时前' },
-  { title: 'DeepSeek R2 开源：推理能力再破纪录，完全免费', time: '1天前' },
+  { title: 'DeepSeek R2 开源发布：推理能力再破纪录，完全免费使用', time: '2小时前', tag: 'hot' },
+  { title: 'ChatGPT o3 模型上线：推理能力超越人类专家水平', time: '3小时前', tag: 'new' },
+  { title: '豆包大模型升级：视频生成+实时语音全免费开放', time: '5小时前', tag: 'hot' },
+  { title: 'Cursor 1.0 正式发布：Vibe Coding 效率提升10倍', time: '8小时前', tag: 'new' },
+  { title: 'Kimi 长文本突破200万字：论文分析PDF阅读最强工具', time: '12小时前', tag: 'hot' },
+  { title: 'Sora 正式开放：AI视频生成进入全民时代', time: '1天前', tag: 'new' },
+  { title: 'Midjourney V8 发布：AI绘画质量再次大幅飞跃', time: '1天前' },
+  { title: '通义千问 Qwen3 开源：编程能力超越GPT-4o', time: '2天前', tag: 'new' },
+];
+
+// SEO热门话题——覆盖搜索热词
+const seoTopics = [
+  { title: '2026年最好用的AI工具排行榜', desc: '深度评测34+主流AI工具，帮你选出最值得用的', badge: '排行榜' },
+  { title: 'DeepSeek vs ChatGPT vs 豆包：三大AI助手横评', desc: '从推理、写作、编程、多模态四大维度全面对比', badge: '横评' },
+  { title: '免费AI工具大全：不花钱也能用上顶级AI', desc: '30+完全免费的AI工具，写作/绘画/编程/视频全覆盖', badge: '免费' },
+  { title: 'AI赚钱实操指南：6种方法从0到日入500', desc: '内容创作、SaaS开发、自媒体运营等真实案例分享', badge: '变现' },
 ];
 
 export default function Home() {
@@ -43,23 +55,44 @@ export default function Home() {
       <section className="hero">
         <h1>{t(locale, 'site.name')}</h1>
         <p>{t(locale, 'site.slogan')}</p>
-        <p style={{ color: 'var(--text3)', fontSize: '0.86rem', marginTop: 4 }}>{t(locale, 'site.description')}</p>
+        <p className="hero-sub">{t(locale, 'site.description')}</p>
         <div className="hero-stats">
-          <div className="hero-stat-num">{totalTools}+</div>
-          <div className="hero-stat-num">{freeTools}</div>
-          <div className="hero-stat-num">{categories.length + 1}</div>
+          <div className="hero-stat">
+            <div className="hero-stat-num">{totalTools}+</div>
+            <div className="hero-stat-label">{t(locale, 'home.allReviews')}</div>
+          </div>
+          <div className="hero-stat">
+            <div className="hero-stat-num">{freeTools}</div>
+            <div className="hero-stat-label">{t(locale, 'home.freeUsable')}</div>
+          </div>
+          <div className="hero-stat">
+            <div className="hero-stat-num">{categories.length + 1}</div>
+            <div className="hero-stat-label">{t(locale, 'home.categories')}</div>
+          </div>
         </div>
-        <div style={{ display: 'flex', justifyContent: 'center', gap: 40, marginTop: 4 }}>
-          <div className="hero-stat-label">{t(locale, 'home.allReviews')}</div>
-          <div className="hero-stat-label">{t(locale, 'home.freeUsable')}</div>
-          <div className="hero-stat-label">{t(locale, 'home.categories')}</div>
+      </section>
+
+      {/* SEO热门专题 */}
+      <section className="section">
+        <div className="section-header">
+          <h2 className="section-title"><IconStar size={18} style={{ color: '#fbbf24' }} /> 热门专题</h2>
+          <Link href={`/${locale}/tutorials`} className="section-more">{t(locale, 'home.viewMore')} <IconChevronRight size={12} /></Link>
+        </div>
+        <div className="topic-grid">
+          {seoTopics.map((topic, i) => (
+            <Link key={i} href={i === 1 ? `/${locale}/compare/china-ai` : `/${locale}/tutorials`} className="topic-card">
+              <div className="topic-badge">{topic.badge}</div>
+              <div className="topic-title">{topic.title}</div>
+              <div className="topic-desc">{topic.desc}</div>
+            </Link>
+          ))}
         </div>
       </section>
 
       {/* AI今日要闻 */}
       <section className="section">
         <div className="section-header">
-          <h2 className="section-title">{t(locale, 'home.todayNews')}</h2>
+          <h2 className="section-title"><IconFire size={18} style={{ color: 'var(--red)' }} /> AI今日要闻</h2>
           <Link href={`/${locale}/news`} className="section-more">{t(locale, 'home.viewMore')} <IconChevronRight size={12} /></Link>
         </div>
         <div className="news-list">
@@ -67,6 +100,7 @@ export default function Home() {
             <div key={i} className="news-item">
               <span className="news-dot" />
               <span className="news-title">{item.title}</span>
+              {item.tag && <span className={`news-tag ${item.tag}`}>{item.tag === 'hot' ? '热' : '新'}</span>}
               <span className="news-time">{item.time}</span>
             </div>
           ))}
@@ -76,21 +110,21 @@ export default function Home() {
       {/* 月排行榜 */}
       <section className="section">
         <div className="section-header">
-          <h2 className="section-title">{t(locale, 'home.monthlyRank')}</h2>
+          <h2 className="section-title">📊 月排行榜</h2>
           <Link href={`/${locale}/products`} className="section-more">{t(locale, 'home.fullList')} <IconChevronRight size={12} /></Link>
         </div>
         <div className="ranking-grid">
-          <RankingColumn title={t(locale, 'home.totalRank')} items={rankingData.overall} locale={locale} />
-          <RankingColumn title={t(locale, 'home.imageTools')} items={rankingData.image} locale={locale} />
-          <RankingColumn title={t(locale, 'home.videoTools')} items={rankingData.video} locale={locale} />
-          <RankingColumn title={t(locale, 'home.devTools')} items={rankingData.dev} locale={locale} />
+          <RankingColumn title="🏆 总排行" items={rankingData.overall} locale={locale} />
+          <RankingColumn title="🎨 图像工具" items={rankingData.image} locale={locale} />
+          <RankingColumn title="🎬 视频工具" items={rankingData.video} locale={locale} />
+          <RankingColumn title="💻 开发工具" items={rankingData.dev} locale={locale} />
         </div>
       </section>
 
       {/* 大家都在用 */}
       <section className="section">
         <div className="section-header">
-          <h2 className="section-title">{t(locale, 'home.everyoneUsing')}</h2>
+          <h2 className="section-title">🔥 大家都在用</h2>
         </div>
         <div className="usage-tabs">
           {['热门', '办公', '自媒体', '教育', '设计'].map((tab, i) => (
@@ -100,7 +134,7 @@ export default function Home() {
         <div className="usage-grid">
           {hotTools.map(tool => (
             <Link key={tool.id} href={`/${locale}/tool/${tool.id}`} className="usage-card">
-              <Favicon domain={tool.favicon} name={tool.name} size={36} />
+              <Favicon domain={tool.favicon} name={tool.name} size={40} />
               <div>
                 <div className="usage-name">{tool.name}</div>
                 <div className="usage-desc">{tool.tagline}</div>
@@ -114,9 +148,10 @@ export default function Home() {
       <section className="section">
         <div className="section-header">
           <h2 className="section-title"><IconStar size={18} style={{ color: '#fbbf24' }} /> {t(locale, 'home.recentHot')}</h2>
+          <Link href={`/${locale}/products`} className="section-more">{t(locale, 'home.fullList')} <IconChevronRight size={12} /></Link>
         </div>
         <div className="tool-grid">
-          {tools.slice(0, 8).map(tool => (
+          {filteredTools.slice(0, 12).map(tool => (
             <ToolCard key={tool.id} tool={tool} locale={locale} />
           ))}
         </div>
@@ -126,21 +161,21 @@ export default function Home() {
       <section className="section">
         <div className="three-col-grid">
           <div className="three-col-card">
-            <h3 className="three-col-title">{t(locale, 'home.devEssential')}</h3>
-            {tools.filter(tool => tool.category === 'code').slice(0, 4).map(tool => (
+            <h3 className="three-col-title">💻 开发者必备</h3>
+            {tools.filter(tool => tool.category === 'code').slice(0, 5).map(tool => (
               <Link key={tool.id} href={`/${locale}/tool/${tool.id}`} className="mini-tool-row">
                 <Favicon domain={tool.favicon} name={tool.name} size={22} />
                 <span>{tool.name}</span>
-                <span className="mini-tool-tag">{tool.pricing.free ? t(locale, 'product.free') : t(locale, 'product.paid')}</span>
+                <span className="mini-tool-tag">{tool.pricing.free ? '免费' : '付费'}</span>
               </Link>
             ))}
           </div>
           <div className="three-col-card">
-            <h3 className="three-col-title">{t(locale, 'home.freeDeploy')}</h3>
+            <h3 className="three-col-title">🚀 免费部署平台</h3>
             <FreeDeployList />
           </div>
           <div className="three-col-card">
-            <h3 className="three-col-title">{t(locale, 'home.modelTraining')}</h3>
+            <h3 className="three-col-title">🧠 模型训练</h3>
             {[
               { name: 'Ollama', domain: 'ollama.com' },
               { name: 'Google Colab', domain: 'colab.research.google.com' },
@@ -160,36 +195,36 @@ export default function Home() {
       {/* AI变现指南 */}
       <section className="section">
         <div className="section-header">
-          <h2 className="section-title">{t(locale, 'home.moneyGuide')}</h2>
+          <h2 className="section-title">💰 AI变现指南</h2>
           <Link href={`/${locale}/tutorials`} className="section-more">{t(locale, 'home.viewMore')} <IconChevronRight size={12} /></Link>
         </div>
         <div className="money-grid">
-          <a href={`/${locale}/tutorials`} className="money-card">
+          <Link href={`/${locale}/tutorials`} className="money-card">
             <div className="money-badge">内容创作</div>
             <div className="money-title">AI二创IP变现：从流量爆款到实物变现</div>
             <div className="money-views">12.3K 阅读</div>
-          </a>
-          <a href={`/${locale}/tutorials`} className="money-card">
+          </Link>
+          <Link href={`/${locale}/tutorials`} className="money-card">
             <div className="money-badge">开发变现</div>
             <div className="money-title">用AI自动化搭建SaaS，实现日入$200</div>
             <div className="money-views">49.0K 阅读</div>
-          </a>
-          <a href={`/${locale}/tutorials`} className="money-card">
+          </Link>
+          <Link href={`/${locale}/tutorials`} className="money-card">
             <div className="money-badge">自媒体</div>
             <div className="money-title">AI视频起号：零粉到万粉爆款玩法</div>
             <div className="money-views">32.6K 阅读</div>
-          </a>
+          </Link>
         </div>
       </section>
 
       {/* 省钱指南 */}
       <section className="section">
         <div className="section-header">
-          <h2 className="section-title"><IconFree size={18} /> {t(locale, 'home.dealsSection')}</h2>
+          <h2 className="section-title"><IconFree size={18} /> 省钱指南</h2>
           <Link href={`/${locale}/deals`} className="section-more">{t(locale, 'home.viewMore')} <IconChevronRight size={12} /></Link>
         </div>
         <div className="deals-preview">
-          {tools.filter(tool => tool.pricing.free).slice(0, 5).map(tool => (
+          {tools.filter(tool => tool.pricing.free).slice(0, 6).map(tool => (
             <Link key={tool.id} href={`/${locale}/tool/${tool.id}`} className="deal-mini">
               <Favicon domain={tool.favicon} name={tool.name} size={22} />
               <span style={{ fontWeight: 600, fontSize: '0.88rem' }}>{tool.name}</span>
@@ -208,12 +243,12 @@ function RankingColumn({ title, items, locale }) {
       <div className="ranking-col-title">{title}</div>
       {items.map((tool, i) => (
         <Link key={tool.id} href={`/${locale}/tool/${tool.id}`} className="ranking-item">
-          <span className={`ranking-num ${i < 3 ? 'top' : ''}`}>#{i + 1}</span>
+          <span className={`ranking-num ${i === 0 ? 'top1' : i === 1 ? 'top2' : i === 2 ? 'top3' : ''}`}>#{i + 1}</span>
           <Favicon domain={tool.favicon} name={tool.name} size={18} />
           <span className="ranking-name">{tool.name}</span>
         </Link>
       ))}
-      <Link href={`/${locale}/products`} className="ranking-more">{title} →</Link>
+      <Link href={`/${locale}/products`} className="ranking-more">查看完整榜单 →</Link>
     </div>
   );
 }
@@ -241,8 +276,13 @@ function ToolCard({ tool, locale }) {
   return (
     <Link href={`/${locale}/tool/${tool.id}`} className="tool-card">
       <div className="tool-header">
-        <Favicon domain={tool.favicon} name={tool.name} size={34} />
-        <span className="tool-name">{tool.name}</span>
+        <Favicon domain={tool.favicon} name={tool.name} size={36} />
+        <span className="tool-name">
+          {tool.name}
+          {['deepseek', 'doubao', 'cursor', 'chatgpt', 'kimi'].includes(tool.id) && (
+            <span className="hot-tag"><IconFire size={9} /></span>
+          )}
+        </span>
       </div>
       <div className="tool-tagline">{tool.tagline}</div>
       <div className="feature-tags">

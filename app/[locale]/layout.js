@@ -8,9 +8,26 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }) {
   const { locale } = await params;
+  const titles = {
+    'zh': "Quen's AI - AI工具深度评测与推荐 | 通往AGI之路",
+    'zh-HK': "Quen's AI - AI工具深度評測與推薦 | 通往AGI之路",
+    'en': "Quen's AI - Best AI Tool Reviews & Recommendations",
+  };
+  const descriptions = {
+    'zh': '深度评测DeepSeek、ChatGPT、豆包、Kimi、Cursor等34+主流AI工具。AI工具排行榜、免费AI工具大全、AI变现指南、AI模型横评，帮你选对不花冤枉钱。',
+    'zh-HK': '深度評測DeepSeek、ChatGPT、豆包、Kimi、Cursor等34+主流AI工具。AI工具排行榜、免費AI工具大全、AI變現指南、AI模型橫評，幫你選對不花冤枉錢。',
+    'en': 'In-depth reviews of 34+ AI tools including DeepSeek, ChatGPT, Doubao, Kimi, Cursor. AI tool rankings, free AI tools, monetization guides, and model comparisons.',
+  };
   return {
-    title: 'QuenAI - 通往AGI之路',
-    description: 'AI工具深度评测、AI资讯、AI模型对比、AI变现指南',
+    title: titles[locale] || titles['zh'],
+    description: descriptions[locale] || descriptions['zh'],
+    keywords: 'AI工具,AI评测,DeepSeek,ChatGPT,豆包,Kimi,Cursor,AI排行榜,免费AI,AI变现,AI绘画,AI写作,AI编程,AI视频,人工智能',
+    openGraph: {
+      title: titles[locale] || titles['zh'],
+      description: descriptions[locale] || descriptions['zh'],
+      type: 'website',
+      locale: locale === 'zh-HK' ? 'zh_HK' : locale === 'en' ? 'en_US' : 'zh_CN',
+    },
   };
 }
 
@@ -23,19 +40,20 @@ export default async function LocaleLayout({ children, params }) {
         <TopNav locale={locale} />
         {children}
         <footer className="footer">
-          <div style={{ maxWidth: '80%', margin: '0 auto', display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
+          <div style={{ maxWidth: '80%', margin: '0 auto', padding: '0 28px', display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 24, alignItems: 'center' }}>
             <div>
-              <div style={{ fontWeight: 700, marginBottom: 8 }}>QuenAI</div>
-              <div style={{ fontSize: '0.78rem', color: 'var(--text3)' }}>通往AGI之路</div>
+              <div style={{ fontWeight: 700, marginBottom: 6, fontSize: '0.9rem' }}>Quen&apos;s AI</div>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text3)' }}>通往AGI之路 · 深度评测·真实体验·帮你选对</div>
             </div>
             <div style={{ display: 'flex', gap: 24, fontSize: '0.78rem' }}>
               <a href={`/${locale}/products`}>AI产品</a>
               <a href={`/${locale}/tools`}>AI工具</a>
               <a href={`/${locale}/models`}>AI模型</a>
               <a href={`/${locale}/tutorials`}>AI教程</a>
+              <a href={`/${locale}/deals`}>省钱指南</a>
             </div>
             <div style={{ fontSize: '0.72rem', color: 'var(--text3)' }}>
-              © 2026 QuenAI · All rights reserved
+              © 2026 Quen&apos;s AI · All rights reserved
             </div>
           </div>
         </footer>

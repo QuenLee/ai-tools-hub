@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { t, locales } from '@/lib/i18n';
 import { IconSearch, IconFire, IconCompare, IconGift, IconMenu, IconX, IconRobot, IconWrite, IconCode, IconChat } from '@/components/icons/Icons';
+import ThemeToggle from '@/components/ThemeToggle';
 
 const navItems = [
   { href: '', labelKey: 'nav.home' },
@@ -45,7 +46,7 @@ export default function TopNav({ locale }) {
         <div className="topnav-inner">
           <Link href={`/${currentLocale}`} className="topnav-logo">
             <IconRobot size={20} />
-            QuenAI
+            Quen&apos;s AI
           </Link>
 
           <div className="topnav-links">
@@ -65,16 +66,19 @@ export default function TopNav({ locale }) {
             <input placeholder={t(currentLocale, 'nav.search')} />
           </div>
 
-          <div className="lang-switch">
-            {localeLabels.map(l => (
-              <button
-                key={l.code}
-                className={`lang-btn ${currentLocale === l.code ? 'active' : ''}`}
-                onClick={() => switchLocale(l.code)}
-              >
-                {l.label}
-              </button>
-            ))}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <ThemeToggle />
+            <div className="lang-switch">
+              {localeLabels.map(l => (
+                <button
+                  key={l.code}
+                  className={`lang-btn ${currentLocale === l.code ? 'active' : ''}`}
+                  onClick={() => switchLocale(l.code)}
+                >
+                  {l.label}
+                </button>
+              ))}
+            </div>
           </div>
 
           <button className="mobile-menu-btn" onClick={() => setMobileOpen(true)}>
@@ -96,7 +100,8 @@ export default function TopNav({ locale }) {
             {t(currentLocale, item.labelKey)}
           </Link>
         ))}
-        <div style={{ display: 'flex', gap: 6, marginTop: 20 }}>
+        <div style={{ display: 'flex', gap: 8, marginTop: 20, alignItems: 'center' }}>
+          <ThemeToggle />
           {localeLabels.map(l => (
             <button
               key={l.code}
