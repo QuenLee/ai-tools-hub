@@ -8,17 +8,6 @@ import { IconStar, IconFire, IconFree, IconPaid, IconChevronRight, IconGift, Ico
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 
-const newsItems = [
-  { title: 'DeepSeek R2 开源发布：推理能力再破纪录，完全免费使用', time: '2小时前', tag: 'hot' },
-  { title: 'ChatGPT o3 模型上线：推理能力超越人类专家水平', time: '3小时前', tag: 'new' },
-  { title: '豆包大模型升级：视频生成+实时语音全免费开放', time: '5小时前', tag: 'hot' },
-  { title: 'Cursor 1.0 正式发布：Vibe Coding 效率提升10倍', time: '8小时前', tag: 'new' },
-  { title: 'Kimi 长文本突破200万字：论文分析PDF阅读最强工具', time: '12小时前', tag: 'hot' },
-  { title: 'Sora 正式开放：AI视频生成进入全民时代', time: '1天前', tag: 'new' },
-  { title: 'Midjourney V8 发布：AI绘画质量再次大幅飞跃', time: '1天前' },
-  { title: '通义千问 Qwen3 开源：编程能力超越GPT-4o', time: '2天前', tag: 'new' },
-];
-
 // "大家都在用"标签页配置
 const toolTabs = [
   { id: 'hot', label: '热门工具', icon: IconFire, color: 'var(--red)' },
@@ -285,23 +274,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ==================== AI今日要闻（精简3条）==================== */}
-      <section className="section">
-        <div className="section-header">
-          <h2 className="section-title"><IconFire size={18} style={{ color: 'var(--red)' }} /> AI今日要闻</h2>
-          <Link href={`/${locale}/news`} className="section-more">{t(locale, 'home.viewMore')} <IconChevronRight size={12} /></Link>
-        </div>
-        <div className="news-list">
-          {newsItems.slice(0, 3).map((item, i) => (
-            <div key={i} className="news-item">
-              <span className="news-dot" />
-              <span className="news-title">{item.title}</span>
-              {item.tag && <span className={`news-tag ${item.tag}`}>{item.tag === 'hot' ? '热' : '新'}</span>}
-              <span className="news-time">{item.time}</span>
-            </div>
-          ))}
-        </div>
-      </section>
     </div>
   );
 }
