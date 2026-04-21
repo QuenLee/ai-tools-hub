@@ -1,0 +1,114 @@
+{
+  "site": {
+    "name": "QuenAI",
+    "slogan": "通往AGI之路",
+    "description": "深度評測·真實體驗·幫你選對不花冤枉錢"
+  },
+  "nav": {
+    "home": "首頁",
+    "news": "AI資訊",
+    "products": "AI產品",
+    "tools": "AI工具",
+    "models": "AI模型",
+    "tutorials": "AI教程",
+    "search": "搜尋..."
+  },
+  "home": {
+    "todayNews": "AI今日要聞",
+    "weeklyHot": "本週AI熱點",
+    "monthlyRank": "月排行榜",
+    "everyoneUsing": "大家都在用",
+    "recentHot": "近期熱門推薦",
+    "devEssential": "開發者必備AI工具",
+    "modelTraining": "模型訓練AI工具",
+    "freeDeploy": "免費部署平台",
+    "moneyGuide": "AI變現指南",
+    "dealsSection": "省錢指南",
+    "totalRank": "總排行",
+    "imageTools": "圖像工具",
+    "videoTools": "影片工具",
+    "devTools": "開發工具",
+    "viewMore": "查看更多",
+    "fullList": "完整榜單",
+    "allReviews": "全部評測",
+    "freeUsable": "免費可用",
+    "categories": "工具分類"
+  },
+  "product": {
+    "featured": "編輯精選",
+    "worthInstalling": "值得裝",
+    "deepTopic": "深度專題",
+    "hotTools": "熱門工具",
+    "free": "免費",
+    "paid": "付費",
+    "score": "分",
+    "review": "評測",
+    "visit": "訪問官網",
+    "visitAffiliate": "通過評測鏈接訪問",
+    "pros": "優點",
+    "cons": "不足",
+    "usefulness": "實用性",
+    "value": "性價比",
+    "ease": "易用性",
+    "pricing": "價格方案",
+    "freeVersion": "免費版",
+    "paidVersion": "付費版",
+    "noFreeVersion": "無免費版",
+    "coreFeatures": "核心功能",
+    "detailReview": "詳細評測",
+    "updated": "評測更新於",
+    "comprehensive": "綜合評分",
+    "excellent": "優秀",
+    "good": "良好",
+    "average": "一般"
+  },
+  "compare": {
+    "title": "橫評對比",
+    "subtitle": "同類工具放一起看，誰更好一目瞭然",
+    "scenarioTitle": "場景選誰？",
+    "deepAnalysis": "深度分析",
+    "conclusion": "結論",
+    "strongest": "最強項",
+    "weakness": "弱項",
+    "scenario": "使用場景",
+    "recommend": "推薦",
+    "reason": "理由"
+  },
+  "deals": {
+    "title": "優惠專區",
+    "subtitle": "最新免費額度、優惠和限時優惠",
+    "note1": "免費額度基於官方公開資訊，實際可能有變動",
+    "note2": "如果發現優惠已過期，歡迎告知我們更新",
+    "noteTitle": "說明",
+    "savingTip": "省錢建議"
+  },
+  "news": {
+    "title": "AI資訊",
+    "subtitle": "熱點AI新聞，每日更新"
+  },
+  "tools": {
+    "title": "AI工具",
+    "subtitle": "自建實用AI工具",
+    "modelCompare": "模型選型對比",
+    "costCalc": "費用計算器",
+    "modelArena": "模型競技場"
+  },
+  "models": {
+    "title": "AI模型",
+    "subtitle": "全球最熱門、最優質、最好用的AI模型皆匯聚於此",
+    "popular": "最近流行大模型",
+    "recentUpdate": "最近更新AI模型",
+    "openSource": "熱門開源模型"
+  },
+  "tutorials": {
+    "title": "AI教程",
+    "subtitle": "AI賺錢案例、工具使用教程、Prompt技巧"
+  },
+  "footer": {
+    "about": "關於我們",
+    "contact": "聯絡我們",
+    "privacy": "隱私政策",
+    "terms": "服務條款",
+    "copyright": "QuenAI - 通往AGI之路"
+  }
+}

@@ -1,7 +1,7 @@
 import { tools, categories, getToolBySlug, getScoreColor, getScoreLabel } from '@/lib/data';
 import Link from 'next/link';
-import Favicon from '@/app/components/Favicon';
-import { IconFree, IconPaid, IconExternal } from '@/app/components/icons/Icons';
+import Favicon from '@/components/Favicon';
+import { IconFree, IconPaid, IconExternal } from '@/components/icons/Icons';
 
 export async function generateStaticParams() {
   return tools.map(t => ({ slug: t.id }));

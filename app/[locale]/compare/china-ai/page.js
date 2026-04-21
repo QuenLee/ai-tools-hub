@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import Favicon from '@/app/components/Favicon';
-import { IconFire, IconFree, IconCompare } from '@/app/components/icons/Icons';
+import Favicon from '@/components/Favicon';
+import { IconFire, IconFree, IconCompare } from '@/components/icons/Icons';
 
 export const metadata = {
   title: 'DeepSeek vs 豆包 vs Kimi — 2026国产AI助手横评 | AI工具情报站',

@@ -1,5 +1,5 @@
-import Favicon from '@/app/components/Favicon';
-import { IconFree, IconGift } from '@/app/components/icons/Icons';
+import Favicon from '@/components/Favicon';
+import { IconFree, IconGift } from '@/components/icons/Icons';
 
 export const metadata = {
   title: 'AI工具优惠 - AI工具情报站',

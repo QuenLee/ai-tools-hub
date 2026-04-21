@@ -1,7 +1,7 @@
 import { categories, getToolsByCategory, getScoreColor } from '@/lib/data';
 import Link from 'next/link';
-import Favicon from '@/app/components/Favicon';
-import { IconFree, IconPaid, categoryIcons } from '@/app/components/icons/Icons';
+import Favicon from '@/components/Favicon';
+import { IconFree, IconPaid, categoryIcons } from '@/components/icons/Icons';
 
 export async function generateStaticParams() {
   return categories.map(c => ({ slug: c.id }));

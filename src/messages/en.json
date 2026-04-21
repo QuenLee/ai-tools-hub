@@ -1,0 +1,114 @@
+{
+  "site": {
+    "name": "QuenAI",
+    "slogan": "Your Gateway to AGI",
+    "description": "In-depth reviews · Real experience · Help you choose right"
+  },
+  "nav": {
+    "home": "Home",
+    "news": "AI News",
+    "products": "AI Products",
+    "tools": "AI Tools",
+    "models": "AI Models",
+    "tutorials": "AI Tutorials",
+    "search": "Search..."
+  },
+  "home": {
+    "todayNews": "AI Today",
+    "weeklyHot": "Weekly Highlights",
+    "monthlyRank": "Monthly Rankings",
+    "everyoneUsing": "Everyone's Using",
+    "recentHot": "Recent Hot Picks",
+    "devEssential": "Must-Have AI Dev Tools",
+    "modelTraining": "AI Model Training Tools",
+    "freeDeploy": "Free Deployment Platforms",
+    "moneyGuide": "AI Monetization Guide",
+    "dealsSection": "Deals & Free Tiers",
+    "totalRank": "Overall",
+    "imageTools": "Image Tools",
+    "videoTools": "Video Tools",
+    "devTools": "Dev Tools",
+    "viewMore": "View More",
+    "fullList": "Full Rankings",
+    "allReviews": "All Reviews",
+    "freeUsable": "Free Usable",
+    "categories": "Categories"
+  },
+  "product": {
+    "featured": "Editor's Picks",
+    "worthInstalling": "Worth Installing",
+    "deepTopic": "Deep Dives",
+    "hotTools": "Hot Tools",
+    "free": "Free",
+    "paid": "Paid",
+    "score": "pts",
+    "review": "Review",
+    "visit": "Visit Official Site",
+    "visitAffiliate": "Visit via Review Link",
+    "pros": "Pros",
+    "cons": "Cons",
+    "usefulness": "Usefulness",
+    "value": "Value",
+    "ease": "Ease of Use",
+    "pricing": "Pricing",
+    "freeVersion": "Free Tier",
+    "paidVersion": "Paid Tier",
+    "noFreeVersion": "No Free Tier",
+    "coreFeatures": "Core Features",
+    "detailReview": "Detailed Review",
+    "updated": "Review updated",
+    "comprehensive": "Overall Score",
+    "excellent": "Excellent",
+    "good": "Good",
+    "average": "Average"
+  },
+  "compare": {
+    "title": "Compare",
+    "subtitle": "Side by side, the best choice is clear",
+    "scenarioTitle": "Which one for your scenario?",
+    "deepAnalysis": "Deep Analysis",
+    "conclusion": "Conclusion",
+    "strongest": "Strengths",
+    "weakness": "Weaknesses",
+    "scenario": "Scenario",
+    "recommend": "Recommended",
+    "reason": "Reason"
+  },
+  "deals": {
+    "title": "Deals & Free Tiers",
+    "subtitle": "Latest free tiers, deals and limited-time offers",
+    "note1": "Free tier info based on official data, subject to change",
+    "note2": "If you find an expired deal, let us know",
+    "noteTitle": "Note",
+    "savingTip": "Money-saving tip"
+  },
+  "news": {
+    "title": "AI News",
+    "subtitle": "Hot AI news, updated daily"
+  },
+  "tools": {
+    "title": "AI Tools",
+    "subtitle": "Built-in practical AI tools",
+    "modelCompare": "Model Selector",
+    "costCalc": "Cost Calculator",
+    "modelArena": "Model Arena"
+  },
+  "models": {
+    "title": "AI Models",
+    "subtitle": "The world's hottest, best AI models in one place",
+    "popular": "Popular Models",
+    "recentUpdate": "Recently Updated",
+    "openSource": "Open Source Models"
+  },
+  "tutorials": {
+    "title": "AI Tutorials",
+    "subtitle": "AI monetization cases, tool guides, Prompt tips"
+  },
+  "footer": {
+    "about": "About Us",
+    "contact": "Contact",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "copyright": "QuenAI - Your Gateway to AGI"
+  }
+}

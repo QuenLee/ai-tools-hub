@@ -1,4 +1,3 @@
-/** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'standalone',
   images: {
@@ -7,4 +6,5 @@ const nextConfig = {
     ],
   },
 };
+
 module.exports = nextConfig;

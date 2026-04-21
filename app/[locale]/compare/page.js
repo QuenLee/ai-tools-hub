@@ -1,7 +1,7 @@
 import { tools, categories } from '@/lib/data';
 import Link from 'next/link';
-import Favicon from '@/app/components/Favicon';
-import { IconFire, IconFree, IconCompare } from '@/app/components/icons/Icons';
+import Favicon from '@/components/Favicon';
+import { IconFire, IconFree, IconCompare } from '@/components/icons/Icons';
 
 export const metadata = {
   title: '横评对比 - AI工具情报站',
