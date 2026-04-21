@@ -861,3 +861,274 @@ button[style*="border"][style*="var(--"][style*="color"]:hover {
 .topnav-link:hover::after, .topnav-link.active::after {
   transform: scaleX(1);
 }
+
+/* ===== ALL PAGES: Staggered Card Animations ===== */
+/* Tool cards in grid — staggered entrance */
+.tool-grid .tool-card {
+  animation: fadeInUp 0.4s ease-out both;
+}
+.tool-grid .tool-card:nth-child(1) { animation-delay: 0.02s; }
+.tool-grid .tool-card:nth-child(2) { animation-delay: 0.04s; }
+.tool-grid .tool-card:nth-child(3) { animation-delay: 0.06s; }
+.tool-grid .tool-card:nth-child(4) { animation-delay: 0.08s; }
+.tool-grid .tool-card:nth-child(5) { animation-delay: 0.10s; }
+.tool-grid .tool-card:nth-child(6) { animation-delay: 0.12s; }
+.tool-grid .tool-card:nth-child(7) { animation-delay: 0.14s; }
+.tool-grid .tool-card:nth-child(8) { animation-delay: 0.16s; }
+.tool-grid .tool-card:nth-child(9) { animation-delay: 0.18s; }
+.tool-grid .tool-card:nth-child(10) { animation-delay: 0.20s; }
+.tool-grid .tool-card:nth-child(n+11) { animation-delay: 0.22s; }
+
+/* Usage cards in grid — staggered */
+.usage-grid .usage-card {
+  animation: fadeInUp 0.35s ease-out both;
+}
+.usage-grid .usage-card:nth-child(1) { animation-delay: 0.02s; }
+.usage-grid .usage-card:nth-child(2) { animation-delay: 0.04s; }
+.usage-grid .usage-card:nth-child(3) { animation-delay: 0.06s; }
+.usage-grid .usage-card:nth-child(4) { animation-delay: 0.08s; }
+.usage-grid .usage-card:nth-child(5) { animation-delay: 0.10s; }
+.usage-grid .usage-card:nth-child(6) { animation-delay: 0.12s; }
+.usage-grid .usage-card:nth-child(n+7) { animation-delay: 0.14s; }
+
+/* Money cards — staggered entrance */
+.money-grid .money-card {
+  animation: fadeInUp 0.5s ease-out both;
+}
+.money-grid .money-card:nth-child(1) { animation-delay: 0.05s; }
+.money-grid .money-card:nth-child(2) { animation-delay: 0.10s; }
+.money-grid .money-card:nth-child(3) { animation-delay: 0.15s; }
+.money-grid .money-card:nth-child(4) { animation-delay: 0.20s; }
+
+/* Topic cards in carousel — staggered */
+.topic-card {
+  animation: fadeInUp 0.4s ease-out both;
+}
+
+/* ===== PAGE-LEVEL: Title & Breadcrumb Animations ===== */
+/* Page titles — gradient text animation */
+.page h1, .detail-page h1 {
+  animation: fadeInUp 0.5s ease-out;
+  background: linear-gradient(135deg, var(--text) 0%, var(--accent2) 50%, var(--text) 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: fadeInUp 0.5s ease-out, gradient-shift 6s ease infinite;
+}
+
+/* Breadcrumb — fade in */
+.breadcrumb {
+  animation: fadeIn 0.4s ease-out;
+}
+
+/* Page descriptions — slide in */
+.page > div > p:first-of-type, .detail-page > div > p:first-of-type {
+  animation: fadeIn 0.6s ease-out;
+}
+
+/* ===== DETAIL PAGE: Score Bar Animations ===== */
+.score-fill {
+  animation: slideScoreIn 1s ease-out both;
+}
+@keyframes slideScoreIn {
+  from { width: 0; }
+}
+
+/* ===== COMPARE TABLE: Row Hover ===== */
+.compare-table tbody tr {
+  transition: all 0.2s;
+}
+.compare-table tbody tr:hover {
+  background: rgba(124,92,252,0.04);
+  transform: scale(1.005);
+}
+.compare-table tbody tr td {
+  transition: all 0.2s;
+}
+
+/* ===== DEALS PAGE: Deal Cards ===== */
+.deal-card {
+  animation: fadeInUp 0.35s ease-out both;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.deal-card:nth-child(1) { animation-delay: 0.02s; }
+.deal-card:nth-child(2) { animation-delay: 0.04s; }
+.deal-card:nth-child(3) { animation-delay: 0.06s; }
+.deal-card:nth-child(4) { animation-delay: 0.08s; }
+.deal-card:nth-child(5) { animation-delay: 0.10s; }
+.deal-card:nth-child(6) { animation-delay: 0.12s; }
+.deal-card:nth-child(n+7) { animation-delay: 0.14s; }
+.deal-card:hover {
+  border-color: rgba(52,211,153,0.3);
+  box-shadow: var(--shadow-hover), 0 0 20px rgba(52,211,153,0.06);
+  transform: translateY(-2px);
+}
+
+/* ===== MODELS PAGE: Model Cards ===== */
+.model-card {
+  animation: fadeInUp 0.4s ease-out both;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.model-card:nth-child(1) { animation-delay: 0.02s; }
+.model-card:nth-child(2) { animation-delay: 0.05s; }
+.model-card:nth-child(3) { animation-delay: 0.08s; }
+.model-card:nth-child(4) { animation-delay: 0.11s; }
+.model-card:nth-child(5) { animation-delay: 0.14s; }
+.model-card:nth-child(n+6) { animation-delay: 0.17s; }
+.model-card:hover {
+  border-color: rgba(124,92,252,0.3);
+  box-shadow: var(--shadow-hover), 0 0 24px rgba(124,92,252,0.08);
+  transform: translateY(-3px);
+}
+
+/* ===== TUTORIALS PAGE: Tutorial Cards ===== */
+.tutorial-card {
+  animation: fadeInUp 0.4s ease-out both;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.tutorial-card:nth-child(1) { animation-delay: 0.02s; }
+.tutorial-card:nth-child(2) { animation-delay: 0.05s; }
+.tutorial-card:nth-child(3) { animation-delay: 0.08s; }
+.tutorial-card:nth-child(4) { animation-delay: 0.11s; }
+.tutorial-card:nth-child(5) { animation-delay: 0.14s; }
+.tutorial-card:nth-child(n+6) { animation-delay: 0.17s; }
+.tutorial-card:hover {
+  border-color: rgba(124,92,252,0.3);
+  box-shadow: var(--shadow-hover), 0 0 24px rgba(124,92,252,0.08);
+  transform: translateY(-3px);
+}
+
+/* ===== INTERACTIVE TOOLS: Canvas & Calculator ===== */
+.tool-section {
+  animation: fadeInUp 0.5s ease-out both;
+  transition: all 0.3s;
+}
+.tool-section:hover {
+  box-shadow: var(--shadow-hover), 0 0 30px rgba(124,92,252,0.06);
+}
+
+/* Calculator result — pop in */
+.result-value {
+  animation: count-up 0.5s ease-out;
+}
+
+/* ===== CATEGORY TABS: Active Animation ===== */
+.cat-tab.active {
+  position: relative;
+}
+.cat-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 20%; right: 20%;
+  height: 2px;
+  background: var(--gradient1);
+  border-radius: 1px;
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* ===== CHINA-AI COMPARE: Scenario Cards ===== */
+.scenario-card {
+  animation: fadeInUp 0.4s ease-out both;
+  transition: all 0.3s;
+}
+.scenario-card:nth-child(1) { animation-delay: 0.05s; }
+.scenario-card:nth-child(2) { animation-delay: 0.10s; }
+.scenario-card:nth-child(3) { animation-delay: 0.15s; }
+.scenario-card:nth-child(4) { animation-delay: 0.20s; }
+.scenario-card:nth-child(n+5) { animation-delay: 0.25s; }
+.scenario-card:hover {
+  border-color: rgba(124,92,252,0.3);
+  box-shadow: var(--shadow-hover), 0 0 20px rgba(124,92,252,0.08);
+  transform: translateY(-2px);
+}
+
+/* ===== TOPIC DETAIL: Article Animation ===== */
+article section {
+  animation: fadeInUp 0.5s ease-out both;
+}
+article section:nth-child(1) { animation-delay: 0.1s; }
+article section:nth-child(2) { animation-delay: 0.2s; }
+article section:nth-child(3) { animation-delay: 0.3s; }
+article section:nth-child(4) { animation-delay: 0.4s; }
+article section:nth-child(5) { animation-delay: 0.5s; }
+
+article h2 {
+  position: relative;
+  padding-left: 16px;
+}
+article h2::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 4px; bottom: 4px;
+  width: 3px;
+  background: var(--gradient1);
+  border-radius: 2px;
+}
+
+/* ===== DETAIL PAGE: Sidebar Sticky ===== */
+.detail-sidebar {
+  animation: fadeIn 0.8s ease-out;
+}
+
+/* ===== DETAIL PAGE: Pros/Cons items ===== */
+.pros-cons li {
+  animation: slide-in-left 0.3s ease-out both;
+}
+.pros-cons li:nth-child(1) { animation-delay: 0.05s; }
+.pros-cons li:nth-child(2) { animation-delay: 0.10s; }
+.pros-cons li:nth-child(3) { animation-delay: 0.15s; }
+.pros-cons li:nth-child(4) { animation-delay: 0.20s; }
+.pros-cons li:nth-child(n+5) { animation-delay: 0.25s; }
+
+/* ===== GLOBAL: Smooth page transitions ===== */
+.page {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* ===== GLOBAL: Button press effect ===== */
+button:active {
+  transform: scale(0.97);
+  transition: transform 0.1s;
+}
+
+/* ===== GLOBAL: Link hover color transition ===== */
+a {
+  transition: color 0.2s, transform 0.2s;
+}
+
+/* ===== GLOBAL: Card press effect ===== */
+.tool-card:active, .usage-card:active, .money-card:active, .topic-card:active,
+.deal-card:active, .model-card:active, .tutorial-card:active {
+  transform: scale(0.98) !important;
+  transition: transform 0.1s;
+}
+
+/* ===== LIGHT MODE: Enhanced hover glow ===== */
+[data-theme="light"] .tool-card:hover {
+  box-shadow: 0 6px 24px rgba(0,0,0,0.06), 0 0 0 1px rgba(109,77,224,0.08);
+}
+[data-theme="light"] .deal-card:hover {
+  box-shadow: 0 6px 24px rgba(0,0,0,0.06), 0 0 0 1px rgba(16,185,129,0.08);
+}
+[data-theme="light"] .model-card:hover, [data-theme="light"] .tutorial-card:hover {
+  box-shadow: 0 6px 24px rgba(0,0,0,0.06), 0 0 0 1px rgba(109,77,224,0.08);
+}
+
+/* ===== RESPONSIVE: Disable heavy animations on mobile ===== */
+@media (max-width: 768px) {
+  .tool-grid .tool-card,
+  .usage-grid .usage-card,
+  .money-grid .money-card,
+  .deal-card,
+  .model-card,
+  .tutorial-card,
+  .scenario-card,
+  article section {
+    animation: none !important;
+  }
+  [data-theme="dark"] .page::before {
+    display: none;
+  }
+}

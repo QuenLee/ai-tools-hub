@@ -80,6 +80,7 @@ export default function TutorialsPage() {
                   borderRadius: 'var(--radius-sm)', padding: '18px 22px',
                   boxShadow: 'var(--shadow-card)', transition: 'all 0.2s',
                   cursor: 'pointer',
+          className: 'tutorial-card',
                 }}
                 onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--border2)'; e.currentTarget.style.boxShadow = 'var(--shadow-hover)'; }}
                 onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.boxShadow = 'var(--shadow-card)'; }}

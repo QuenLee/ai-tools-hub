@@ -130,7 +130,7 @@ export default async function ChinaAICompare({ params }) {
       <h2 style={{ fontSize: '1.15rem', marginBottom: 18, color: 'var(--accent3)' }}>深度分析</h2>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16, marginBottom: 40 }}>
         {contenders.map(c => (
-          <div key={c.id} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', padding: 22, boxShadow: 'var(--shadow-card)' }}>
+          <div key={c.id} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', padding: 22, boxShadow: 'var(--shadow-card)', className: 'scenario-card' }}>
             <h3 style={{ fontSize: '1rem', marginBottom: 14, display: 'flex', alignItems: 'center', gap: 8 }}>
               <Favicon domain={c.favicon} name={c.name} size={20} />
               {c.name}
