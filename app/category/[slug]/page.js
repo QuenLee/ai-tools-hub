@@ -23,8 +23,10 @@ export default async function CategoryPage({ params }) {
 
   return (
     <div className="container" style={{ padding: '40px 20px 80px' }}>
-      <div style={{ marginBottom: 16 }}>
-        <Link href="/" style={{ fontSize: '0.9rem', color: 'var(--text2)' }}>← 返回首页</Link>
+      <div className="breadcrumb">
+        <a href="/">首页</a>
+        <span>/</span>
+        {cat.icon} {cat.name}
       </div>
 
       <h1 style={{ fontSize: '2rem', marginBottom: 8 }}>{cat.icon} {cat.name}</h1>

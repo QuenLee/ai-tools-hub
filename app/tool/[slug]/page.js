@@ -25,12 +25,12 @@ export default async function ToolDetail({ params }) {
 
   return (
     <div className="container detail">
-      <div style={{ marginBottom: 16 }}>
-        <Link href="/" style={{ fontSize: '0.9rem', color: 'var(--text2)' }}>← 返回首页</Link>
-        {' / '}
-        <Link href={`/category/${tool.category}`} style={{ fontSize: '0.9rem', color: 'var(--text2)' }}>
-          {cat?.icon} {cat?.name}
-        </Link>
+      <div className="breadcrumb">
+        <a href="/">首页</a>
+        <span>/</span>
+        <a href={`/category/${tool.category}`}>{cat?.icon} {cat?.name}</a>
+        <span>/</span>
+        {tool.name}
       </div>
 
       <div className="detail-header">
