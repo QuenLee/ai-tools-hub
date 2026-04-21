@@ -11,13 +11,13 @@ export async function generateMetadata({ params }) {
   const { slug } = await params;
   const cat = categories.find(c => c.id === slug);
   return {
-    title: `${cat?.name || '分类'} - AI工具情报站`,
-    description: `${cat?.name}类AI工具评测合集`,
+    title: `${cat?.name || '分类'} - Quen's AI`,
+    description: `${cat?.name}类AI工具评测合集，深度评测帮你选对不花冤枉钱`,
   };
 }
 
 export default async function CategoryPage({ params }) {
-  const { slug } = await params;
+  const { slug, locale } = await params;
   const cat = categories.find(c => c.id === slug);
   const catTools = getToolsByCategory(slug);
   const CatIcon = categoryIcons[slug];
@@ -25,24 +25,24 @@ export default async function CategoryPage({ params }) {
   if (!cat) return <div className="empty">分类未找到</div>;
 
   return (
-    <div className="page" style={{ padding: '32px 24px 80px' }}>
+    <div className="page" style={{ padding: '32px 0 80px' }}>
       <div className="breadcrumb">
-        <a href="/">首页</a>
+        <a href={`/${locale}`}>首页</a>
+        <span>/</span>
+        <a href={`/${locale}/products`}>AI产品</a>
         <span>/</span>
         {cat.name}
       </div>
-
       <h1 style={{ fontSize: '1.6rem', fontWeight: 800, marginBottom: 6, display: 'flex', alignItems: 'center', gap: 10 }}>
         {CatIcon && <CatIcon size={24} />}
         {cat.name}
       </h1>
       <p style={{ color: 'var(--text2)', marginBottom: 28 }}>共 {catTools.length} 个工具评测</p>
-
       <div className="tool-grid">
         {catTools.map(tool => {
           const avgScore = Math.round((tool.scores.usefulness + tool.scores.value + tool.scores.ease) / 3);
           return (
-            <a key={tool.id} href={`/tool/${tool.id}`} className="tool-card">
+            <Link key={tool.id} href={`/${locale}/tool/${tool.id}`} className="tool-card">
               <div className="tool-header">
                 <Favicon domain={tool.favicon} name={tool.name} size={34} />
                 <span className="tool-name">{tool.name}</span>
@@ -61,7 +61,7 @@ export default async function CategoryPage({ params }) {
                   {avgScore}分
                 </span>
               </div>
-            </a>
+            </Link>
           );
         })}
       </div>

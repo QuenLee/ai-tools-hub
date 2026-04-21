@@ -4,7 +4,7 @@ import Favicon from '@/components/Favicon';
 import { IconFire, IconFree, IconCompare } from '@/components/icons/Icons';
 
 export const metadata = {
-  title: '横评对比 - AI工具情报站',
+  title: '横评对比 - Quen\'s AI',
   description: '同类AI工具横向对比评测，帮你选出最适合的',
 };
 
@@ -15,7 +15,9 @@ function getScoreColor(score) {
   return '#888';
 }
 
-export default function ComparePage() {
+export default async function ComparePage({ params }) {
+  const { locale } = await params;
+
   const comparisons = categories
     .filter(c => tools.filter(t => t.category === c.id).length >= 2)
     .map(cat => ({
@@ -30,20 +32,19 @@ export default function ComparePage() {
     }));
 
   return (
-    <div className="page" style={{ padding: '32px 24px 80px' }}>
+    <div className="page" style={{ padding: '32px 0 80px' }}>
       <div className="breadcrumb">
-        <a href="/">首页</a>
+        <a href={`/${locale}`}>首页</a>
         <span>/</span>
         横评对比
       </div>
-
       <h1 style={{ fontSize: '1.6rem', fontWeight: 800, marginBottom: 6, display: 'flex', alignItems: 'center', gap: 8 }}>
         <IconCompare size={24} /> 横评对比
       </h1>
       <p style={{ color: 'var(--text2)', marginBottom: 28 }}>同类工具放一起看，谁更好一目了然</p>
 
       <div className="topic-grid" style={{ marginBottom: 40 }}>
-        <Link href="/compare/china-ai" className="topic-card">
+        <Link href={`/${locale}/compare/china-ai`} className="topic-card">
           <div className="topic-badge"><IconFire size={12} /> 热门专题</div>
           <div className="topic-title">DeepSeek vs 豆包 vs Kimi — 2026国产AI助手横评</div>
           <div className="topic-desc">8大场景深度对比，看完你就知道选哪个 →</div>
@@ -71,7 +72,7 @@ export default function ComparePage() {
                 {comp.tools.map(tool => (
                   <tr key={tool.id}>
                     <td>
-                      <Link href={`/tool/${tool.id}`} style={{ fontWeight: 600, display: 'flex', alignItems: 'center', gap: 8 }}>
+                      <Link href={`/${locale}/tool/${tool.id}`} style={{ fontWeight: 600, display: 'flex', alignItems: 'center', gap: 8 }}>
                         <Favicon domain={tool.favicon} name={tool.name} size={18} />
                         {tool.name}
                       </Link>
@@ -85,7 +86,7 @@ export default function ComparePage() {
                       </span>
                     </td>
                     <td>
-                      <Link href={`/tool/${tool.id}`} style={{ fontSize: '0.82rem' }}>评测 →</Link>
+                      <Link href={`/${locale}/tool/${tool.id}`} style={{ fontSize: '0.82rem' }}>评测 →</Link>
                     </td>
                   </tr>
                 ))}

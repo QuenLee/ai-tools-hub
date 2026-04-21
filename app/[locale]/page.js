@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { tools, categories, getToolsByCategory, getScoreColor } from '@/lib/data';
 import { t } from '@/lib/i18n';
 import Favicon from '@/components/Favicon';
-import { IconStar, IconFire, IconFree, IconPaid, IconChevronRight, IconRobot, categoryIcons } from '@/components/icons/Icons';
+import { IconStar, IconFire, IconFree, IconPaid, IconChevronRight, categoryIcons } from '@/components/icons/Icons';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { t, locales } from '@/lib/i18n';
-import { IconSearch, IconFire, IconCompare, IconGift, IconMenu, IconX, IconRobot, IconWrite, IconCode, IconChat } from '@/components/icons/Icons';
+import { IconSearch, IconFire, IconCompare, IconGift, IconMenu, IconX, IconWrite, IconCode, IconChat } from '@/components/icons/Icons';
 import ThemeToggle from '@/components/ThemeToggle';
 
 const navItems = [
@@ -45,7 +45,6 @@ export default function TopNav({ locale }) {
       <nav className="topnav">
         <div className="topnav-inner">
           <Link href={`/${currentLocale}`} className="topnav-logo">
-            <IconRobot size={20} />
             Quen&apos;s AI
           </Link>
 
