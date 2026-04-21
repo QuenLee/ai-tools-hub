@@ -64,60 +64,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ==================== 变现区（最上方核心位置）==================== */}
-      <section className="section">
-        <div className="section-header">
-          <h2 className="section-title"><IconFire size={18} style={{ color: 'var(--red)' }} /> AI赚钱实战</h2>
-          <Link href={`/${locale}/tutorials`} className="section-more">更多教程 <IconChevronRight size={12} /></Link>
-        </div>
-        <div className="money-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))' }}>
-          <Link href={`/${locale}/tutorials`} className="money-card" style={{ borderLeft: '3px solid var(--pink)' }}>
-            <div className="money-badge" style={{ background: 'rgba(244,114,182,0.1)', color: 'var(--pink)' }}>内容创作</div>
-            <div className="money-title">AI二创IP变现：从流量爆款到实物变现</div>
-            <div className="money-views">12.3K 阅读 · 入门级</div>
-          </Link>
-          <Link href={`/${locale}/tutorials`} className="money-card" style={{ borderLeft: '3px solid var(--cyan)' }}>
-            <div className="money-badge" style={{ background: 'rgba(34,211,238,0.1)', color: 'var(--cyan)' }}>开发变现</div>
-            <div className="money-title">利用AI自动化搭建SaaS，实现日入$200</div>
-            <div className="money-views">49.0K 阅读 · 专业级</div>
-          </Link>
-          <Link href={`/${locale}/tutorials`} className="money-card" style={{ borderLeft: '3px solid var(--yellow)' }}>
-            <div className="money-badge" style={{ background: 'rgba(251,191,36,0.1)', color: 'var(--yellow)' }}>自媒体</div>
-            <div className="money-title">AI视频起号：零粉到万粉爆款玩法</div>
-            <div className="money-views">32.6K 阅读 · 入门级</div>
-          </Link>
-          <Link href={`/${locale}/tutorials`} className="money-card" style={{ borderLeft: '3px solid var(--accent2)' }}>
-            <div className="money-badge" style={{ background: 'rgba(124,92,252,0.1)', color: 'var(--accent2)' }}>自由职业</div>
-            <div className="money-title">用Cursor做自由职业：接单实战攻略</div>
-            <div className="money-views">22.8K 阅读 · 进阶级</div>
-          </Link>
-        </div>
-      </section>
-
-      {/* ==================== 省钱优惠（变现的另一半：少花=多赚）==================== */}
-      <section className="section">
-        <div className="section-header">
-          <h2 className="section-title"><IconGift size={18} style={{ color: 'var(--green)' }} /> 省钱优惠</h2>
-          <Link href={`/${locale}/deals`} className="section-more">全部优惠 <IconChevronRight size={12} /></Link>
-        </div>
-        <div className="deals-preview">
-          {[
-            { name: 'DeepSeek', domain: 'chat.deepseek.com', price: '完全免费', id: 'deepseek' },
-            { name: '豆包', domain: 'www.doubao.com', price: '完全免费', id: 'doubao' },
-            { name: 'TRAE', domain: 'www.trae.ai', price: '完全免费', id: null },
-            { name: 'Cursor', domain: 'cursor.com', price: '免费2000次/月', id: 'cursor' },
-            { name: '通义千问', domain: 'tongyi.aliyun.com', price: 'API送100万tokens', id: 'qwen' },
-            { name: 'Suno', domain: 'suno.com', price: '免费10首/天', id: 'suno' },
-          ].map(deal => (
-            <Link key={deal.name} href={deal.id ? `/${locale}/tool/${deal.id}` : `/${locale}/deals`} className="deal-mini">
-              <Favicon domain={deal.domain} name={deal.name} size={22} />
-              <span style={{ fontWeight: 600, fontSize: '0.88rem' }}>{deal.name}</span>
-              <span style={{ color: 'var(--green)', fontSize: '0.78rem', marginLeft: 'auto' }}>{deal.price}</span>
-            </Link>
-          ))}
-        </div>
-      </section>
-
       {/* ==================== 热门专题（SEO+引流）==================== */}
       <section className="section">
         <div className="section-header">
@@ -148,24 +94,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ==================== AI今日要闻（精简版，只显示3条）==================== */}
-      <section className="section">
-        <div className="section-header">
-          <h2 className="section-title"><IconFire size={18} style={{ color: 'var(--red)' }} /> AI今日要闻</h2>
-          <Link href={`/${locale}/news`} className="section-more">{t(locale, 'home.viewMore')} <IconChevronRight size={12} /></Link>
-        </div>
-        <div className="news-list">
-          {newsItems.slice(0, 3).map((item, i) => (
-            <div key={i} className="news-item">
-              <span className="news-dot" />
-              <span className="news-title">{item.title}</span>
-              {item.tag && <span className={`news-tag ${item.tag}`}>{item.tag === 'hot' ? '热' : '新'}</span>}
-              <span className="news-time">{item.time}</span>
-            </div>
-          ))}
-        </div>
-      </section>
-
       {/* ==================== 大家都在用（热门工具快速入口）==================== */}
       <section className="section">
         <div className="section-header">
@@ -184,7 +112,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ==================== 三列卡（开发者+免费部署+模型训练）移到这里 ==================== */}
+      {/* ==================== 三列卡（开发者+免费部署+模型训练）==================== */}
       <section className="section">
         <div className="three-col-grid">
           <div className="three-col-card">
@@ -216,6 +144,78 @@ export default function Home() {
               </a>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ==================== AI变现攻略 ==================== */}
+      <section className="section">
+        <div className="section-header">
+          <h2 className="section-title"><IconFire size={18} style={{ color: 'var(--red)' }} /> AI变现攻略</h2>
+          <Link href={`/${locale}/tutorials`} className="section-more">更多教程 <IconChevronRight size={12} /></Link>
+        </div>
+        <div className="money-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))' }}>
+          <Link href={`/${locale}/tutorials`} className="money-card" style={{ borderLeft: '3px solid var(--pink)' }}>
+            <div className="money-badge" style={{ background: 'rgba(244,114,182,0.1)', color: 'var(--pink)' }}>内容创作</div>
+            <div className="money-title">AI二创IP变现：从流量爆款到实物变现</div>
+            <div className="money-views">12.3K 阅读 · 入门级</div>
+          </Link>
+          <Link href={`/${locale}/tutorials`} className="money-card" style={{ borderLeft: '3px solid var(--cyan)' }}>
+            <div className="money-badge" style={{ background: 'rgba(34,211,238,0.1)', color: 'var(--cyan)' }}>开发变现</div>
+            <div className="money-title">利用AI自动化搭建SaaS，实现日入$200</div>
+            <div className="money-views">49.0K 阅读 · 专业级</div>
+          </Link>
+          <Link href={`/${locale}/tutorials`} className="money-card" style={{ borderLeft: '3px solid var(--yellow)' }}>
+            <div className="money-badge" style={{ background: 'rgba(251,191,36,0.1)', color: 'var(--yellow)' }}>自媒体</div>
+            <div className="money-title">AI视频起号：零粉到万粉爆款玩法</div>
+            <div className="money-views">32.6K 阅读 · 入门级</div>
+          </Link>
+          <Link href={`/${locale}/tutorials`} className="money-card" style={{ borderLeft: '3px solid var(--accent2)' }}>
+            <div className="money-badge" style={{ background: 'rgba(124,92,252,0.1)', color: 'var(--accent2)' }}>自由职业</div>
+            <div className="money-title">用Cursor做自由职业：接单实战攻略</div>
+            <div className="money-views">22.8K 阅读 · 进阶级</div>
+          </Link>
+        </div>
+      </section>
+
+      {/* ==================== 免费白嫖指南 ==================== */}
+      <section className="section">
+        <div className="section-header">
+          <h2 className="section-title"><IconGift size={18} style={{ color: 'var(--green)' }} /> 免费白嫖指南</h2>
+          <Link href={`/${locale}/deals`} className="section-more">全部优惠 <IconChevronRight size={12} /></Link>
+        </div>
+        <div className="deals-preview">
+          {[
+            { name: 'DeepSeek', domain: 'chat.deepseek.com', price: '完全免费', id: 'deepseek' },
+            { name: '豆包', domain: 'www.doubao.com', price: '完全免费', id: 'doubao' },
+            { name: 'TRAE', domain: 'www.trae.ai', price: '完全免费', id: null },
+            { name: 'Cursor', domain: 'cursor.com', price: '免费2000次/月', id: 'cursor' },
+            { name: '通义千问', domain: 'tongyi.aliyun.com', price: 'API送100万tokens', id: 'qwen' },
+            { name: 'Suno', domain: 'suno.com', price: '免费10首/天', id: 'suno' },
+          ].map(deal => (
+            <Link key={deal.name} href={deal.id ? `/${locale}/tool/${deal.id}` : `/${locale}/deals`} className="deal-mini">
+              <Favicon domain={deal.domain} name={deal.name} size={22} />
+              <span style={{ fontWeight: 600, fontSize: '0.88rem' }}>{deal.name}</span>
+              <span style={{ color: 'var(--green)', fontSize: '0.78rem', marginLeft: 'auto' }}>{deal.price}</span>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* ==================== AI今日要闻（精简3条）==================== */}
+      <section className="section">
+        <div className="section-header">
+          <h2 className="section-title"><IconFire size={18} style={{ color: 'var(--red)' }} /> AI今日要闻</h2>
+          <Link href={`/${locale}/news`} className="section-more">{t(locale, 'home.viewMore')} <IconChevronRight size={12} /></Link>
+        </div>
+        <div className="news-list">
+          {newsItems.slice(0, 3).map((item, i) => (
+            <div key={i} className="news-item">
+              <span className="news-dot" />
+              <span className="news-title">{item.title}</span>
+              {item.tag && <span className={`news-tag ${item.tag}`}>{item.tag === 'hot' ? '热' : '新'}</span>}
+              <span className="news-time">{item.time}</span>
+            </div>
+          ))}
         </div>
       </section>
 
