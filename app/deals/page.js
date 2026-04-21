@@ -1,5 +1,3 @@
-import { tools } from '@/lib/data';
-
 export const metadata = {
   title: 'AI工具优惠 - AI工具情报站',
   description: '收集各AI工具的最新优惠、促销和终身deal',
@@ -7,36 +5,44 @@ export const metadata = {
 
 const deals = [
   {
-    name: 'Notion AI',
-    desc: '笔记+AI写作，最佳办公写作组合',
-    original: '$20/月',
-    current: '免费体验',
-    url: 'https://ntn.so/aitools',
-    tag: '🔥 推荐',
-  },
-  {
-    name: 'Cursor Pro',
-    desc: 'AI编程IDE，Vibe Coding首选',
-    original: '$20/月',
-    current: '免费2000次/月',
-    url: 'https://cursor.com',
-    tag: '🆓 免费版',
-  },
-  {
     name: 'TRAE',
-    desc: '字节跳动AI编程IDE，完全免费',
+    desc: '字节跳动AI编程IDE，完全免费无限制',
     original: '—',
     current: '完全免费',
     url: 'https://www.trae.ai',
     tag: '🆓 永久免费',
   },
   {
-    name: 'Kimi',
-    desc: '200万字超长上下文AI助手',
+    name: 'DeepSeek',
+    desc: '推理能力最强，完全免费，API超低价',
     original: '—',
     current: '完全免费',
-    url: 'https://kimi.moonshot.cn',
+    url: 'https://chat.deepseek.com',
     tag: '🆓 永久免费',
+  },
+  {
+    name: '豆包',
+    desc: '字节出品AI助手，免费无限对话',
+    original: '—',
+    current: '完全免费',
+    url: 'https://www.doubao.com',
+    tag: '🆓 永久免费',
+  },
+  {
+    name: 'Kimi',
+    desc: '200万字超长上下文，免费版够日常用',
+    original: '—',
+    current: '免费可用',
+    url: 'https://kimi.moonshot.cn',
+    tag: '🆓 免费版',
+  },
+  {
+    name: 'Cursor',
+    desc: 'AI编程IDE，Vibe Coding首选',
+    original: '$20/月',
+    current: '免费2000次/月',
+    url: 'https://cursor.com',
+    tag: '🆓 免费版',
   },
   {
     name: '通义千问',
@@ -45,6 +51,14 @@ const deals = [
     current: 'API免费100万tokens',
     url: 'https://tongyi.aliyun.com',
     tag: '🆓 开发者福利',
+  },
+  {
+    name: 'Suno',
+    desc: 'AI音乐生成，输入描述即可创作歌曲',
+    original: '$10/月',
+    current: '免费10首/天',
+    url: 'https://suno.com',
+    tag: '🆓 免费版',
   },
   {
     name: '秘塔AI搜索',
@@ -58,12 +72,18 @@ const deals = [
 
 export default function DealsPage() {
   return (
-    <div className="container" style={{ padding: '40px 20px 80px' }}>
-      <h1 style={{ fontSize: '2rem', marginBottom: 8 }}>🎁 AI工具优惠</h1>
-      <p style={{ color: 'var(--text2)', marginBottom: 30 }}>最新优惠、免费额度和限时deal</p>
+    <div className="page" style={{ padding: '32px 24px 80px' }}>
+      <div className="breadcrumb">
+        <a href="/">首页</a>
+        <span>/</span>
+        优惠专区
+      </div>
+
+      <h1 style={{ fontSize: '1.6rem', fontWeight: 800, marginBottom: 6 }}>🎁 优惠专区</h1>
+      <p style={{ color: 'var(--text2)', marginBottom: 28 }}>最新免费额度、优惠和限时deal</p>
 
       {deals.map(deal => (
-        <a key={deal.name} href={deal.url} target="_blank" rel="noopener noreferrer" className="deal-card" style={{ textDecoration: 'none', color: 'var(--text)', display: 'flex' }}>
+        <a key={deal.name} href={deal.url} target="_blank" rel="noopener noreferrer" className="deal-card">
           <div className="deal-info">
             <h3>{deal.tag} {deal.name}</h3>
             <p>{deal.desc}</p>
@@ -75,12 +95,16 @@ export default function DealsPage() {
         </a>
       ))}
 
-      <div style={{ marginTop: 40, padding: 24, background: 'var(--surface)', borderRadius: 14, border: '1px solid var(--border)' }}>
-        <h3 style={{ marginBottom: 12 }}>💡 优惠说明</h3>
-        <ul style={{ color: 'var(--text2)', fontSize: '0.9rem', paddingLeft: 20 }}>
-          <li style={{ marginBottom: 8 }}>带 🔥 标记的是我们推荐的优惠，通过链接注册我们可能获得少量佣金（不影响您的价格）</li>
-          <li style={{ marginBottom: 8 }}>免费额度信息基于官方公开信息，实际可能有变动</li>
-          <li style={{ marginBottom: 8 }}>如果您发现优惠已过期，欢迎告知我们更新</li>
+      <div style={{ 
+        marginTop: 32, padding: 20, 
+        background: 'var(--surface)', 
+        borderRadius: 'var(--radius-sm)', 
+        border: '1px solid var(--border)' 
+      }}>
+        <h3 style={{ marginBottom: 10, fontSize: '0.95rem' }}>💡 说明</h3>
+        <ul style={{ color: 'var(--text2)', fontSize: '0.85rem', paddingLeft: 20 }}>
+          <li style={{ marginBottom: 6 }}>免费额度基于官方公开信息，实际可能有变动</li>
+          <li style={{ marginBottom: 6 }}>如果发现优惠已过期，欢迎告知我们更新</li>
         </ul>
       </div>
     </div>

@@ -24,7 +24,7 @@ export default async function ToolDetail({ params }) {
   const avgScore = Math.round((tool.scores.usefulness + tool.scores.value + tool.scores.ease) / 3);
 
   return (
-    <div className="container detail">
+    <div className="detail-page">
       <div className="breadcrumb">
         <a href="/">首页</a>
         <span>/</span>
@@ -33,7 +33,7 @@ export default async function ToolDetail({ params }) {
         {tool.name}
       </div>
 
-      <div className="detail-header">
+      <div className="detail-hero">
         <span className="detail-icon">{tool.icon}</span>
         <div>
           <h1 className="detail-title">{tool.name}</h1>
@@ -41,13 +41,13 @@ export default async function ToolDetail({ params }) {
         </div>
       </div>
 
-      <div className="detail-grid">
+      <div className="detail-body">
         <div className="detail-main">
           <h2>📝 详细评测</h2>
           <p>{tool.description}</p>
 
           <h2>🔧 核心功能</h2>
-          <div className="feature-tags">
+          <div className="feature-tags" style={{ marginBottom: 16 }}>
             {tool.features.map(f => (
               <span key={f} className="feature-tag">{f}</span>
             ))}
@@ -56,39 +56,23 @@ export default async function ToolDetail({ params }) {
           <div className="pros-cons">
             <div>
               <h3 style={{ color: 'var(--green)' }}>✅ 优点</h3>
-              <ul>
-                {tool.pros.map((p, i) => (
-                  <li key={i} className="pro-item">{p}</li>
-                ))}
-              </ul>
+              <ul>{tool.pros.map((p, i) => <li key={i} className="pro-item">{p}</li>)}</ul>
             </div>
             <div>
               <h3 style={{ color: 'var(--yellow)' }}>⚠️ 不足</h3>
-              <ul>
-                {tool.cons.map((c, i) => (
-                  <li key={i} className="con-item">{c}</li>
-                ))}
-              </ul>
+              <ul>{tool.cons.map((c, i) => <li key={i} className="con-item">{c}</li>)}</ul>
             </div>
           </div>
 
           <h2>💰 价格方案</h2>
-          <p>
-            <strong>免费版：</strong>{tool.pricing.free ? `✅ ${tool.pricing.price}` : '❌ 无免费版'}
-          </p>
-          {tool.pricing.paid && (
-            <p><strong>付费版：</strong>{tool.pricing.paid}</p>
-          )}
+          <p><strong>免费版：</strong>{tool.pricing.free ? `✅ ${tool.pricing.price}` : '❌ 无免费版'}</p>
+          {tool.pricing.paid && <p><strong>付费版：</strong>{tool.pricing.paid}</p>}
         </div>
 
         <div className="detail-sidebar">
           <div style={{ textAlign: 'center', marginBottom: 20 }}>
-            <div style={{ fontSize: '2.5rem', fontWeight: 700, color: getScoreColor(avgScore) }}>
-              {avgScore}
-            </div>
-            <div style={{ color: 'var(--text2)', fontSize: '0.9rem' }}>
-              综合评分 · {getScoreLabel(avgScore)}
-            </div>
+            <div style={{ fontSize: '2.5rem', fontWeight: 800, color: getScoreColor(avgScore) }}>{avgScore}</div>
+            <div style={{ color: 'var(--text2)', fontSize: '0.88rem' }}>综合评分 · {getScoreLabel(avgScore)}</div>
           </div>
 
           <ScoreBar label="实用性" score={tool.scores.usefulness} />
@@ -104,7 +88,7 @@ export default async function ToolDetail({ params }) {
             {tool.affiliate ? '🎉 通过评测链接访问' : '🔗 访问官网'}
           </a>
 
-          <div style={{ marginTop: 16, fontSize: '0.8rem', color: 'var(--text2)', textAlign: 'center' }}>
+          <div style={{ marginTop: 14, fontSize: '0.75rem', color: 'var(--text3)', textAlign: 'center' }}>
             评测更新于 {tool.updatedAt}
           </div>
         </div>
@@ -118,13 +102,10 @@ function ScoreBar({ label, score }) {
     <div className="score-bar">
       <div className="score-label">
         <span>{label}</span>
-        <span style={{ color: getScoreColor(score), fontWeight: 600 }}>{score}</span>
+        <span style={{ color: getScoreColor(score), fontWeight: 700 }}>{score}</span>
       </div>
       <div className="score-track">
-        <div 
-          className="score-fill" 
-          style={{ width: `${score}%`, background: getScoreColor(score) }}
-        />
+        <div className="score-fill" style={{ width: `${score}%`, background: getScoreColor(score) }} />
       </div>
     </div>
   );

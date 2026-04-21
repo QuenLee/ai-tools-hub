@@ -22,15 +22,17 @@ export default async function CategoryPage({ params }) {
   if (!cat) return <div className="empty">分类未找到</div>;
 
   return (
-    <div className="container" style={{ padding: '40px 20px 80px' }}>
+    <div className="page" style={{ padding: '32px 24px 80px' }}>
       <div className="breadcrumb">
         <a href="/">首页</a>
         <span>/</span>
         {cat.icon} {cat.name}
       </div>
 
-      <h1 style={{ fontSize: '2rem', marginBottom: 8 }}>{cat.icon} {cat.name}</h1>
-      <p style={{ color: 'var(--text2)', marginBottom: 30 }}>共 {catTools.length} 个工具</p>
+      <h1 style={{ fontSize: '1.6rem', fontWeight: 800, marginBottom: 6 }}>
+        {cat.icon} {cat.name}
+      </h1>
+      <p style={{ color: 'var(--text2)', marginBottom: 28 }}>共 {catTools.length} 个工具评测</p>
 
       <div className="tool-grid">
         {catTools.map(tool => {

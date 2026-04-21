@@ -51,11 +51,13 @@ const scenarios = [
 
 export default function ChinaAICompare() {
   return (
-    <div style={{ padding: '40px 32px 80px' }}>
+    <div className="page" style={{ padding: '32px 24px 80px' }}>
       <div className="breadcrumb">
         <a href="/">首页</a>
         <span>/</span>
-        横评专题
+        <a href="/compare">横评</a>
+        <span>/</span>
+        国产AI横评
       </div>
 
       <h1 style={{ fontSize: '1.8rem', fontWeight: 800, marginBottom: 8 }}>

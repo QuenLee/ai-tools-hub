@@ -1,6 +1,5 @@
 import './globals.css';
-import Sidebar from './components/Sidebar';
-import Header from './components/Header';
+import TopNav from './components/TopNav';
 
 export const metadata = {
   title: 'AI工具情报站 - 深度评测，发现好用的AI工具',
@@ -11,15 +10,14 @@ export default function RootLayout({ children }) {
   return (
     <html lang="zh-CN">
       <body>
-        <div className="app-layout">
-          <Sidebar />
-          <div className="main-content">
-            <Header />
-            {children}
-          </div>
-        </div>
+        <TopNav />
+        {children}
         <footer className="footer">
-          🤖 AI工具情报站 — 深度评测，发现好用的AI工具 · © 2026
+          <a href="/">首页</a>
+          <a href="/compare">横评</a>
+          <a href="/deals">优惠</a>
+          <br style={{ margin: 10 }} />
+          🤖 AI工具情报站 · 深度评测，发现好用的AI工具 · © 2026
         </footer>
       </body>
     </html>
