@@ -3,12 +3,13 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { IconSearch, IconFire, IconCompare, IconGift, IconMenu, IconX, IconRobot } from './icons/Icons';
 
 const navLinks = [
   { href: '/', label: '首页' },
-  { href: '/compare/china-ai', label: '🔥 国产AI横评' },
-  { href: '/compare', label: '横评对比' },
-  { href: '/deals', label: '优惠专区' },
+  { href: '/compare/china-ai', label: '国产AI横评', icon: <IconFire size={14} /> },
+  { href: '/compare', label: '横评对比', icon: <IconCompare size={14} /> },
+  { href: '/deals', label: '优惠专区', icon: <IconGift size={14} /> },
 ];
 
 export default function TopNav() {
@@ -25,7 +26,7 @@ export default function TopNav() {
       <nav className="topnav">
         <div className="topnav-inner">
           <Link href="/" className="topnav-logo">
-            <span className="emoji">🤖</span>
+            <IconRobot size={22} />
             AI情报站
           </Link>
 
@@ -36,32 +37,33 @@ export default function TopNav() {
                 href={link.href}
                 className={`topnav-link ${isActive(link.href) ? 'active' : ''}`}
               >
-                {link.label}
+                {link.icon}{link.label}
               </Link>
             ))}
           </div>
 
           <div className="topnav-search">
-            <span className="search-icon">🔍</span>
+            <span className="search-icon"><IconSearch size={15} /></span>
             <input placeholder="搜索工具..." />
           </div>
 
           <button className="mobile-menu-btn" onClick={() => setMobileOpen(true)}>
-            ☰
+            <IconMenu />
           </button>
         </div>
       </nav>
 
-      {/* Mobile drawer */}
       <div className={`mobile-nav ${mobileOpen ? 'open' : ''}`}>
-        <button className="mobile-nav-close" onClick={() => setMobileOpen(false)}>✕</button>
+        <button className="mobile-nav-close" onClick={() => setMobileOpen(false)}>
+          <IconX />
+        </button>
         {navLinks.map(link => (
           <Link 
             key={link.href}
             href={link.href}
             onClick={() => setMobileOpen(false)}
           >
-            {link.label}
+            {link.icon} {link.label}
           </Link>
         ))}
       </div>

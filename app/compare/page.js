@@ -1,5 +1,7 @@
 import { tools, categories } from '@/lib/data';
 import Link from 'next/link';
+import Favicon from '@/app/components/Favicon';
+import { IconFire, IconFree, IconCompare } from '@/app/components/icons/Icons';
 
 export const metadata = {
   title: '横评对比 - AI工具情报站',
@@ -35,13 +37,14 @@ export default function ComparePage() {
         横评对比
       </div>
 
-      <h1 style={{ fontSize: '1.6rem', fontWeight: 800, marginBottom: 6 }}>⚔️ 横评对比</h1>
+      <h1 style={{ fontSize: '1.6rem', fontWeight: 800, marginBottom: 6, display: 'flex', alignItems: 'center', gap: 8 }}>
+        <IconCompare size={24} /> 横评对比
+      </h1>
       <p style={{ color: 'var(--text2)', marginBottom: 28 }}>同类工具放一起看，谁更好一目了然</p>
 
-      {/* Featured Topic */}
       <div className="topic-grid" style={{ marginBottom: 40 }}>
         <Link href="/compare/china-ai" className="topic-card">
-          <div className="topic-badge">🔥 热门专题</div>
+          <div className="topic-badge"><IconFire size={12} /> 热门专题</div>
           <div className="topic-title">DeepSeek vs 豆包 vs Kimi — 2026国产AI助手横评</div>
           <div className="topic-desc">8大场景深度对比，看完你就知道选哪个 →</div>
         </Link>
@@ -50,7 +53,7 @@ export default function ComparePage() {
       {comparisons.map(comp => (
         <div key={comp.id} style={{ marginBottom: 36 }}>
           <h2 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: 16 }}>
-            {comp.icon} {comp.name}工具横评
+            {comp.name}工具横评
           </h2>
           <div style={{ overflowX: 'auto' }}>
             <table className="compare-table">
@@ -68,8 +71,9 @@ export default function ComparePage() {
                 {comp.tools.map(tool => (
                   <tr key={tool.id}>
                     <td>
-                      <Link href={`/tool/${tool.id}`} style={{ fontWeight: 600 }}>
-                        {tool.icon} {tool.name}
+                      <Link href={`/tool/${tool.id}`} style={{ fontWeight: 600, display: 'flex', alignItems: 'center', gap: 8 }}>
+                        <Favicon domain={tool.favicon} name={tool.name} size={18} />
+                        {tool.name}
                       </Link>
                     </td>
                     <td style={{ color: getScoreColor(tool.scores.usefulness) }}>{tool.scores.usefulness}</td>

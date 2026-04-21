@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import { tools, categories, getToolsByCategory, getScoreColor } from '@/lib/data';
+import Favicon from './components/Favicon';
+import { IconStar, IconFire, IconFree, IconPaid, IconRobot, categoryIcons } from './components/icons/Icons';
 
 export default function Home() {
   const [activeCat, setActiveCat] = useState('all');
@@ -10,12 +12,10 @@ export default function Home() {
     ? tools 
     : getToolsByCategory(activeCat);
 
-  // Featured picks (top scored)
   const featured = tools
     .filter(t => t.scores.usefulness >= 90)
     .slice(0, 4);
 
-  // Hot tools
   const hotIds = ['deepseek', 'doubao', 'chatgpt', 'kimi', 'cursor', 'suno'];
   const hotTools = hotIds.map(id => tools.find(t => t.id === id)).filter(Boolean);
 
@@ -24,7 +24,6 @@ export default function Home() {
 
   return (
     <div className="page">
-      {/* Hero */}
       <section className="hero">
         <h1>发现最好的AI工具</h1>
         <p>深度评测 · 真实体验 · 帮你选对不花冤枉钱</p>
@@ -40,10 +39,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Featured Picks */}
+      {/* Featured */}
       <section className="section">
         <div className="section-header">
-          <h2 className="section-title">⭐ 编辑精选</h2>
+          <h2 className="section-title"><IconStar size={20} style={{ color: '#fbbf24' }} /> 编辑精选</h2>
           <span className="section-badge">值得装</span>
         </div>
         <div className="featured-grid">
@@ -53,53 +52,49 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Editorial / Topics */}
+      {/* Topics */}
       <section className="section">
         <div className="section-header">
-          <h2 className="section-title">📝 深度专题</h2>
+          <h2 className="section-title"><IconFire size={20} style={{ color: '#fc5c7d' }} /> 深度专题</h2>
         </div>
         <div className="topic-grid">
           <a href="/compare/china-ai" className="topic-card">
-            <div className="topic-badge">🔥 热门</div>
+            <div className="topic-badge"><IconFire size={12} /> 热门</div>
             <div className="topic-title">DeepSeek vs 豆包 vs Kimi — 2026国产AI助手横评</div>
             <div className="topic-desc">8大场景深度对比，看完你就知道选哪个</div>
           </a>
           <a href="/deals" className="topic-card">
-            <div className="topic-badge">🎁 省钱</div>
+            <div className="topic-badge"><IconFree size={12} /> 省钱</div>
             <div className="topic-title">2026最值得白嫖的AI工具免费额度</div>
             <div className="topic-desc">免费版就能干大事，这些AI工具不用花一分钱</div>
           </a>
         </div>
       </section>
 
-      {/* Hot Tools Row */}
+      {/* Hot Tools */}
       <section className="section">
         <div className="section-header">
-          <h2 className="section-title">🔥 热门工具</h2>
+          <h2 className="section-title"><IconFire size={20} style={{ color: '#fc5c7d' }} /> 热门工具</h2>
         </div>
         <div style={{ display: 'flex', gap: 10, overflowX: 'auto', paddingBottom: 4, scrollbarWidth: 'none' }}>
           {hotTools.map(tool => {
             const avg = Math.round((tool.scores.usefulness + tool.scores.value + tool.scores.ease) / 3);
             return (
               <a 
-                key={tool.id} 
-                href={`/tool/${tool.id}`}
+                key={tool.id} href={`/tool/${tool.id}`}
                 style={{
                   display: 'flex', alignItems: 'center', gap: 10,
-                  padding: '12px 18px',
+                  padding: '10px 16px',
                   background: 'var(--surface)',
                   border: '1px solid var(--border)',
                   borderRadius: 'var(--radius-sm)',
                   whiteSpace: 'nowrap',
-                  fontSize: '0.9rem',
-                  fontWeight: 600,
-                  color: 'var(--text)',
-                  textDecoration: 'none',
-                  flexShrink: 0,
-                  transition: 'all 0.2s',
+                  fontSize: '0.88rem', fontWeight: 600,
+                  color: 'var(--text)', textDecoration: 'none',
+                  flexShrink: 0, transition: 'all 0.2s',
                 }}
               >
-                <span style={{ fontSize: '1.3rem' }}>{tool.icon}</span>
+                <Favicon domain={tool.favicon} name={tool.name} size={20} />
                 {tool.name}
                 <span style={{ fontSize: '0.78rem', color: getScoreColor(avg), fontWeight: 700 }}>{avg}分</span>
               </a>
@@ -108,33 +103,33 @@ export default function Home() {
         </div>
       </section>
 
-      {/* All Tools with category tabs */}
+      {/* All Tools */}
       <section className="section">
         <div className="section-header">
           <h2 className="section-title">
-            {activeCat === 'all' ? '📋 全部评测' : categories.find(c => c.id === activeCat)?.icon + ' ' + categories.find(c => c.id === activeCat)?.name}
-            <span style={{ fontSize: '0.82rem', color: 'var(--text3)', fontWeight: 400 }}>
+            {activeCat === 'all' ? '全部评测' : categories.find(c => c.id === activeCat)?.name}
+            <span style={{ fontSize: '0.82rem', color: 'var(--text3)', fontWeight: 400, marginLeft: 8 }}>
               {filteredTools.length}个
             </span>
           </h2>
         </div>
 
         <div className="cat-tabs">
-          <button 
-            className={`cat-tab ${activeCat === 'all' ? 'active' : ''}`}
-            onClick={() => setActiveCat('all')}
-          >
+          <button className={`cat-tab ${activeCat === 'all' ? 'active' : ''}`} onClick={() => setActiveCat('all')}>
             全部
           </button>
-          {categories.map(cat => (
-            <button
-              key={cat.id}
-              className={`cat-tab ${activeCat === cat.id ? 'active' : ''}`}
-              onClick={() => setActiveCat(cat.id)}
-            >
-              {cat.icon} {cat.name}
-            </button>
-          ))}
+          {categories.map(cat => {
+            const CatIcon = categoryIcons[cat.id];
+            return (
+              <button
+                key={cat.id}
+                className={`cat-tab ${activeCat === cat.id ? 'active' : ''}`}
+                onClick={() => setActiveCat(cat.id)}
+              >
+                {CatIcon && <CatIcon size={14} />} {cat.name}
+              </button>
+            );
+          })}
         </div>
 
         <div className="tool-grid">
@@ -151,18 +146,18 @@ function FeaturedCard({ tool }) {
   const avg = Math.round((tool.scores.usefulness + tool.scores.value + tool.scores.ease) / 3);
   return (
     <a href={`/tool/${tool.id}`} className="featured-card">
-      <div className="featured-icon">{tool.icon}</div>
+      <Favicon domain={tool.favicon} name={tool.name} size={56} />
       <div className="featured-body">
         <div className="featured-name">
           {tool.name}
           {['deepseek', 'doubao', 'chatgpt', 'kimi'].includes(tool.id) && (
-            <span className="hot-tag">🔥 HOT</span>
+            <span className="hot-tag"><IconFire size={10} /> HOT</span>
           )}
         </div>
         <div className="featured-tagline">{tool.tagline}</div>
         <div className="featured-meta">
           <span className={`featured-price-tag ${tool.pricing.free ? 'free' : 'paid'}`}>
-            {tool.pricing.free ? '🆓 ' : '💰 '}{tool.pricing.price}
+            {tool.pricing.free ? <><IconFree /> {tool.pricing.price}</> : <><IconPaid /> {tool.pricing.price}</>}
           </span>
           <span className="featured-score" style={{ color: getScoreColor(avg) }}>{avg}分</span>
         </div>
@@ -176,11 +171,11 @@ function ToolCard({ tool }) {
   return (
     <a href={`/tool/${tool.id}`} className="tool-card">
       <div className="tool-header">
-        <span className="tool-icon">{tool.icon}</span>
+        <Favicon domain={tool.favicon} name={tool.name} size={34} />
         <span className="tool-name">
           {tool.name}
           {['deepseek', 'doubao', 'cursor', 'chatgpt', 'kimi'].includes(tool.id) && (
-            <span className="hot-tag">🔥</span>
+            <span className="hot-tag"><IconFire size={9} /></span>
           )}
         </span>
       </div>
@@ -192,7 +187,7 @@ function ToolCard({ tool }) {
       </div>
       <div className="tool-meta">
         <span className={`tool-price ${tool.pricing.free ? 'free' : 'paid'}`}>
-          {tool.pricing.free ? '🆓 ' : '💰 '}{tool.pricing.price}
+          {tool.pricing.free ? <><IconFree /> {tool.pricing.price}</> : <><IconPaid /> {tool.pricing.price}</>}
         </span>
         <span className="tool-score" style={{ color: getScoreColor(avg) }}>{avg}分</span>
       </div>

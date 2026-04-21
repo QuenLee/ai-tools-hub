@@ -1,15 +1,17 @@
 import Link from 'next/link';
+import Favicon from '@/app/components/Favicon';
+import { IconFire, IconFree, IconCompare } from '@/app/components/icons/Icons';
 
 export const metadata = {
   title: 'DeepSeek vs 豆包 vs Kimi — 2026国产AI助手横评 | AI工具情报站',
-  description: '三款最火的国产AI助手深度对比：DeepSeek推理最强，豆包生态最全，Kimi长文最强。看完这篇你就知道选哪个。',
+  description: '三款最火的国产AI助手深度对比：DeepSeek推理最强，豆包生态最全，Kimi长文最强。',
 };
 
 const contenders = [
   {
     id: 'deepseek',
     name: 'DeepSeek',
-    icon: '🔮',
+    favicon: 'chat.deepseek.com',
     tagline: '推理之王 · 完全免费',
     scores: { usefulness: 92, value: 100, ease: 88 },
     best: ['推理/数学/逻辑', '性价比（完全免费）', 'API价格业界最低', '开源生态'],
@@ -19,7 +21,7 @@ const contenders = [
   {
     id: 'doubao',
     name: '豆包',
-    icon: '🟣',
+    favicon: 'www.doubao.com',
     tagline: '字节出品 · 全能免费',
     scores: { usefulness: 86, value: 95, ease: 92 },
     best: ['完全免费无限用', '字节生态整合（抖音/飞书）', '语音对话体验好', '多模态能力'],
@@ -29,7 +31,7 @@ const contenders = [
   {
     id: 'kimi',
     name: 'Kimi',
-    icon: '🌙',
+    favicon: 'kimi.moonshot.cn',
     tagline: '长文之王 · 免费够用',
     scores: { usefulness: 87, value: 92, ease: 90 },
     best: ['200万字超长上下文', '网页/PDF深度阅读', '联网搜索能力强', '免费版够日常用'],
@@ -39,14 +41,14 @@ const contenders = [
 ];
 
 const scenarios = [
-  { name: '📝 写文章/文案', winner: 'doubao', reason: '豆包中文表达流畅，创意辅助好，免费无限用' },
-  { name: '🧮 数学/推理/逻辑', winner: 'deepseek', reason: 'DeepSeek R1推理模型碾压级优势，数学竞赛级水平' },
-  { name: '💻 写代码', winner: 'deepseek', reason: 'DeepSeek代码能力接近GPT-4，免费无限用' },
-  { name: '📚 读长文档/论文', winner: 'kimi', reason: '200万字上下文，扔一本PDF进去直接问' },
-  { name: '🎤 语音对话', winner: 'doubao', reason: '豆包语音体验最自然，实时对话延迟低' },
-  { name: '🔍 联网搜索', winner: 'kimi', reason: 'Kimi搜索整合做得最好，引用来源清晰' },
-  { name: '💼 办公/飞书', winner: 'doubao', reason: '字节生态直连飞书，办公场景无缝' },
-  { name: '🔧 API开发', winner: 'deepseek', reason: 'API价格最低（1元=100万tokens），性价比碾压' },
+  { name: '写文章/文案', winner: 'doubao', reason: '豆包中文表达流畅，创意辅助好，免费无限用' },
+  { name: '数学/推理/逻辑', winner: 'deepseek', reason: 'DeepSeek R1推理模型碾压级优势，数学竞赛级水平' },
+  { name: '写代码', winner: 'deepseek', reason: 'DeepSeek代码能力接近GPT-4，免费无限用' },
+  { name: '读长文档/论文', winner: 'kimi', reason: '200万字上下文，扔一本PDF进去直接问' },
+  { name: '语音对话', winner: 'doubao', reason: '豆包语音体验最自然，实时对话延迟低' },
+  { name: '联网搜索', winner: 'kimi', reason: 'Kimi搜索整合做得最好，引用来源清晰' },
+  { name: '办公/飞书', winner: 'doubao', reason: '字节生态直连飞书，办公场景无缝' },
+  { name: 'API开发', winner: 'deepseek', reason: 'API价格最低（1元=100万tokens），性价比碾压' },
 ];
 
 export default function ChinaAICompare() {
@@ -60,38 +62,38 @@ export default function ChinaAICompare() {
         国产AI横评
       </div>
 
-      <h1 style={{ fontSize: '1.8rem', fontWeight: 800, marginBottom: 8 }}>
-        🔥 DeepSeek vs 豆包 vs Kimi
+      <h1 style={{ fontSize: '1.6rem', fontWeight: 800, marginBottom: 6, display: 'flex', alignItems: 'center', gap: 8 }}>
+        <IconFire size={24} style={{ color: '#fc5c7d' }} /> DeepSeek vs 豆包 vs Kimi
       </h1>
-      <p style={{ color: 'var(--text2)', fontSize: '1rem', marginBottom: 32, maxWidth: 600 }}>
+      <p style={{ color: 'var(--text2)', fontSize: '0.95rem', marginBottom: 32, maxWidth: 600 }}>
         2026年三款最火国产AI助手深度横评，看完你就知道选哪个
       </p>
 
       {/* Contenders */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16, marginBottom: 40 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 16, marginBottom: 40 }}>
         {contenders.map(c => {
           const avg = Math.round((c.scores.usefulness + c.scores.value + c.scores.ease) / 3);
           return (
-            <Link href={`/tool/${c.id}`} style={{ textDecoration: 'none', color: 'var(--text)' }}>
+            <Link key={c.id} href={`/tool/${c.id}`} style={{ textDecoration: 'none', color: 'var(--text)' }}>
               <div style={{
                 background: 'var(--surface)',
                 border: '1px solid var(--border)',
-                borderRadius: 16,
+                borderRadius: 'var(--radius)',
                 padding: 24,
                 transition: 'all 0.3s',
               }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
-                  <span style={{ fontSize: '2.5rem' }}>{c.icon}</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 14 }}>
+                  <Favicon domain={c.favicon} name={c.name} size={40} />
                   <div>
-                    <div style={{ fontSize: '1.2rem', fontWeight: 700 }}>{c.name}</div>
-                    <div style={{ fontSize: '0.85rem', color: 'var(--text2)' }}>{c.tagline}</div>
+                    <div style={{ fontSize: '1.15rem', fontWeight: 700 }}>{c.name}</div>
+                    <div style={{ fontSize: '0.82rem', color: 'var(--text2)' }}>{c.tagline}</div>
                   </div>
                 </div>
-                <div style={{ textAlign: 'center', margin: '16px 0' }}>
+                <div style={{ textAlign: 'center', margin: '14px 0' }}>
                   <div style={{ fontSize: '2rem', fontWeight: 800, color: avg >= 90 ? '#34d399' : '#fbbf24' }}>{avg}</div>
-                  <div style={{ fontSize: '0.78rem', color: 'var(--text3)' }}>综合评分</div>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text3)' }}>综合评分</div>
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'space-around', fontSize: '0.82rem', color: 'var(--text2)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-around', fontSize: '0.8rem', color: 'var(--text2)' }}>
                   <div>实用性 {c.scores.usefulness}</div>
                   <div>性价比 {c.scores.value}</div>
                   <div>易用性 {c.scores.ease}</div>
@@ -102,9 +104,9 @@ export default function ChinaAICompare() {
         })}
       </div>
 
-      {/* Scenario Winners */}
-      <h2 style={{ fontSize: '1.2rem', marginBottom: 20, color: 'var(--accent3)' }}>
-        🎯 场景选谁？一张表看懂
+      {/* Scenario Table */}
+      <h2 style={{ fontSize: '1.15rem', marginBottom: 18, color: 'var(--accent3)', display: 'flex', alignItems: 'center', gap: 8 }}>
+        <IconCompare size={18} /> 场景选谁？一张表看懂
       </h2>
       <div style={{ overflowX: 'auto', marginBottom: 40 }}>
         <table className="compare-table">
@@ -123,11 +125,12 @@ export default function ChinaAICompare() {
                   <td style={{ fontWeight: 500, whiteSpace: 'nowrap' }}>{s.name}</td>
                   <td>
                     <Link href={`/tool/${winner.id}`} style={{ 
-                      display: 'inline-flex', alignItems: 'center', gap: 6,
+                      display: 'inline-flex', alignItems: 'center', gap: 8,
                       background: 'rgba(124,92,252,0.1)', padding: '4px 12px',
-                      borderRadius: 8, fontWeight: 600, fontSize: '0.88rem',
+                      borderRadius: 8, fontWeight: 600, fontSize: '0.86rem',
                     }}>
-                      {winner.icon} {winner.name}
+                      <Favicon domain={winner.favicon} name={winner.name} size={16} />
+                      {winner.name}
                     </Link>
                   </td>
                   <td style={{ color: 'var(--text2)', fontSize: '0.85rem' }}>{s.reason}</td>
@@ -139,33 +142,32 @@ export default function ChinaAICompare() {
       </div>
 
       {/* Deep Analysis */}
-      <h2 style={{ fontSize: '1.2rem', marginBottom: 20, color: 'var(--accent3)' }}>
-        📊 深度分析
-      </h2>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 16, marginBottom: 40 }}>
+      <h2 style={{ fontSize: '1.15rem', marginBottom: 18, color: 'var(--accent3)' }}>深度分析</h2>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16, marginBottom: 40 }}>
         {contenders.map(c => (
           <div key={c.id} style={{
             background: 'var(--surface)',
             border: '1px solid var(--border)',
-            borderRadius: 16,
-            padding: 24,
+            borderRadius: 'var(--radius-sm)',
+            padding: 22,
           }}>
-            <h3 style={{ fontSize: '1.05rem', marginBottom: 16 }}>
-              {c.icon} {c.name}
+            <h3 style={{ fontSize: '1rem', marginBottom: 14, display: 'flex', alignItems: 'center', gap: 8 }}>
+              <Favicon domain={c.favicon} name={c.name} size={20} />
+              {c.name}
             </h3>
-            <div style={{ marginBottom: 16 }}>
-              <div style={{ fontSize: '0.82rem', color: 'var(--green)', fontWeight: 600, marginBottom: 8 }}>✅ 最强项</div>
+            <div style={{ marginBottom: 14 }}>
+              <div style={{ fontSize: '0.8rem', color: 'var(--green)', fontWeight: 600, marginBottom: 8 }}>最强项</div>
               {c.best.map(b => (
-                <div key={b} style={{ fontSize: '0.85rem', color: 'var(--text2)', padding: '4px 0 4px 20px', position: 'relative' }}>
-                  <span style={{ position: 'absolute', left: 0 }}>•</span>{b}
+                <div key={b} style={{ fontSize: '0.82rem', color: 'var(--text2)', padding: '3px 0 3px 18px', position: 'relative' }}>
+                  <span style={{ position: 'absolute', left: 0, color: 'var(--green)' }}>+</span>{b}
                 </div>
               ))}
             </div>
             <div>
-              <div style={{ fontSize: '0.82rem', color: 'var(--yellow)', fontWeight: 600, marginBottom: 8 }}>⚠️ 弱项</div>
+              <div style={{ fontSize: '0.8rem', color: 'var(--yellow)', fontWeight: 600, marginBottom: 8 }}>弱项</div>
               {c.weak.map(w => (
-                <div key={w} style={{ fontSize: '0.85rem', color: 'var(--text2)', padding: '4px 0 4px 20px', position: 'relative' }}>
-                  <span style={{ position: 'absolute', left: 0 }}>•</span>{w}
+                <div key={w} style={{ fontSize: '0.82rem', color: 'var(--text2)', padding: '3px 0 3px 18px', position: 'relative' }}>
+                  <span style={{ position: 'absolute', left: 0, color: 'var(--yellow)' }}>-</span>{w}
                 </div>
               ))}
             </div>
@@ -175,22 +177,25 @@ export default function ChinaAICompare() {
 
       {/* Conclusion */}
       <div style={{
-        background: 'linear-gradient(135deg, rgba(124,92,252,0.08) 0%, rgba(224,64,160,0.06) 100%)',
-        border: '1px solid rgba(124,92,252,0.15)',
-        borderRadius: 16,
+        background: 'linear-gradient(135deg, rgba(124,92,252,0.06) 0%, rgba(224,64,160,0.04) 100%)',
+        border: '1px solid rgba(124,92,252,0.12)',
+        borderRadius: 'var(--radius)',
         padding: 28,
       }}>
-        <h2 style={{ fontSize: '1.2rem', marginBottom: 16 }}>💡 结论</h2>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 20 }}>
+        <h2 style={{ fontSize: '1.1rem', marginBottom: 16 }}>结论</h2>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 20 }}>
           {contenders.map(c => (
             <div key={c.id}>
-              <div style={{ fontWeight: 600, marginBottom: 6 }}>{c.icon} {c.name} — {c.tagline.split('·')[0].trim()}</div>
-              <p style={{ fontSize: '0.88rem', color: 'var(--text2)', lineHeight: 1.7 }}>{c.verdict}</p>
+              <div style={{ fontWeight: 600, marginBottom: 6, display: 'flex', alignItems: 'center', gap: 6 }}>
+                <Favicon domain={c.favicon} name={c.name} size={18} />
+                {c.name}
+              </div>
+              <p style={{ fontSize: '0.86rem', color: 'var(--text2)', lineHeight: 1.7 }}>{c.verdict}</p>
             </div>
           ))}
         </div>
-        <div style={{ marginTop: 20, padding: '14px 18px', background: 'var(--surface)', borderRadius: 12, fontSize: '0.88rem', color: 'var(--text2)' }}>
-          💰 <strong>省钱建议：</strong>三款都有免费版，建议都注册。日常用豆包，推理/代码用DeepSeek，读长文档用Kimi — 互相补充，一分钱不花。
+        <div style={{ marginTop: 18, padding: '14px 18px', background: 'var(--surface)', borderRadius: 'var(--radius-sm)', fontSize: '0.86rem', color: 'var(--text2)' }}>
+          <strong>省钱建议：</strong>三款都有免费版，建议都注册。日常用豆包，推理/代码用DeepSeek，读长文档用Kimi — 互相补充，一分钱不花。
         </div>
       </div>
     </div>
