@@ -78,16 +78,16 @@ export default function Home() {
     <div className="page">
       {/* ==================== Hero：只保留统计数字 ==================== */}
       <section style={{ marginBottom: 24, display: 'flex', gap: 20, justifyContent: 'center' }}>
-        <div style={{ textAlign: 'center', padding: '10px 24px', background: 'var(--surface)', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)', minWidth: 100 }}>
-          <div style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--accent2)' }}>{tools.length}+</div>
+        <div className="hero-stat-card" style={{ '--i': 0, textAlign: 'center', padding: '10px 24px', background: 'var(--surface)', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)', minWidth: 100, transition: 'all 0.3s' }}>
+          <div className="stat-gradient stat-num" style={{ fontSize: '1.4rem', fontWeight: 800 }}>{tools.length}+</div>
           <div style={{ fontSize: '0.72rem', color: 'var(--text3)' }}>工具评测</div>
         </div>
-        <div style={{ textAlign: 'center', padding: '10px 24px', background: 'var(--surface)', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)', minWidth: 100 }}>
-          <div style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--green)' }}>{tools.filter(t => t.pricing.free).length}</div>
+        <div className="hero-stat-card" style={{ '--i': 1, textAlign: 'center', padding: '10px 24px', background: 'var(--surface)', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)', minWidth: 100, transition: 'all 0.3s' }}>
+          <div className="stat-gradient stat-num" style={{ fontSize: '1.4rem', fontWeight: 800 }}>{tools.filter(t => t.pricing.free).length}</div>
           <div style={{ fontSize: '0.72rem', color: 'var(--text3)' }}>免费可用</div>
         </div>
-        <div style={{ textAlign: 'center', padding: '10px 24px', background: 'var(--surface)', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)', minWidth: 100 }}>
-          <div style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--yellow)' }}>{categories.length + 1}</div>
+        <div className="hero-stat-card" style={{ '--i': 2, textAlign: 'center', padding: '10px 24px', background: 'var(--surface)', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)', minWidth: 100, transition: 'all 0.3s' }}>
+          <div className="stat-gradient stat-num" style={{ fontSize: '1.4rem', fontWeight: 800 }}>{categories.length + 1}</div>
           <div style={{ fontSize: '0.72rem', color: 'var(--text3)' }}>分类</div>
         </div>
       </section>
