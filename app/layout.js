@@ -1,5 +1,6 @@
 import './globals.css';
 import Sidebar from './components/Sidebar';
+import Header from './components/Header';
 
 export const metadata = {
   title: 'AI工具情报站 - 深度评测，发现好用的AI工具',
@@ -13,12 +14,7 @@ export default function RootLayout({ children }) {
         <div className="app-layout">
           <Sidebar />
           <div className="main-content">
-            <header className="header">
-              <div className="search-box">
-                <span className="search-icon">🔍</span>
-                <input placeholder="搜索AI工具..." />
-              </div>
-            </header>
+            <Header />
             {children}
           </div>
         </div>
