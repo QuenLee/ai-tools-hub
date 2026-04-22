@@ -100,9 +100,9 @@ export default function Home() {
 
   // 12个在线工具分组
   const socialTools = ALL_TOOLS.filter(t => t.cat === 'social');
-  const highTools = ALL_TOOLS.filter(t => t.cat === 'high');
-  const midTools = ALL_TOOLS.filter(t => t.cat === 'mid');
-  const existingTools = ALL_TOOLS.filter(t => t.cat === 'existing');
+  const officeTools = ALL_TOOLS.filter(t => t.cat === 'office');
+  const proTools = ALL_TOOLS.filter(t => t.cat === 'pro');
+  const basicTools = ALL_TOOLS.filter(t => t.cat === 'basic');
 
   return (
     <div className="page">
@@ -113,7 +113,7 @@ export default function Home() {
           <Link href={`/${locale}/tools`} className="section-more">全部工具 <IconChevronRight size={12} /></Link>
         </div>
         <div style={{ margin: '0 0 18px', padding: '14px 18px', borderRadius: 'var(--radius-sm)', background: 'linear-gradient(135deg, rgba(99,102,241,0.08), rgba(124,92,252,0.08))', border: '1px solid rgba(99,102,241,0.2)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 10 }}>
-          <span style={{ fontWeight: 600, fontSize: '0.88rem' }}>12款在线工具免费使用，开通会员无限解锁</span>
+          <span style={{ fontWeight: 600, fontSize: '0.88rem' }}>32款在线工具·20款AI驱动，开通会员无限解锁</span>
           <Link href={`/${locale}/tools`} style={{ padding: '7px 18px', borderRadius: 'var(--radius-2xs)', background: 'var(--accent)', color: '#fff', fontSize: '0.82rem', fontWeight: 600, textDecoration: 'none' }}>🔓 ¥9.9/月开通</Link>
         </div>
         {/* 自媒体神器 */}
@@ -135,7 +135,7 @@ export default function Home() {
         {/* 高频刚需 */}
         <div style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--text2)', marginBottom: 8 }}>🔥 高频刚需</div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 10, marginBottom: 16 }}>
-          {highTools.map(tool => (
+          {officeTools.map(tool => (
             <Link key={tool.id} href={`/${locale}/tools?tool=${tool.id}`} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 16px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', textDecoration: 'none', color: 'var(--text)', boxShadow: 'var(--shadow-card)', transition: 'all 0.3s', position: 'relative', overflow: 'hidden' }}>
               <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: 'linear-gradient(90deg, var(--red), var(--accent))' }} />
               <span style={{ fontSize: '1.4rem' }}>{tool.icon}</span>
@@ -150,7 +150,7 @@ export default function Home() {
         {/* 实用工具 */}
         <div style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--text2)', marginBottom: 8 }}>💡 实用工具</div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 10, marginBottom: 16 }}>
-          {midTools.map(tool => (
+          {proTools.map(tool => (
             <Link key={tool.id} href={`/${locale}/tools?tool=${tool.id}`} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 16px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', textDecoration: 'none', color: 'var(--text)', boxShadow: 'var(--shadow-card)', transition: 'all 0.3s' }}>
               <span style={{ fontSize: '1.4rem' }}>{tool.icon}</span>
               <div style={{ flex: 1, minWidth: 0 }}>
@@ -164,7 +164,7 @@ export default function Home() {
         {/* 基础工具 */}
         <div style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--text2)', marginBottom: 8 }}>📄 基础工具</div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 10 }}>
-          {existingTools.map(tool => (
+          {basicTools.map(tool => (
             <Link key={tool.id} href={`/${locale}/tools?tool=${tool.id}`} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 16px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', textDecoration: 'none', color: 'var(--text)', boxShadow: 'var(--shadow-card)', transition: 'all 0.2s' }}>
               <span style={{ fontSize: '1.2rem' }}>{tool.icon}</span>
               <div style={{ flex: 1, minWidth: 0 }}>

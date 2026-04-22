@@ -2,12 +2,14 @@
 import { useState, useEffect } from 'react';
 import { canUseTool, recordUsage, isPaidUser, getUser, saveUser, logout, PAID_PRICES, getFreeLimitDisplay } from '@/lib/usage';
 import { ALL_TOOLS } from '@/lib/tools-registry';
-import { SOCIAL_TOOL_CONFIGS } from '@/lib/social-tool-configs';
+import { TOOL_CONFIGS } from '@/lib/tool-configs';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 
-// 工具组件
+// AI驱动工具通用组件
 import { AITool } from '@/components/tools/AITool';
+
+// 基础工具组件
 import { AITextDetect } from '@/components/tools/AITextDetect';
 import { AIWatermarkRemover } from '@/components/tools/AIWatermarkRemover';
 import { ShortURLGenerator } from '@/components/tools/ShortURLGenerator';
@@ -21,35 +23,46 @@ import { AICopywriter } from '@/components/tools/AICopywriter';
 import { ImageConverter } from '@/components/tools/ImageConverter';
 import { MarkdownEditor } from '@/components/tools/MarkdownEditor';
 
-// 为7个自媒体工具创建AITool包装组件
-function XHSWriter(props) { return <AITool config={SOCIAL_TOOL_CONFIGS['xhs-writer']} {...props} />; }
-function DouyinScript(props) { return <AITool config={SOCIAL_TOOL_CONFIGS['douyin-script']} {...props} />; }
-function LiveScript(props) { return <AITool config={SOCIAL_TOOL_CONFIGS['live-script']} {...props} />; }
-function CommentReply(props) { return <AITool config={SOCIAL_TOOL_CONFIGS['comment-reply']} {...props} />; }
-function WechatArticle(props) { return <AITool config={SOCIAL_TOOL_CONFIGS['wechat-article']} {...props} />; }
-function BiliScript(props) { return <AITool config={SOCIAL_TOOL_CONFIGS['bili-script']} {...props} />; }
-function PrivateDomain(props) { return <AITool config={SOCIAL_TOOL_CONFIGS['private-domain']} {...props} />; }
+// AI工具动态包装器
+function AIToolWrapper({ toolId, onBack, locale }) {
+  const config = TOOL_CONFIGS[toolId];
+  if (!config) return <div>工具配置未找到</div>;
+  return <AITool config={config} onBack={onBack} locale={locale} />;
+}
 
 const TOOL_COMPONENTS = {
-  // 自媒体
-  'xhs-writer': XHSWriter,
-  'douyin-script': DouyinScript,
-  'live-script': LiveScript,
-  'comment-reply': CommentReply,
-  'wechat-article': WechatArticle,
-  'bili-script': BiliScript,
-  'private-domain': PrivateDomain,
-  // 高频刚需
+  // 📱 自媒体（全部AI驱动）
+  'xhs-writer': (props) => <AIToolWrapper toolId="xhs-writer" {...props} />,
+  'douyin-script': (props) => <AIToolWrapper toolId="douyin-script" {...props} />,
+  'live-script': (props) => <AIToolWrapper toolId="live-script" {...props} />,
+  'comment-reply': (props) => <AIToolWrapper toolId="comment-reply" {...props} />,
+  'wechat-article': (props) => <AIToolWrapper toolId="wechat-article" {...props} />,
+  'bili-script': (props) => <AIToolWrapper toolId="bili-script" {...props} />,
+  'private-domain': (props) => <AIToolWrapper toolId="private-domain" {...props} />,
+  // 💼 职场办公（全部AI驱动）
+  'weekly-report': (props) => <AIToolWrapper toolId="weekly-report" {...props} />,
+  'meeting-notes': (props) => <AIToolWrapper toolId="meeting-notes" {...props} />,
+  'email-writer': (props) => <AIToolWrapper toolId="email-writer" {...props} />,
+  'ppt-outline': (props) => <AIToolWrapper toolId="ppt-outline" {...props} />,
+  'speech-writer': (props) => <AIToolWrapper toolId="speech-writer" {...props} />,
+  'excel-formula': (props) => <AIToolWrapper toolId="excel-formula" {...props} />,
+  'competitor-analysis': (props) => <AIToolWrapper toolId="competitor-analysis" {...props} />,
+  // 🔧 专业工具（全部AI驱动）
+  'seo-article': (props) => <AIToolWrapper toolId="seo-article" {...props} />,
+  'product-desc': (props) => <AIToolWrapper toolId="product-desc" {...props} />,
+  'ad-copy': (props) => <AIToolWrapper toolId="ad-copy" {...props} />,
+  'contract-review': (props) => <AIToolWrapper toolId="contract-review" {...props} />,
+  'data-analysis': (props) => <AIToolWrapper toolId="data-analysis" {...props} />,
+  'interview-prep': (props) => <AIToolWrapper toolId="interview-prep" {...props} />,
+  // 📄 基础工具（前端本地）
   'ai-text-detect': AITextDetect,
   'ai-watermark': AIWatermarkRemover,
   'short-url': ShortURLGenerator,
   'ai-translate': AITranslateCompare,
-  // 实用工具
   'ai-resume': AIResumeOptimizer,
   'prompt-templates': PromptTemplates,
   'ai-code-review': AICodeReview,
   'seo-title-gen': SEOTitleGen,
-  // 基础工具
   'pdf-convert': PDFConverter,
   'ai-copywriter': AICopywriter,
   'image-convert': ImageConverter,
@@ -57,11 +70,11 @@ const TOOL_COMPONENTS = {
 };
 
 const TABS = [
-  { id: 'all', label: '全部', emoji: '🛠' },
-  { id: 'social', label: '📱 自媒体神器', emoji: '📱' },
-  { id: 'high', label: '🔥 高频刚需', emoji: '🔥' },
-  { id: 'mid', label: '💡 实用工具', emoji: '💡' },
-  { id: 'existing', label: '📄 基础工具', emoji: '📄' },
+  { id: 'all', label: '全部工具', emoji: '🛠' },
+  { id: 'social', label: '自媒体神器', emoji: '📱' },
+  { id: 'office', label: '职场办公', emoji: '💼' },
+  { id: 'pro', label: '专业工具', emoji: '🔧' },
+  { id: 'basic', label: '基础工具', emoji: '📄' },
 ];
 
 export default function ToolsPage() {
@@ -79,8 +92,7 @@ export default function ToolsPage() {
     }
   }, []);
 
-  const filteredTools = activeTab === 'all' ? ALL_TOOLS :
-    ALL_TOOLS.filter(t => t.cat === activeTab);
+  const filteredTools = activeTab === 'all' ? ALL_TOOLS : ALL_TOOLS.filter(t => t.cat === activeTab);
 
   if (activeTool) {
     const ToolComponent = TOOL_COMPONENTS[activeTool];
@@ -88,9 +100,7 @@ export default function ToolsPage() {
     if (ToolComponent) return (
       <div className="page" style={{ padding: '32px 0 80px' }}>
         <div style={{ padding: '0 24px' }}>
-          <div className="breadcrumb">
-            <a href={`/${locale}/tools`}>AI工具</a><span>/</span>{toolInfo?.name}
-          </div>
+          <div className="breadcrumb"><a href={`/${locale}/tools`}>AI工具</a><span>/</span>{toolInfo?.name}</div>
           <ToolComponent onBack={() => setActiveTool(null)} locale={locale} />
         </div>
       </div>
@@ -104,24 +114,24 @@ export default function ToolsPage() {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12, marginBottom: 6 }}>
           <div>
             <h1 style={{ fontSize: '1.6rem', fontWeight: 800, marginBottom: 6 }}>AI工具箱</h1>
-            <p style={{ color: 'var(--text2)', fontSize: '0.88rem' }}>19款在线工具，自媒体+职场+效率，免费试用</p>
+            <p style={{ color: 'var(--text2)', fontSize: '0.88rem' }}>32款在线工具 · 20款AI驱动 · 自媒体+职场+专业全覆盖</p>
           </div>
-          <div style={{ display: 'flex', gap: 8 }}>
-            {getUser() && <span style={{ fontSize: '0.78rem', color: 'var(--accent2)', fontWeight: 600, padding: '6px 0' }}>👤 {getUser().email}</span>}
+          <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+            {getUser() && <span style={{ fontSize: '0.78rem', color: 'var(--accent2)', fontWeight: 600 }}>👤 {getUser().email}</span>}
             <button onClick={() => getUser() ? logout() : setShowLogin(true)} style={{ padding: '6px 16px', borderRadius: 'var(--radius-2xs)', background: getUser() ? 'var(--border)' : 'var(--accent)', color: getUser() ? 'var(--text2)' : '#fff', fontSize: '0.82rem', fontWeight: 600, border: 'none', cursor: 'pointer' }}>{getUser() ? '退出' : '登录'}</button>
           </div>
         </div>
 
         {/* 会员横幅 */}
         <div style={{ margin: '16px 0 20px', padding: '14px 18px', borderRadius: 'var(--radius-sm)', background: 'linear-gradient(135deg, rgba(99,102,241,0.08), rgba(124,92,252,0.08))', border: '1px solid rgba(99,102,241,0.2)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 10 }}>
-          <div><span style={{ fontWeight: 700, fontSize: '0.92rem' }}>🔓 解锁全部工具</span><span style={{ fontSize: '0.82rem', color: 'var(--text2)', marginLeft: 8 }}>基础版 {PAID_PRICES.monthly}元/月 · 专业版 {PAID_PRICES.pro_monthly}元/月</span></div>
+          <div><span style={{ fontWeight: 700, fontSize: '0.92rem' }}>🔓 解锁全部工具无限使用</span><span style={{ fontSize: '0.82rem', color: 'var(--text2)', marginLeft: 8 }}>基础版 ¥{PAID_PRICES.monthly}/月 · 专业版 ¥{PAID_PRICES.pro_monthly}/月</span></div>
           <button onClick={() => setShowPay(true)} style={{ padding: '7px 18px', borderRadius: 'var(--radius-2xs)', background: 'var(--accent)', color: '#fff', fontSize: '0.82rem', fontWeight: 600, border: 'none', cursor: 'pointer' }}>开通会员</button>
         </div>
 
         {/* Tab */}
         <div style={{ display: 'flex', gap: 6, marginBottom: 20, flexWrap: 'wrap' }}>
           {TABS.map(tab => (
-            <button key={tab.id} onClick={() => setActiveTab(tab.id)} style={{ padding: '7px 14px', borderRadius: 'var(--radius-2xs)', fontSize: '0.82rem', border: activeTab === tab.id ? '1px solid var(--accent)' : '1px solid var(--border)', background: activeTab === tab.id ? 'rgba(99,102,241,0.08)' : 'transparent', color: activeTab === tab.id ? 'var(--accent)' : 'var(--text2)', fontWeight: 600, cursor: 'pointer' }}>{tab.emoji} {tab.label}</button>
+            <button key={tab.id} onClick={() => setActiveTab(tab.id)} style={{ padding: '7px 14px', borderRadius: 'var(--radius-2xs)', fontSize: '0.82rem', border: activeTab === tab.id ? '1px solid var(--accent)' : '1px solid var(--border)', background: activeTab === tab.id ? 'rgba(99,102,241,0.08)' : 'transparent', color: activeTab === tab.id ? 'var(--accent)' : 'var(--text2)', fontWeight: 600, cursor: 'pointer' }}>{tab.emoji} {tab.label} ({tab.id === 'all' ? ALL_TOOLS.length : ALL_TOOLS.filter(t => t.cat === tab.id).length})</button>
           ))}
         </div>
 
@@ -130,12 +140,13 @@ export default function ToolsPage() {
           {filteredTools.map(tool => (
             <div key={tool.id} onClick={() => setActiveTool(tool.id)} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', padding: '20px', cursor: 'pointer', transition: 'all 0.3s', position: 'relative', boxShadow: 'var(--shadow-card)' }}>
               {tool.cat === 'social' && <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: 'linear-gradient(90deg, #FF2442, var(--accent))' }} />}
-              {tool.cat === 'high' && <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: 'linear-gradient(90deg, var(--red), var(--accent))' }} />}
+              {tool.cat === 'office' && <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: 'linear-gradient(90deg, var(--yellow), var(--accent))' }} />}
+              {tool.cat === 'pro' && <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: 'linear-gradient(90deg, var(--green), var(--accent))' }} />}
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
                 <span style={{ fontSize: '1.6rem' }}>{tool.icon}</span>
                 <div style={{ flex: 1 }}>
                   <div style={{ fontWeight: 700, fontSize: '0.96rem' }}>{tool.name}</div>
-                  {tool.apiTool && <span style={{ fontSize: '0.6rem', padding: '1px 6px', borderRadius: 4, background: 'rgba(99,102,241,0.1)', color: 'var(--accent)', fontWeight: 600 }}>AI驱动</span>}
+                  {tool.apiTool && <span style={{ fontSize: '0.6rem', padding: '1px 6px', borderRadius: 4, background: 'rgba(99,102,241,0.1)', color: 'var(--accent)', fontWeight: 600, marginLeft: 4 }}>AI驱动</span>}
                 </div>
               </div>
               <div style={{ fontSize: '0.78rem', color: 'var(--text2)', marginBottom: 10 }}>{tool.desc}</div>
@@ -201,18 +212,18 @@ function PayModal({ onClose }) {
     <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999 }} onClick={onClose}>
       <div style={{ background: 'var(--surface)', borderRadius: 'var(--radius-md)', padding: 32, width: 420, maxWidth: '90vw', boxShadow: '0 20px 60px rgba(0,0,0,0.3)' }} onClick={e => e.stopPropagation()}>
         <h2 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: 6 }}>开通会员</h2>
-        <p style={{ fontSize: '0.82rem', color: 'var(--text2)', marginBottom: 20 }}>解锁全部工具无限使用</p>
+        <p style={{ fontSize: '0.82rem', color: 'var(--text2)', marginBottom: 20 }}>解锁全部32款工具无限使用</p>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 20 }}>
           <div style={{ padding: 20, borderRadius: 'var(--radius-sm)', border: '2px solid var(--accent)', background: 'rgba(99,102,241,0.05)', textAlign: 'center' }}>
             <div style={{ fontSize: '0.72rem', color: 'var(--accent)', fontWeight: 600, marginBottom: 4 }}>基础版</div>
             <div style={{ fontSize: '1.6rem', fontWeight: 800 }}>¥9.9<span style={{ fontSize: '0.72rem', fontWeight: 400 }}>/月</span></div>
-            <div style={{ fontSize: '0.72rem', color: 'var(--text3)', marginTop: 6 }}>自媒体7工具+检测/翻译<br/>短链接/文案/SEO/Prompt</div>
+            <div style={{ fontSize: '0.72rem', color: 'var(--text3)', marginTop: 6 }}>自媒体7工具+职场7工具<br/>评论回复/邮件/Excel免费</div>
           </div>
           <div style={{ padding: 20, borderRadius: 'var(--radius-sm)', border: '2px solid var(--accent2)', background: 'rgba(124,92,252,0.05)', textAlign: 'center', position: 'relative' }}>
             <div style={{ position: 'absolute', top: -10, right: -10, background: 'var(--accent2)', color: '#fff', fontSize: '0.6rem', padding: '2px 8px', borderRadius: 8, fontWeight: 600 }}>推荐</div>
             <div style={{ fontSize: '0.72rem', color: 'var(--accent2)', fontWeight: 600, marginBottom: 4 }}>专业版</div>
             <div style={{ fontSize: '1.6rem', fontWeight: 800 }}>¥19.9<span style={{ fontSize: '0.72rem', fontWeight: 400 }}>/月</span></div>
-            <div style={{ fontSize: '0.72rem', color: 'var(--text3)', marginTop: 6 }}>全部基础版<br/>+直播话术+公众号+去水印+简历+代码审查</div>
+            <div style={{ fontSize: '0.72rem', color: 'var(--text3)', marginTop: 6 }}>全部基础版<br/>+专业6工具+直播/演讲/合同/面试</div>
           </div>
         </div>
         <div style={{ textAlign: 'center', marginBottom: 16 }}>

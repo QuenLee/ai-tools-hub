@@ -1,6 +1,6 @@
-// 使用次数管理 + 用户状态（localStorage方案，后续可升级为KV数据库）
+// 使用次数管理 + 用户状态
 const FREE_LIMITS = {
-  // 自媒体AI工具（调API，有真实AI输出）
+  // 📱 自媒体AI工具
   'xhs-writer': { daily: 1 },
   'douyin-script': { daily: 1 },
   'live-script': { daily: 1 },
@@ -8,17 +8,30 @@ const FREE_LIMITS = {
   'wechat-article': { daily: 1 },
   'bili-script': { daily: 1 },
   'private-domain': { daily: 2 },
-  // 高频刚需
-  'ai-text-detect': { daily: 3, chars: 500 },
+  // 💼 职场办公
+  'weekly-report': { daily: 3 },
+  'meeting-notes': { daily: 3 },
+  'email-writer': { daily: 5 },
+  'ppt-outline': { daily: 2 },
+  'speech-writer': { daily: 1 },
+  'excel-formula': { daily: 5 },
+  'competitor-analysis': { daily: 1 },
+  // 🔧 专业工具
+  'seo-article': { daily: 1 },
+  'product-desc': { daily: 2 },
+  'ad-copy': { daily: 2 },
+  'contract-review': { daily: 1 },
+  'data-analysis': { daily: 2 },
+  'interview-prep': { daily: 1 },
+  // 📄 基础工具
+  'ai-text-detect': { daily: 3 },
   'ai-watermark': { daily: 1 },
   'short-url': { daily: 5 },
   'ai-translate': { daily: 3 },
-  // 实用工具
   'ai-resume': { total: 1 },
   'prompt-templates': { basic: true },
   'ai-code-review': { daily: 3 },
   'seo-title-gen': { daily: 3 },
-  // 基础工具
   'pdf-convert': { daily: 3 },
   'ai-copywriter': { daily: 3 },
   'image-convert': { daily: 5 },
