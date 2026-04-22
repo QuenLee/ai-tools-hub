@@ -27,7 +27,7 @@ import { MarkdownEditor } from '@/components/tools/MarkdownEditor';
 function AIToolWrapper({ toolId, onBack, locale }) {
   const config = TOOL_CONFIGS[toolId];
   if (!config) return <div>工具配置未找到</div>;
-  return <AITool config={config} onBack={onBack} locale={locale} />;
+  return <AITool config={config} onBack={onBack} locale={locale} toolId={toolId} />;
 }
 
 const TOOL_COMPONENTS = {

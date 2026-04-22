@@ -6,8 +6,9 @@ import { useToolGuard, ToolWrapper, LimitBlocked } from './shared';
  * 通用AI驱动工具组件
  * 所有调NVIDIA API的工具共用这一个组件，通过config差异化
  */
-export function AITool({ config, onBack, locale }) {
-  const { id, icon, title, desc, placeholders, examples, buildPrompt } = config;
+export function AITool({ config, onBack, locale, toolId }) {
+  const id = toolId || config.id;
+  const { icon, title, desc, placeholders, examples, buildPrompt } = config;
   const [inputs, setInputs] = useState(config.fields.map(f => ''));
   const [result, setResult] = useState('');
   const [loading, setLoading] = useState(false);
@@ -21,10 +22,7 @@ export function AITool({ config, onBack, locale }) {
     if (empty) { setError('请填写必要信息'); return; }
     if (!guard.check()) return;
 
-    setError('');
-    setLoading(true);
-    setResult('');
-
+    setError(''); setLoading(true); setResult('');
     const userPrompt = buildPrompt(inputs);
     const ctrl = new AbortController();
     abortRef.current = ctrl;
@@ -37,17 +35,11 @@ export function AITool({ config, onBack, locale }) {
         signal: ctrl.signal,
       });
       const data = await res.json();
-      if (data.error) {
-        setError(data.error);
-      } else {
-        guard.useOnce();
-        setResult(data.content);
-      }
+      if (data.error) { setError(data.error); }
+      else { guard.useOnce(); setResult(data.content); }
     } catch (e) {
       if (e.name !== 'AbortError') setError('网络错误，请重试');
-    } finally {
-      setLoading(false);
-    }
+    } finally { setLoading(false); }
   }, [inputs, guard, id, locale, config]);
 
   if (guard.blocked) return <LimitBlocked onBack={onBack} />;
@@ -68,7 +60,8 @@ export function AITool({ config, onBack, locale }) {
           ) : field.type === 'select' ? (
             <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
               {field.options.map(opt => (
-                <button key={opt} onClick={() => { const n = [...inputs]; n[i] = opt; setInputs(n); }} style={{ padding: '5px 14px', borderRadius: 'var(--radius-2xs)', fontSize: '0.82rem', border: inputs[i] === opt ? '1px solid var(--accent)' : '1px solid var(--border)', background: inputs[i] === opt ? 'rgba(99,102,241,0.08)' : 'transparent', color: inputs[i] === opt ? 'var(--accent)' : 'var(--text2)', fontWeight: 600, cursor: 'pointer' }}>{opt}</button>
+                <button key={opt} onClick={() => { const n = [...inputs]; n[i] = opt; setInputs(n); }}
+                  style={{ padding: '5px 14px', borderRadius: 'var(--radius-2xs)', fontSize: '0.82rem', border: inputs[i] === opt ? '1px solid var(--accent)' : '1px solid var(--border)', background: inputs[i] === opt ? 'rgba(99,102,241,0.08)' : 'transparent', color: inputs[i] === opt ? 'var(--accent)' : 'var(--text2)', fontWeight: 600, cursor: 'pointer' }}>{opt}</button>
               ))}
             </div>
           ) : (
@@ -87,22 +80,17 @@ export function AITool({ config, onBack, locale }) {
         <div style={{ marginBottom: 12 }}>
           <span style={{ fontSize: '0.72rem', color: 'var(--text3)', marginRight: 8 }}>试试：</span>
           {examples.map((ex, i) => (
-            <button key={i} onClick={() => setInputs(ex.values)} style={{ padding: '3px 10px', borderRadius: 'var(--radius-2xs)', border: '1px solid var(--border)', background: 'transparent', color: 'var(--text2)', fontSize: '0.72rem', cursor: 'pointer', marginRight: 4, marginBottom: 4 }}>{ex.label}</button>
+            <button key={i} onClick={() => setInputs(ex.values)}
+              style={{ padding: '3px 10px', borderRadius: 'var(--radius-2xs)', border: '1px solid var(--border)', background: 'transparent', color: 'var(--text2)', fontSize: '0.72rem', cursor: 'pointer', marginRight: 4, marginBottom: 4 }}>{ex.label}</button>
           ))}
         </div>
       )}
 
       {/* 生成按钮 */}
-      <button
-        onClick={handleGenerate}
-        disabled={loading}
-        style={{ width: '100%', padding: '12px', borderRadius: 'var(--radius-sm)', background: loading ? 'var(--border)' : 'var(--accent)', color: loading ? 'var(--text3)' : '#fff', fontWeight: 700, fontSize: '0.92rem', border: 'none', cursor: loading ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
-      >
+      <button onClick={handleGenerate} disabled={loading}
+        style={{ width: '100%', padding: '12px', borderRadius: 'var(--radius-sm)', background: loading ? 'var(--border)' : 'var(--accent)', color: loading ? 'var(--text3)' : '#fff', fontWeight: 700, fontSize: '0.92rem', border: 'none', cursor: loading ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
         {loading ? (
-          <>
-            <span style={{ display: 'inline-block', width: 16, height: 16, border: '2px solid var(--text3)', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
-            AI生成中...
-          </>
+          <><span style={{ display: 'inline-block', width: 16, height: 16, border: '2px solid var(--text3)', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} /> AI生成中...</>
         ) : '🚀 AI生成'}
       </button>
 
@@ -114,7 +102,8 @@ export function AITool({ config, onBack, locale }) {
         <div style={{ marginTop: 16 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
             <span style={{ fontSize: '0.88rem', fontWeight: 700 }}>✨ 生成结果</span>
-            <button onClick={() => navigator.clipboard.writeText(result)} style={{ padding: '4px 12px', borderRadius: 'var(--radius-2xs)', border: '1px solid var(--border)', background: 'transparent', color: 'var(--text2)', fontSize: '0.72rem', cursor: 'pointer' }}>📋 复制全部</button>
+            <button onClick={() => navigator.clipboard.writeText(result)}
+              style={{ padding: '4px 12px', borderRadius: 'var(--radius-2xs)', border: '1px solid var(--border)', background: 'transparent', color: 'var(--text2)', fontSize: '0.72rem', cursor: 'pointer' }}>📋 复制全部</button>
           </div>
           <div style={{ padding: 20, borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)', background: 'var(--bg)', whiteSpace: 'pre-wrap', fontSize: '0.88rem', lineHeight: 1.8, color: 'var(--text2)', maxHeight: 500, overflow: 'auto' }}>{result}</div>
         </div>
