@@ -4,8 +4,26 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { tutorials } from '@/lib/tutorials';
 
+// 按分类分组
+const catOrder = ['内容创作', '开发变现', '自媒体运营', '工具教程', 'Prompt技巧'];
+const catColors = {
+  '内容创作': 'var(--pink)',
+  '开发变现': 'var(--cyan)',
+  '自媒体运营': 'var(--yellow)',
+  '工具教程': 'var(--accent2)',
+  'Prompt技巧': 'var(--green)',
+};
+
 export default function TutorialsPage() {
   const { locale } = useParams();
+
+  // 按分类分组
+  const grouped = {};
+  for (const t of tutorials) {
+    if (!grouped[t.cat]) grouped[t.cat] = [];
+    grouped[t.cat].push(t);
+  }
+
   return (
     <div className="page" style={{ padding: '32px 0 80px' }}>
       <div className="breadcrumb">
@@ -13,14 +31,15 @@ export default function TutorialsPage() {
       </div>
       <h1 style={{ fontSize: '1.6rem', fontWeight: 800, marginBottom: 6 }}>AI教程</h1>
       <p style={{ color: 'var(--text2)', marginBottom: 32 }}>AI赚钱案例、工具使用教程、Prompt技巧</p>
-      {tutorials.map(section => (
-        <div key={section.cat} style={{ marginBottom: 36 }}>
+
+      {catOrder.filter(cat => grouped[cat]).map(cat => (
+        <div key={cat} style={{ marginBottom: 36 }}>
           <h2 style={{ fontSize: '1.05rem', fontWeight: 700, marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span style={{ width: 4, height: 20, borderRadius: 2, background: section.catColor, display: 'inline-block' }} />
-            {section.cat}
+            <span style={{ width: 4, height: 20, borderRadius: 2, background: catColors[cat] || 'var(--accent)', display: 'inline-block' }} />
+            {cat}
           </h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-            {section.sections.map((t, i) => (
+            {grouped[cat].map(t => (
               <Link key={t.slug} href={`/${locale}/tutorial/${t.slug}`} className="tutorial-card" style={{
                 background: 'var(--surface)', border: '1px solid var(--border)',
                 borderRadius: 'var(--radius-sm)', padding: '18px 22px',
