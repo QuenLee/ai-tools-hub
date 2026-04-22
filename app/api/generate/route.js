@@ -1,6 +1,6 @@
 import { PROMPTS } from '@/lib/prompts';
 
-// Node.js runtime — 60s timeout (vs Edge 10s on Hobby plan)
+// Node.js runtime — 60s timeout
 export const maxDuration = 60;
 
 const NVIDIA_API_URL = 'https://integrate.api.nvidia.com/v1/chat/completions';
@@ -25,16 +25,11 @@ function isJailbreak(input) {
 
 // 泄露检测
 const LEAK_PATTERNS = [
-  /系统安全规则/i,
-  /系统提示词/i,
-  /GUARD_PREFIX/i,
-  /GUARD_SUFFIX/i,
-  /【系统/i,
-  /【输出安全/i,
+  /系统安全规则/i, /系统提示词/i, /GUARD_PREFIX/i, /GUARD_SUFFIX/i, /【系统/i, /【输出安全/i,
 ];
 
-function hasLeak(output) {
-  return LEAK_PATTERNS.some(p => p.test(output));
+function hasLeak(chunk) {
+  return LEAK_PATTERNS.some(p => p.test(chunk));
 }
 
 export async function POST(request) {
@@ -43,28 +38,17 @@ export async function POST(request) {
     const toolId = body.toolId;
     const input = body.input;
     const locale = body.locale;
+    const stream = body.stream !== false; // 默认流式
 
-    if (!toolId) {
-      return Response.json({ error: '缺少toolId参数' }, { status: 400 });
-    }
-    if (!input || !input.trim()) {
-      return Response.json({ error: '请填写必要的内容后再生成' }, { status: 400 });
-    }
-
-    // 越狱检测
-    if (isJailbreak(input)) {
-      return Response.json({ error: '请输入与工具相关的内容' }, { status: 400 });
-    }
+    if (!toolId) return Response.json({ error: '缺少toolId参数' }, { status: 400 });
+    if (!input || !input.trim()) return Response.json({ error: '请填写内容后再生成' }, { status: 400 });
+    if (isJailbreak(input)) return Response.json({ error: '请输入与工具相关的内容' }, { status: 400 });
 
     const systemPrompt = PROMPTS[toolId];
-    if (!systemPrompt) {
-      return Response.json({ error: `未知工具: ${toolId}` }, { status: 400 });
-    }
+    if (!systemPrompt) return Response.json({ error: `未知工具: ${toolId}` }, { status: 400 });
 
     const apiKey = process.env.NVIDIA_API_KEY;
-    if (!apiKey) {
-      return Response.json({ error: 'API未配置，请联系管理员' }, { status: 500 });
-    }
+    if (!apiKey) return Response.json({ error: 'API未配置' }, { status: 500 });
 
     const userMessage = locale === 'en'
       ? `Please respond in English. Here is my request:\n${input}`
@@ -72,6 +56,84 @@ export async function POST(request) {
         ? `請用繁體中文回覆。以下是我的需求：\n${input}`
         : input;
 
+    // ===== 流式输出（SSE）=====
+    if (stream) {
+      const nvidiaRes = await fetch(NVIDIA_API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`,
+        },
+        body: JSON.stringify({
+          model: MODEL,
+          messages: [
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: userMessage },
+          ],
+          temperature: 0.7,
+          max_tokens: 1024,
+          top_p: 0.9,
+          stream: true,
+        }),
+      });
+
+      if (!nvidiaRes.ok) {
+        const err = await nvidiaRes.text();
+        console.error('NVIDIA API error:', nvidiaRes.status, err);
+        return Response.json({ error: 'AI服务暂时不可用' }, { status: 502 });
+      }
+
+      // 将NVIDIA的SSE流转发给前端
+      const encoder = new TextEncoder();
+      const readable = new ReadableStream({
+        async start(controller) {
+          const reader = nvidiaRes.body.getReader();
+          const decoder = new TextDecoder();
+          let buffer = '';
+
+          try {
+            while (true) {
+              const { done, value } = await reader.read();
+              if (done) break;
+
+              buffer += decoder.decode(value, { stream: true });
+              const lines = buffer.split('\n');
+              buffer = lines.pop() || '';
+
+              for (const line of lines) {
+                if (!line.startsWith('data: ')) continue;
+                const data = line.slice(6).trim();
+                if (data === '[DONE]') {
+                  controller.enqueue(encoder.encode('data: [DONE]\n\n'));
+                  continue;
+                }
+                try {
+                  const parsed = JSON.parse(data);
+                  const content = parsed.choices?.[0]?.delta?.content;
+                  if (content && !hasLeak(content)) {
+                    controller.enqueue(encoder.encode(`data: ${JSON.stringify({ content })}\n\n`));
+                  }
+                } catch {}
+              }
+            }
+          } catch (e) {
+            console.error('Stream error:', e);
+          } finally {
+            controller.close();
+          }
+        },
+      });
+
+      return new Response(readable, {
+        headers: {
+          'Content-Type': 'text/event-stream',
+          'Cache-Control': 'no-cache',
+          'Connection': 'keep-alive',
+        },
+      });
+    }
+
+    // ===== 非流式（fallback）=====
     const response = await fetch(NVIDIA_API_URL, {
       method: 'POST',
       headers: {
@@ -85,7 +147,7 @@ export async function POST(request) {
           { role: 'user', content: userMessage },
         ],
         temperature: 0.7,
-        max_tokens: 2048,
+        max_tokens: 1024,
         top_p: 0.9,
       }),
     });
@@ -93,13 +155,11 @@ export async function POST(request) {
     if (!response.ok) {
       const err = await response.text();
       console.error('NVIDIA API error:', response.status, err);
-      return Response.json({ error: 'AI服务暂时不可用，请稍后重试' }, { status: 502 });
+      return Response.json({ error: 'AI服务暂时不可用' }, { status: 502 });
     }
 
     const data = await response.json();
     let content = data.choices?.[0]?.message?.content || '生成失败，请重试';
-
-    // 泄露检测
     if (hasLeak(content)) {
       content = content.replace(/【系统.*?】[\s\S]*?===/g, '');
       content = content.replace(/【输出安全.*?字样/g, '');
