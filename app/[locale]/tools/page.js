@@ -163,8 +163,17 @@ function PayModal({ onClose }) {
           </div>
         </div>
         <div style={{ textAlign: 'center', marginBottom: 16 }}>
-          <div style={{ fontSize: '0.88rem', fontWeight: 600, marginBottom: 8 }}>扫码支付（微信/支付宝）</div>
-          <div style={{ width: 180, height: 180, background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text3)', fontSize: '0.78rem' }}>收款码放置区</div>
+          <div style={{ fontSize: '0.88rem', fontWeight: 600, marginBottom: 8 }}>扫码支付</div>
+          <div style={{ display: 'flex', gap: 16, justifyContent: 'center', marginBottom: 8 }}>
+            <div style={{ textAlign: 'center' }}>
+              <img src="/pay/wechat.png" alt="微信收款码" style={{ width: 150, height: 150, borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)', objectFit: 'contain' }} />
+              <div style={{ fontSize: '0.72rem', color: 'var(--text3)', marginTop: 4 }}>微信支付</div>
+            </div>
+            <div style={{ textAlign: 'center' }}>
+              <img src="/pay/alipay.png" alt="支付宝收款码" style={{ width: 150, height: 150, borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)', objectFit: 'contain' }} />
+              <div style={{ fontSize: '0.72rem', color: 'var(--text3)', marginTop: 4 }}>支付宝</div>
+            </div>
+          </div>
           <div style={{ fontSize: '0.72rem', color: 'var(--text3)', marginTop: 8 }}>付款后发送截图至 quen@ai.tools<br/>1小时内手动开通会员</div>
         </div>
       </div>
