@@ -202,22 +202,22 @@ export default function Home() {
           <Link href={`/${locale}/tutorials`} className="section-more">更多教程 <IconChevronRight size={12} /></Link>
         </div>
         <div className="money-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))' }}>
-          <Link href={`/${locale}/tutorials`} className="money-card" style={{ borderLeft: '3px solid var(--pink)' }}>
+          <Link href={`/${locale}/tutorial/ai-ip-monetization`} className="money-card" style={{ borderLeft: '3px solid var(--pink)' }}>
             <div className="money-badge" style={{ background: 'rgba(244,114,182,0.1)', color: 'var(--pink)' }}>内容创作</div>
             <div className="money-title">AI二创IP变现：从流量爆款到实物变现</div>
             <div className="money-views">12.3K 阅读 · 入门级</div>
           </Link>
-          <Link href={`/${locale}/tutorials`} className="money-card" style={{ borderLeft: '3px solid var(--cyan)' }}>
+          <Link href={`/${locale}/tutorial/ai-saas-build`} className="money-card" style={{ borderLeft: '3px solid var(--cyan)' }}>
             <div className="money-badge" style={{ background: 'rgba(34,211,238,0.1)', color: 'var(--cyan)' }}>开发变现</div>
             <div className="money-title">利用AI自动化搭建SaaS，实现日入$200</div>
             <div className="money-views">49.0K 阅读 · 专业级</div>
           </Link>
-          <Link href={`/${locale}/tutorials`} className="money-card" style={{ borderLeft: '3px solid var(--yellow)' }}>
+          <Link href={`/${locale}/tutorial/ai-video-account`} className="money-card" style={{ borderLeft: '3px solid var(--yellow)' }}>
             <div className="money-badge" style={{ background: 'rgba(251,191,36,0.1)', color: 'var(--yellow)' }}>自媒体</div>
             <div className="money-title">AI视频起号：零粉到万粉爆款玩法</div>
             <div className="money-views">32.6K 阅读 · 入门级</div>
           </Link>
-          <Link href={`/${locale}/tutorials`} className="money-card" style={{ borderLeft: '3px solid var(--accent2)' }}>
+          <Link href={`/${locale}/tutorial/cursor-freelance`} className="money-card" style={{ borderLeft: '3px solid var(--accent2)' }}>
             <div className="money-badge" style={{ background: 'rgba(124,92,252,0.1)', color: 'var(--accent2)' }}>自由职业</div>
             <div className="money-title">用Cursor做自由职业：接单实战攻略</div>
             <div className="money-views">22.8K 阅读 · 进阶级</div>
