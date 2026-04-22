@@ -45,23 +45,9 @@ const trainTools = [
   { name: 'Hugging Face', domain: 'huggingface.co', desc: '模型训练微调' },
 ];
 
-const searchTools = [
-  { name: '秘塔AI搜索', domain: 'metaso.cn', desc: '无广告深度搜索' },
-  { name: 'Perplexity', domain: 'perplexity.ai', desc: 'AI问答式搜索' },
-  { name: 'Genspark', domain: 'genspark.ai', desc: 'AI引擎搜索' },
-];
-
-const writingTools = [
-  { name: 'ChatGPT', domain: 'chatgpt.com', desc: '通用AI写作' },
-  { name: 'Claude', domain: 'claude.ai', desc: '长文本写作最强' },
-  { name: 'Kimi', domain: 'kimi.moonshot.cn', desc: '中文写作好手' },
-  { name: '通义千问', domain: 'tongyi.aliyun.com', desc: '阿里AI助手' },
-];
-
-const musicTools = [
-  { name: 'Suno', domain: 'suno.com', desc: 'AI音乐生成' },
-  { name: 'Udio', domain: 'udio.com', desc: 'AI歌曲创作' },
-];
+const searchToolIds = ['metaso', 'perplexity'];
+const writingToolIds = ['chatgpt', 'claude', 'kimi', 'tongyi'];
+const musicToolIds = ['suno', 'udio'];
 
 // 免费白嫖数据
 const freeDeals = [
@@ -93,17 +79,17 @@ export default function Home() {
   // 获取当前标签的工具列表
   const getCurrentTools = () => {
     if (activeTab === 'hot') return hotTools;
-    if (['deploy', 'train', 'search', 'writing', 'music'].includes(activeTab)) return null;
+    if (activeTab === 'search') return searchToolIds.map(id => tools.find(t => t.id === id)).filter(Boolean);
+    if (activeTab === 'writing') return writingToolIds.map(id => tools.find(t => t.id === id)).filter(Boolean);
+    if (activeTab === 'music') return musicToolIds.map(id => tools.find(t => t.id === id)).filter(Boolean);
+    if (activeTab === 'deploy' || activeTab === 'train') return null;
     return getToolsByCategory(activeTab);
   };
   const currentTools = getCurrentTools();
-  const isSpecialTab = ['deploy', 'train', 'search', 'writing', 'music'].includes(activeTab);
+  const isSpecialTab = activeTab === 'deploy' || activeTab === 'train';
   const getSpecialData = () => {
     if (activeTab === 'deploy') return deployPlatforms;
     if (activeTab === 'train') return trainTools;
-    if (activeTab === 'search') return searchTools;
-    if (activeTab === 'writing') return writingTools;
-    if (activeTab === 'music') return musicTools;
     return [];
   };
 

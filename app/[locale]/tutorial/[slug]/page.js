@@ -28,7 +28,7 @@ export default async function TutorialDetailPage({ params }) {
     <div className="page" style={{ padding: '32px 0 80px' }}>
       <div style={{ padding: '0 24px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16, fontSize: '0.82rem', color: 'var(--text3)' }}>
-          <Link href={`/${locale}/tutorials`} style={{ color: 'var(--text3)', textDecoration: 'none' }}>AI教程</Link>
+          <Link href={`/${locale}/tutorials`} style={{ color: 'var(--text3)', textDecoration: 'none' }}>AI变现攻略</Link>
           <span>/</span>
           <span style={{ color: 'var(--text)' }}>{tut.cat}</span>
         </div>
@@ -75,7 +75,7 @@ export default async function TutorialDetailPage({ params }) {
           <Link href={`/${locale}/tutorials`} style={{
             display: 'inline-flex', alignItems: 'center', gap: 6, color: 'var(--accent2)',
             fontSize: '0.88rem', textDecoration: 'none',
-          }}><IconArrowLeft size={14} /> 返回教程列表</Link>
+          }}><IconArrowLeft size={14} /> 返回变现攻略</Link>
         </div>
       </div>
     </div>
