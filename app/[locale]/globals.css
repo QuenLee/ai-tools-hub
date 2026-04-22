@@ -261,7 +261,7 @@ a:hover { color: var(--accent3); }
 .mobile-nav a:hover { background: var(--surface); }
 
 /* ===== PAGE ===== */
-.page { max-width: 80%; margin: 0 auto; padding: 0 28px; }
+.page { max-width: 92%; margin: 0 auto; padding: 0 28px; }
 
 /* ===== HERO ===== */
 .hero { text-align: center; padding: 52px 0 32px; }

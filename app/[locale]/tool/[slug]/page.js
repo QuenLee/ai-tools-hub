@@ -60,15 +60,15 @@ export default async function ToolDetail({ params }) {
 
         {/* Hero 区域 */}
         <div style={{
-          display: 'flex', gap: 24, alignItems: 'flex-start',
-          padding: '28px 0 32px', borderBottom: '1px solid var(--border)', marginBottom: 28,
+          display: 'flex', gap: 20, alignItems: 'flex-start',
+          padding: '24px 0 28px', borderBottom: '1px solid var(--border)', marginBottom: 24,
           flexWrap: 'wrap',
         }}>
-          <div style={{ display: 'flex', gap: 18, alignItems: 'center', flex: 1, minWidth: 280 }}>
-            <Favicon domain={tool.favicon} name={tool.name} size={72} />
+          <div style={{ display: 'flex', gap: 14, alignItems: 'center', flex: 1, minWidth: 280 }}>
+            <Favicon domain={tool.favicon} name={tool.name} size={56} />
             <div>
-              <h1 style={{ fontSize: '1.8rem', fontWeight: 800, lineHeight: 1.2, marginBottom: 6 }}>{tool.name}</h1>
-              <p style={{ color: 'var(--text2)', fontSize: '0.95rem', lineHeight: 1.5, marginBottom: 10 }}>{tool.tagline}</p>
+              <h1 style={{ fontSize: '1.5rem', fontWeight: 800, lineHeight: 1.2, marginBottom: 6 }}>{tool.name}</h1>
+              <p style={{ color: 'var(--text2)', fontSize: '0.88rem', lineHeight: 1.5, marginBottom: 10 }}>{tool.tagline}</p>
               <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                 <span style={{ fontSize: '0.72rem', padding: '3px 10px', borderRadius: 6, background: 'rgba(96,165,250,0.1)', color: 'var(--blue)', fontWeight: 600 }}>{cat?.name}</span>
                 <span style={{ fontSize: '0.72rem', padding: '3px 10px', borderRadius: 6, background: tool.pricing.free ? 'rgba(52,211,153,0.1)' : 'rgba(251,191,36,0.1)', color: tool.pricing.free ? 'var(--green)' : 'var(--yellow)', fontWeight: 600 }}>
@@ -82,11 +82,11 @@ export default async function ToolDetail({ params }) {
           </div>
           {/* 评分卡 */}
           <div style={{
-            minWidth: 200, padding: '20px 24px', background: 'var(--surface)',
+            minWidth: 180, padding: '16px 20px', background: 'var(--surface)',
             borderRadius: 'var(--radius-md)', border: '1px solid var(--border)',
             boxShadow: 'var(--shadow-card)', textAlign: 'center',
           }}>
-            <div style={{ fontSize: '2.8rem', fontWeight: 800, color: getScoreColor(avgScore), lineHeight: 1 }}>{avgScore}</div>
+            <div style={{ fontSize: '2.4rem', fontWeight: 800, color: getScoreColor(avgScore), lineHeight: 1 }}>{avgScore}</div>
             <div style={{ color: 'var(--text2)', fontSize: '0.88rem', marginBottom: 16 }}>综合评分 · {getScoreLabel(avgScore)}</div>
             <ScoreBar label="实用性" score={tool.scores.usefulness} />
             <ScoreBar label="性价比" score={tool.scores.value} />
@@ -102,7 +102,7 @@ export default async function ToolDetail({ params }) {
         {/* 是什么 */}
         <section style={{ marginBottom: 36 }}>
           <h2 className="article-h2">{tool.name}是什么</h2>
-          <p style={{ fontSize: '0.95rem', lineHeight: 1.8, color: 'var(--text2)' }}>{tool.description}</p>
+          <p style={{ fontSize: '0.88rem', lineHeight: 1.8, color: 'var(--text2)' }}>{tool.description}</p>
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 14 }}>
             {tool.features.map(f => (
               <span key={f} style={{
@@ -152,13 +152,13 @@ export default async function ToolDetail({ params }) {
           <h2 className="article-h2">优缺点分析</h2>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
             <div style={{ padding: '20px', background: 'rgba(52,211,153,0.04)', border: '1px solid rgba(52,211,153,0.15)', borderRadius: 'var(--radius-sm)' }}>
-              <h3 style={{ color: 'var(--green)', fontSize: '0.95rem', fontWeight: 700, marginBottom: 14 }}>✅ 优点</h3>
+              <h3 style={{ color: 'var(--green)', fontSize: '0.88rem', fontWeight: 700, marginBottom: 14 }}>✅ 优点</h3>
               <ul style={{ paddingLeft: 18, lineHeight: 2, fontSize: '0.88rem' }}>
                 {tool.pros.map((p, i) => <li key={i}>{p}</li>)}
               </ul>
             </div>
             <div style={{ padding: '20px', background: 'rgba(251,191,36,0.04)', border: '1px solid rgba(251,191,36,0.15)', borderRadius: 'var(--radius-sm)' }}>
-              <h3 style={{ color: 'var(--yellow)', fontSize: '0.95rem', fontWeight: 700, marginBottom: 14 }}>⚠️ 不足</h3>
+              <h3 style={{ color: 'var(--yellow)', fontSize: '0.88rem', fontWeight: 700, marginBottom: 14 }}>⚠️ 不足</h3>
               <ul style={{ paddingLeft: 18, lineHeight: 2, fontSize: '0.88rem' }}>
                 {tool.cons.map((c, i) => <li key={i}>{c}</li>)}
               </ul>
@@ -175,7 +175,7 @@ export default async function ToolDetail({ params }) {
               border: `1px solid ${tool.pricing.free ? 'rgba(52,211,153,0.2)' : 'var(--border)'}`,
               borderRadius: 'var(--radius-sm)',
             }}>
-              <div style={{ fontWeight: 700, fontSize: '0.95rem', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 6 }}>
+              <div style={{ fontWeight: 700, fontSize: '0.88rem', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 6 }}>
                 <IconFree size={14} /> 免费版
               </div>
               <div style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--green)', marginBottom: 6 }}>
@@ -189,7 +189,7 @@ export default async function ToolDetail({ params }) {
                 borderRadius: 'var(--radius-sm)', position: 'relative',
               }}>
                 <span style={{ position: 'absolute', top: 10, right: 10, fontSize: '0.62rem', padding: '2px 8px', borderRadius: 6, background: 'rgba(251,191,36,0.1)', color: 'var(--yellow)', fontWeight: 600 }}>推荐</span>
-                <div style={{ fontWeight: 700, fontSize: '0.95rem', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 6 }}>
+                <div style={{ fontWeight: 700, fontSize: '0.88rem', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 6 }}>
                   <IconPaid size={14} /> 付费版
                 </div>
                 <div style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text)', marginBottom: 6 }}>{tool.pricing.paid}</div>

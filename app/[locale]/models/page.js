@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Favicon from '@/components/Favicon';
+import { IconGift } from '@/components/icons/Icons';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 
@@ -52,6 +53,42 @@ export default function ModelsPage() {
       </div>
       <h1 style={{ fontSize: '1.6rem', fontWeight: 800, marginBottom: 6 }}>AI模型</h1>
       <p style={{ color: 'var(--text2)', marginBottom: 24 }}>主流AI大模型深度对比，帮你选最合适的模型</p>
+
+      {/* 优惠模型横幅 */}
+      <div style={{
+        marginBottom: 24, padding: '18px 22px', borderRadius: 'var(--radius-sm)',
+        background: 'linear-gradient(135deg, rgba(52,211,153,0.08), rgba(34,211,238,0.08))',
+        border: '1px solid rgba(52,211,153,0.25)',
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+          <IconGift size={18} style={{ color: 'var(--green)' }} />
+          <h2 style={{ fontSize: '1rem', fontWeight: 700, margin: 0 }}>优惠接入</h2>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 12 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 14px', background: 'var(--surface)', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)' }}>
+            <Favicon domain="tongyi.aliyun.com" name="Qwen3" size={28} />
+            <div style={{ flex: 1 }}>
+              <div style={{ fontWeight: 600, fontSize: '0.86rem' }}>通义千问 Qwen3-235B</div>
+              <div style={{ fontSize: '0.72rem', color: 'var(--text3)', marginTop: 2 }}>新用户API送100万tokens，6个月有效</div>
+            </div>
+            <a href="https://www.aliyun.com/minisite/goods?userCode=j1oznb9i" target="_blank" rel="noopener noreferrer"
+              style={{ padding: '4px 10px', borderRadius: 'var(--radius-2xs)', background: 'var(--green)', color: '#fff', fontSize: '0.68rem', fontWeight: 600, textDecoration: 'none', whiteSpace: 'nowrap' }}>
+              🎉 领取优惠
+            </a>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 14px', background: 'var(--surface)', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)' }}>
+            <Favicon domain="bigmodel.cn" name="GLM-4" size={28} />
+            <div style={{ flex: 1 }}>
+              <div style={{ fontWeight: 600, fontSize: '0.86rem' }}>智谱 GLM-4-Plus</div>
+              <div style={{ fontSize: '0.72rem', color: 'var(--text3)', marginTop: 2 }}>¥0.05/百万tokens，国产最便宜API</div>
+            </div>
+            <a href="https://bigmodel.cn" target="_blank" rel="noopener noreferrer"
+              style={{ padding: '4px 10px', borderRadius: 'var(--radius-2xs)', border: '1px solid var(--border)', color: 'var(--text2)', fontSize: '0.68rem', fontWeight: 500, textDecoration: 'none', whiteSpace: 'nowrap' }}>
+              官网
+            </a>
+          </div>
+        </div>
+      </div>
 
       {/* 筛选 + 排序 */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12, marginBottom: 24 }}>
