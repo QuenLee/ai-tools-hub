@@ -24,7 +24,9 @@ export function AITool({ config, onBack, locale, toolId }) {
 
     setError(''); setLoading(true); setResult('');
     const userPrompt = buildPrompt(inputs);
+    // 60秒超时（匹配Vercel Node.js函数maxDuration）
     const ctrl = new AbortController();
+    const timeoutId = setTimeout(() => ctrl.abort(), 55000);
     abortRef.current = ctrl;
 
     try {
@@ -34,12 +36,34 @@ export function AITool({ config, onBack, locale, toolId }) {
         body: JSON.stringify({ toolId: id, input: userPrompt, locale }),
         signal: ctrl.signal,
       });
+
+      // 处理非200响应
+      if (!res.ok) {
+        if (res.status === 504) {
+          setError('AI生成超时，请简化输入后重试');
+        } else if (res.status === 429) {
+          setError('请求过于频繁，请稍等1分钟再试');
+        } else {
+          let msg = `请求失败(${res.status})`;
+          try { const d = await res.json(); if (d.error) msg = d.error; } catch {}
+          setError(msg);
+        }
+        return;
+      }
+
       const data = await res.json();
       if (data.error) { setError(data.error); }
       else { guard.useOnce(); setResult(data.content); }
     } catch (e) {
-      if (e.name !== 'AbortError') setError('网络错误，请重试');
-    } finally { setLoading(false); }
+      if (e.name === 'AbortError') {
+        setError('生成超时，请简化输入后重试');
+      } else {
+        setError('网络错误，请检查网络后重试');
+      }
+    } finally {
+      clearTimeout(timeoutId);
+      setLoading(false);
+    }
   }, [inputs, guard, id, locale, config]);
 
   if (guard.blocked) return <LimitBlocked onBack={onBack} />;
@@ -90,9 +114,11 @@ export function AITool({ config, onBack, locale, toolId }) {
       <button onClick={handleGenerate} disabled={loading}
         style={{ width: '100%', padding: '12px', borderRadius: 'var(--radius-sm)', background: loading ? 'var(--border)' : 'var(--accent)', color: loading ? 'var(--text3)' : '#fff', fontWeight: 700, fontSize: '0.92rem', border: 'none', cursor: loading ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
         {loading ? (
-          <><span style={{ display: 'inline-block', width: 16, height: 16, border: '2px solid var(--text3)', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} /> AI生成中...</>
+          <><span style={{ display: 'inline-block', width: 16, height: 16, border: '2px solid var(--text3)', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} /> AI生成中，请耐心等待...</>
         ) : '🚀 AI生成'}
       </button>
+
+      {loading && <div style={{ marginTop: 8, fontSize: '0.75rem', color: 'var(--text3)', textAlign: 'center' }}>AI正在思考，通常需要10-30秒</div>}
 
       {/* 错误提示 */}
       {error && <div style={{ marginTop: 12, padding: '10px 14px', borderRadius: 'var(--radius-sm)', background: 'rgba(239,68,68,0.1)', color: 'var(--red)', fontSize: '0.82rem' }}>{error}</div>}

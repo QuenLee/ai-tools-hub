@@ -1,6 +1,7 @@
 import { PROMPTS } from '@/lib/prompts';
 
-export const runtime = 'edge';
+// Node.js runtime — 60s timeout (vs Edge 10s on Hobby plan)
+export const maxDuration = 60;
 
 const NVIDIA_API_URL = 'https://integrate.api.nvidia.com/v1/chat/completions';
 const MODEL = 'deepseek-ai/deepseek-v3.2';
