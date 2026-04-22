@@ -14,6 +14,18 @@ const promoTools = [
   { id: 'notion-ai', name: 'Notion AI', domain: 'notion.so', promo: '首月优惠', affiliate: 'https://ntn.so/aitools', desc: 'Notion AI写作助手，评测链接注册享首月优惠' },
 ];
 
+// 产品与在线工具的映射
+const productToOnlineTool = {
+  'chatgpt': 'ai-copywriter',
+  'claude': 'ai-copywriter', 
+  'deepseek': 'ai-translate',
+  'kimi': 'ai-translate',
+  'tongyi': 'ai-translate',
+  'cursor': 'ai-code-review',
+  'trae': 'ai-code-review',
+  'suno': 'prompt-templates',
+};
+
 export default function ProductsPage() {
   const { locale } = useParams();
   const [activeCat, setActiveCat] = useState('all');

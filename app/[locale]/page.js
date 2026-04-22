@@ -1,12 +1,12 @@
 'use client';
-
 import { useState, useRef } from 'react';
-import { tools, categories, getToolsByCategory, getScoreColor } from '@/lib/data';
+import { tools } from '@/lib/data';
 import { topics } from '@/lib/topics';
 import { tutorials } from '@/lib/tutorials';
 import { t } from '@/lib/i18n';
+import { ALL_TOOLS } from '@/lib/tools-registry';
 import Favicon from '@/components/Favicon';
-import { IconStar, IconFire, IconFree, IconPaid, IconChevronRight, IconGift, IconChevronLeft, IconCode, IconRocket, IconBrain, IconImage, IconVideo, IconChat, IconSearch, IconWrite } from '@/components/icons/Icons';
+import { IconStar, IconFire, IconFree, IconGift, IconChevronRight, IconChevronLeft, IconCode, IconRocket, IconBrain, IconImage, IconVideo, IconChat, IconSearch, IconWrite } from '@/components/icons/Icons';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 
@@ -75,10 +75,7 @@ export default function Home() {
 
   const hotIds = ['deepseek', 'doubao', 'chatgpt', 'kimi', 'cursor', 'suno'];
   const hotTools = hotIds.map(id => tools.find(tool => tool.id === id)).filter(Boolean);
-
-  const scrollRef = (ref, dir) => {
-    if (ref.current) ref.current.scrollBy({ left: dir * 320, behavior: 'smooth' });
-  };
+  const scrollRef = (ref, dir) => { if (ref.current) ref.current.scrollBy({ left: dir * 320, behavior: 'smooth' }); };
 
   const getCurrentTools = () => {
     if (activeTab === 'hot') return hotTools;
@@ -86,8 +83,9 @@ export default function Home() {
     if (activeTab === 'search') return searchToolIds.map(id => tools.find(t => t.id === id)).filter(Boolean);
     if (activeTab === 'writing') return writingToolIds.map(id => tools.find(t => t.id === id)).filter(Boolean);
     if (activeTab === 'music') return musicToolIds.map(id => tools.find(t => t.id === id)).filter(Boolean);
-    return getToolsByCategory(activeTab);
+    return tools.filter(t => t.category === activeTab);
   };
+
   const currentTools = getCurrentTools();
   const isSpecialTab = ['deploy', 'train', 'promo'].includes(activeTab);
   const getSpecialData = () => {
@@ -99,9 +97,129 @@ export default function Home() {
 
   const moneyTutorials = tutorials.slice(0, 8);
 
+  // 12个在线工具分组
+  const highTools = ALL_TOOLS.filter(t => t.cat === 'high');
+  const midTools = ALL_TOOLS.filter(t => t.cat === 'mid');
+  const existingTools = ALL_TOOLS.filter(t => t.cat === 'existing');
+
   return (
     <div className="page">
-      {/* ==================== 热门专题 ==================== */}
+      {/* ==================== 🔥 免费AI工具（首页第一屏） ==================== */}
+      <section className="section">
+        <div className="section-header">
+          <h2 className="section-title"><IconRocket size={18} style={{ color: 'var(--accent)' }} /> 免费AI工具</h2>
+          <Link href={`/${locale}/tools`} className="section-more">全部工具 <IconChevronRight size={12} /></Link>
+        </div>
+        <div style={{ margin: '0 0 18px', padding: '14px 18px', borderRadius: 'var(--radius-sm)', background: 'linear-gradient(135deg, rgba(99,102,241,0.08), rgba(124,92,252,0.08))', border: '1px solid rgba(99,102,241,0.2)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 10 }}>
+          <span style={{ fontWeight: 600, fontSize: '0.88rem' }}>12款在线工具免费使用，开通会员无限解锁</span>
+          <Link href={`/${locale}/tools`} style={{ padding: '7px 18px', borderRadius: 'var(--radius-2xs)', background: 'var(--accent)', color: '#fff', fontSize: '0.82rem', fontWeight: 600, textDecoration: 'none' }}>🔓 ¥9.9/月开通</Link>
+        </div>
+        {/* 高优先工具 */}
+        <div style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--text2)', marginBottom: 8 }}>🔥 高频刚需</div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 10, marginBottom: 16 }}>
+          {highTools.map(tool => (
+            <Link key={tool.id} href={`/${locale}/tools?tool=${tool.id}`} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 16px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', textDecoration: 'none', color: 'var(--text)', boxShadow: 'var(--shadow-card)', transition: 'all 0.3s', position: 'relative', overflow: 'hidden' }}>
+              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: 'linear-gradient(90deg, var(--red), var(--accent))' }} />
+              <span style={{ fontSize: '1.4rem' }}>{tool.icon}</span>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontWeight: 700, fontSize: '0.88rem' }}>{tool.name}</div>
+                <div style={{ fontSize: '0.72rem', color: 'var(--text3)', marginTop: 2 }}>{tool.desc}</div>
+              </div>
+              <span style={{ fontSize: '0.62rem', padding: '2px 6px', borderRadius: 4, background: 'rgba(52,211,153,0.1)', color: 'var(--green)', fontWeight: 600, whiteSpace: 'nowrap' }}>免费试用</span>
+            </Link>
+          ))}
+        </div>
+        {/* 实用工具 */}
+        <div style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--text2)', marginBottom: 8 }}>💡 实用工具</div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 10, marginBottom: 16 }}>
+          {midTools.map(tool => (
+            <Link key={tool.id} href={`/${locale}/tools?tool=${tool.id}`} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 16px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', textDecoration: 'none', color: 'var(--text)', boxShadow: 'var(--shadow-card)', transition: 'all 0.3s' }}>
+              <span style={{ fontSize: '1.4rem' }}>{tool.icon}</span>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontWeight: 700, fontSize: '0.88rem' }}>{tool.name}</div>
+                <div style={{ fontSize: '0.72rem', color: 'var(--text3)', marginTop: 2 }}>{tool.desc}</div>
+              </div>
+              <span style={{ fontSize: '0.62rem', padding: '2px 6px', borderRadius: 4, background: 'rgba(99,102,241,0.1)', color: 'var(--accent)', fontWeight: 600, whiteSpace: 'nowrap' }}>免费试用</span>
+            </Link>
+          ))}
+        </div>
+        {/* 基础工具 */}
+        <div style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--text2)', marginBottom: 8 }}>📄 基础工具</div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 10 }}>
+          {existingTools.map(tool => (
+            <Link key={tool.id} href={`/${locale}/tools?tool=${tool.id}`} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 16px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', textDecoration: 'none', color: 'var(--text)', boxShadow: 'var(--shadow-card)', transition: 'all 0.2s' }}>
+              <span style={{ fontSize: '1.2rem' }}>{tool.icon}</span>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontWeight: 600, fontSize: '0.86rem' }}>{tool.name}</div>
+                <div style={{ fontSize: '0.72rem', color: 'var(--text3)', marginTop: 2 }}>{tool.desc}</div>
+              </div>
+              <span style={{ fontSize: '0.62rem', padding: '2px 6px', borderRadius: 4, background: 'rgba(52,211,153,0.1)', color: 'var(--green)', fontWeight: 600, whiteSpace: 'nowrap' }}>完全免费</span>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* ==================== 热门AI产品推荐 ==================== */}
+      <section className="section">
+        <div className="section-header">
+          <h2 className="section-title"><IconFire size={18} style={{ color: 'var(--red)' }} /> 热门AI产品</h2>
+          <Link href={`/${locale}/products`} className="section-more">更多产品 <IconChevronRight size={12} /></Link>
+        </div>
+        <div style={{ display: 'flex', gap: 4, marginBottom: 18, overflowX: 'auto', paddingBottom: 4 }}>
+          {toolTabs.map(tab => {
+            const TabIcon = tab.icon;
+            return (
+              <button key={tab.id} onClick={() => setActiveTab(tab.id)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '7px 14px', borderRadius: 'var(--radius-2xs)', border: activeTab === tab.id ? `1px solid ${tab.color}` : '1px solid var(--border)', background: activeTab === tab.id ? `${tab.color}12` : 'transparent', color: activeTab === tab.id ? tab.color : 'var(--text2)', fontSize: '0.8rem', fontWeight: activeTab === tab.id ? 600 : 400, cursor: 'pointer', whiteSpace: 'nowrap', transition: 'all 0.2s' }}>
+                <TabIcon size={14} /> {tab.label}
+              </button>
+            );
+          })}
+        </div>
+        {isSpecialTab ? (
+          activeTab === 'promo' ? (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 14 }}>
+              {promoTools.map(item => (
+                <div key={item.id} style={{ background: 'var(--surface)', border: '1px solid rgba(52,211,153,0.3)', borderRadius: 'var(--radius-sm)', padding: '18px 20px', boxShadow: 'var(--shadow-card)', transition: 'all 0.3s', position: 'relative', overflow: 'hidden' }}>
+                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: 'linear-gradient(90deg, var(--green), var(--cyan), var(--accent2))' }} />
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
+                    <Favicon domain={item.domain} name={item.name} size={32} />
+                    <div>
+                      <div style={{ fontWeight: 700, fontSize: '0.92rem' }}>{item.name}</div>
+                      <span style={{ fontSize: '0.68rem', padding: '1px 8px', borderRadius: 4, background: 'rgba(52,211,153,0.1)', color: 'var(--green)', fontWeight: 600, display: 'inline-block', marginTop: 2 }}>{item.promo}</span>
+                    </div>
+                  </div>
+                  <p style={{ fontSize: '0.8rem', color: 'var(--text2)', lineHeight: 1.5, marginBottom: 12 }}>{item.desc}</p>
+                  <div style={{ display: 'flex', gap: 8 }}>
+                    <Link href={`/${locale}/tool/${item.id}`} style={{ padding: '6px 14px', borderRadius: 'var(--radius-2xs)', border: '1px solid var(--border)', fontSize: '0.75rem', color: 'var(--text2)', textDecoration: 'none' }}>查看评测</Link>
+                    <a href={item.affiliate} target="_blank" rel="noopener noreferrer" style={{ padding: '6px 14px', borderRadius: 'var(--radius-2xs)', background: 'var(--green)', color: '#fff', fontSize: '0.75rem', fontWeight: 600, textDecoration: 'none' }}>🎉 优惠访问</a>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 10 }}>
+              {getSpecialData().map(item => (
+                <a key={item.domain} href={`https://${item.domain}`} target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 14px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', textDecoration: 'none', color: 'var(--text)', boxShadow: 'var(--shadow-card)', transition: 'all 0.2s' }}>
+                  <Favicon domain={item.domain} name={item.name} size={24} />
+                  <div><div style={{ fontWeight: 600, fontSize: '0.86rem' }}>{item.name}</div><div style={{ fontSize: '0.72rem', color: 'var(--text3)' }}>{item.desc}</div></div>
+                  <span style={{ marginLeft: 'auto', fontSize: '0.68rem', color: 'var(--green)', background: 'rgba(52,211,153,0.08)', padding: '2px 8px', borderRadius: 6, fontWeight: 600 }}>免费</span>
+                </a>
+              ))}
+            </div>
+          )
+        ) : (
+          <div className="usage-grid">
+            {currentTools.map(tool => (
+              <Link key={tool.id} href={`/${locale}/tool/${tool.id}`} className="usage-card">
+                <Favicon domain={tool.favicon} name={tool.name} size={40} />
+                <div><div className="usage-name">{tool.name}</div><div className="usage-desc">{tool.tagline}</div></div>
+              </Link>
+            ))}
+          </div>
+        )}
+      </section>
+
+      {/* ==================== 热门专题（SEO） ==================== */}
       <section className="section">
         <div className="section-header">
           <h2 className="section-title"><IconStar size={18} style={{ color: '#fbbf24' }} /> 热门专题</h2>
@@ -127,89 +245,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ==================== 大家都在用 ==================== */}
-      <section className="section">
-        <div className="section-header">
-          <h2 className="section-title"><IconFire size={18} style={{ color: 'var(--red)' }} /> 大家都在用</h2>
-          <Link href={`/${locale}/products`} className="section-more">更多产品 <IconChevronRight size={12} /></Link>
-        </div>
-        <div style={{ display: 'flex', gap: 4, marginBottom: 18, overflowX: 'auto', paddingBottom: 4 }}>
-          {toolTabs.map(tab => {
-            const TabIcon = tab.icon;
-            return (
-              <button key={tab.id} onClick={() => setActiveTab(tab.id)} style={{
-                display: 'flex', alignItems: 'center', gap: 6, padding: '7px 14px', borderRadius: 'var(--radius-2xs)',
-                border: activeTab === tab.id ? `1px solid ${tab.color}` : '1px solid var(--border)',
-                background: activeTab === tab.id ? `${tab.color}12` : 'transparent',
-                color: activeTab === tab.id ? tab.color : 'var(--text2)',
-                fontSize: '0.8rem', fontWeight: activeTab === tab.id ? 600 : 400,
-                cursor: 'pointer', whiteSpace: 'nowrap', transition: 'all 0.2s',
-              }}>
-                <TabIcon size={14} /> {tab.label}
-              </button>
-            );
-          })}
-        </div>
-        {isSpecialTab ? (
-          activeTab === 'promo' ? (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 14 }}>
-              {promoTools.map(item => (
-                <div key={item.id} style={{
-                  background: 'var(--surface)', border: '1px solid rgba(52,211,153,0.3)',
-                  borderRadius: 'var(--radius-sm)', padding: '18px 20px',
-                  boxShadow: 'var(--shadow-card)', transition: 'all 0.3s',
-                  position: 'relative', overflow: 'hidden',
-                }}>
-                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: 'linear-gradient(90deg, var(--green), var(--cyan), var(--accent2))' }} />
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
-                    <Favicon domain={item.domain} name={item.name} size={32} />
-                    <div>
-                      <div style={{ fontWeight: 700, fontSize: '0.92rem' }}>{item.name}</div>
-                      <span style={{ fontSize: '0.68rem', padding: '1px 8px', borderRadius: 4, background: 'rgba(52,211,153,0.1)', color: 'var(--green)', fontWeight: 600, display: 'inline-block', marginTop: 2 }} title={item.desc}>{item.promo}</span>
-                    </div>
-                  </div>
-                  <p style={{ fontSize: '0.8rem', color: 'var(--text2)', lineHeight: 1.5, marginBottom: 12 }}>{item.desc}</p>
-                  <div style={{ display: 'flex', gap: 8 }}>
-                    <Link href={`/${locale}/tool/${item.id}`} style={{ padding: '6px 14px', borderRadius: 'var(--radius-2xs)', border: '1px solid var(--border)', fontSize: '0.75rem', color: 'var(--text2)', textDecoration: 'none' }}>查看评测</Link>
-                    <a href={item.affiliate} target="_blank" rel="noopener noreferrer" style={{ padding: '6px 14px', borderRadius: 'var(--radius-2xs)', background: 'var(--green)', color: '#fff', fontSize: '0.75rem', fontWeight: 600, textDecoration: 'none' }}>🎉 优惠访问</a>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 10 }}>
-              {getSpecialData().map(item => (
-                <a key={item.domain} href={`https://${item.domain}`} target="_blank" rel="noopener noreferrer" style={{
-                  display: 'flex', alignItems: 'center', gap: 10, padding: '12px 14px',
-                  background: 'var(--surface)', border: '1px solid var(--border)',
-                  borderRadius: 'var(--radius-sm)', textDecoration: 'none', color: 'var(--text)',
-                  boxShadow: 'var(--shadow-card)', transition: 'all 0.2s',
-                }}>
-                  <Favicon domain={item.domain} name={item.name} size={24} />
-                  <div>
-                    <div style={{ fontWeight: 600, fontSize: '0.86rem' }}>{item.name}</div>
-                    <div style={{ fontSize: '0.72rem', color: 'var(--text3)' }}>{item.desc}</div>
-                  </div>
-                  <span style={{ marginLeft: 'auto', fontSize: '0.68rem', color: 'var(--green)', background: 'rgba(52,211,153,0.08)', padding: '2px 8px', borderRadius: 6, fontWeight: 600 }}>免费</span>
-                </a>
-              ))}
-            </div>
-          )
-        ) : (
-          <div className="usage-grid">
-            {currentTools.map(tool => (
-              <Link key={tool.id} href={`/${locale}/tool/${tool.id}`} className="usage-card">
-                <Favicon domain={tool.favicon} name={tool.name} size={40} />
-                <div>
-                  <div className="usage-name">{tool.name}</div>
-                  <div className="usage-desc">{tool.tagline}</div>
-                </div>
-              </Link>
-            ))}
-          </div>
-        )}
-      </section>
-
       {/* ==================== AI变现攻略 ==================== */}
       <section className="section">
         <div className="section-header">
@@ -222,20 +257,10 @@ export default function Home() {
           <div ref={moneyScrollRef} style={{ display: 'flex', gap: 14, overflowX: 'auto', scrollSnapType: 'x mandatory', padding: '4px 36px', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
             {moneyTutorials.map(tut => (
               <Link key={tut.slug} href={`/${locale}/tutorial/${tut.slug}`} style={{ flex: '0 0 calc(25% - 11px)', scrollSnapAlign: 'start', textDecoration: 'none', minWidth: 240 }}>
-                <div style={{
-                  background: 'var(--surface)', border: '1px solid var(--border)',
-                  borderRadius: 'var(--radius-sm)', padding: '16px 18px',
-                  boxShadow: 'var(--shadow-card)', transition: 'all 0.3s',
-                  borderLeft: `3px solid ${tut.catColor}`, height: '100%',
-                }}>
+                <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', padding: '16px 18px', boxShadow: 'var(--shadow-card)', transition: 'all 0.3s', borderLeft: `3px solid ${tut.catColor}`, height: '100%' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                    <span style={{ fontSize: '0.62rem', padding: '2px 8px', borderRadius: 6, color: tut.catColor, fontWeight: 600,
-                      background: tut.catColor === 'var(--pink)' ? 'rgba(244,114,182,0.1)' : tut.catColor === 'var(--cyan)' ? 'rgba(34,211,238,0.1)' : tut.catColor === 'var(--yellow)' ? 'rgba(251,191,36,0.1)' : tut.catColor === 'var(--accent2)' ? 'rgba(124,92,252,0.1)' : 'rgba(52,211,153,0.1)',
-                    }}>{tut.cat}</span>
-                    <span style={{ fontSize: '0.62rem', padding: '2px 6px', borderRadius: 4, fontWeight: 600,
-                      background: tut.difficulty === '入门级' ? 'rgba(52,211,153,0.08)' : tut.difficulty === '进阶级' ? 'rgba(251,191,36,0.08)' : 'rgba(124,92,252,0.08)',
-                      color: tut.difficulty === '入门级' ? 'var(--green)' : tut.difficulty === '进阶级' ? 'var(--yellow)' : 'var(--accent2)',
-                    }}>{tut.difficulty}</span>
+                    <span style={{ fontSize: '0.62rem', padding: '2px 8px', borderRadius: 6, color: tut.catColor, fontWeight: 600, background: tut.catColor === 'var(--pink)' ? 'rgba(244,114,182,0.1)' : tut.catColor === 'var(--cyan)' ? 'rgba(34,211,238,0.1)' : tut.catColor === 'var(--yellow)' ? 'rgba(251,191,36,0.1)' : tut.catColor === 'var(--accent2)' ? 'rgba(124,92,252,0.1)' : 'rgba(52,211,153,0.1)' }}>{tut.cat}</span>
+                    <span style={{ fontSize: '0.62rem', padding: '2px 6px', borderRadius: 4, fontWeight: 600, background: tut.difficulty === '入门级' ? 'rgba(52,211,153,0.08)' : tut.difficulty === '进阶级' ? 'rgba(251,191,36,0.08)' : 'rgba(124,92,252,0.08)', color: tut.difficulty === '入门级' ? 'var(--green)' : tut.difficulty === '进阶级' ? 'var(--yellow)' : 'var(--accent2)' }}>{tut.difficulty}</span>
                   </div>
                   <div style={{ fontSize: '0.88rem', fontWeight: 700, lineHeight: 1.4, marginBottom: 4, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{tut.title}</div>
                   <div style={{ fontSize: '0.74rem', color: 'var(--text3)' }}>{tut.views} 阅读 · {tut.time}</div>
@@ -254,20 +279,12 @@ export default function Home() {
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 10 }}>
           {freeDeals.map(deal => (
-            <Link key={deal.name} href={deal.id ? `/${locale}/tool/${deal.id}` : `/${locale}/deals`} style={{
-              display: 'flex', alignItems: 'center', gap: 10, padding: '12px 14px',
-              background: 'var(--surface)', border: '1px solid var(--border)',
-              borderRadius: 'var(--radius-sm)', textDecoration: 'none', color: 'var(--text)',
-              boxShadow: 'var(--shadow-card)', transition: 'all 0.2s',
-            }}>
+            <Link key={deal.name} href={deal.id ? `/${locale}/tool/${deal.id}` : `/${locale}/deals`} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 14px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', textDecoration: 'none', color: 'var(--text)', boxShadow: 'var(--shadow-card)', transition: 'all 0.2s' }}>
               <Favicon domain={deal.domain} name={deal.name} size={28} />
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontWeight: 600, fontSize: '0.88rem', display: 'flex', alignItems: 'center', gap: 6 }}>
                   {deal.name}
-                  <span style={{ fontSize: '0.62rem', padding: '1px 6px', borderRadius: 4, fontWeight: 600,
-                    background: deal.tag === '永久免费' ? 'rgba(52,211,153,0.1)' : 'rgba(251,191,36,0.1)',
-                    color: deal.tag === '永久免费' ? 'var(--green)' : 'var(--yellow)',
-                  }}>{deal.tag}</span>
+                  <span style={{ fontSize: '0.62rem', padding: '1px 6px', borderRadius: 4, fontWeight: 600, background: deal.tag === '永久免费' ? 'rgba(52,211,153,0.1)' : 'rgba(251,191,36,0.1)', color: deal.tag === '永久免费' ? 'var(--green)' : 'var(--yellow)' }}>{deal.tag}</span>
                 </div>
                 <div style={{ fontSize: '0.74rem', color: 'var(--text3)' }}>{deal.price}</div>
               </div>

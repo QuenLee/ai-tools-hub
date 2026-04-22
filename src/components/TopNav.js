@@ -1,23 +1,21 @@
 'use client';
-
 import { useState } from 'react';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { t } from '@/lib/i18n';
 import { IconSearch, IconMenu, IconX } from '@/components/icons/Icons';
 import ThemeToggle from '@/components/ThemeToggle';
 
 const navItems = [
   { href: '', labelKey: 'nav.home' },
-  { href: '/products', labelKey: 'nav.products' },
   { href: '/tools', labelKey: 'nav.tools' },
+  { href: '/products', labelKey: 'nav.products' },
   { href: '/models', labelKey: 'nav.models' },
   { href: '/tutorials', labelKey: 'nav.tutorials' },
 ];
 
 export default function TopNav({ locale }) {
   const pathname = usePathname();
-  const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
   const currentLocale = locale;
 
@@ -35,9 +33,7 @@ export default function TopNav({ locale }) {
           </Link>
           <div className="topnav-links">
             {navItems.map(item => (
-              <Link key={item.labelKey} href={`/${currentLocale}${item.href}`}
-                className={`topnav-link ${isActive(item.href) ? 'active' : ''}`}
-              >
+              <Link key={item.labelKey} href={`/${currentLocale}${item.href}`} className={`topnav-link ${isActive(item.href) ? 'active' : ''}`}>
                 {t(currentLocale, item.labelKey)}
               </Link>
             ))}
@@ -54,15 +50,12 @@ export default function TopNav({ locale }) {
           </button>
         </div>
       </nav>
-
       <div className={`mobile-nav ${mobileOpen ? 'open' : ''}`}>
         <button className="mobile-nav-close" onClick={() => setMobileOpen(false)}>
           <IconX />
         </button>
         {navItems.map(item => (
-          <Link key={item.labelKey} href={`/${currentLocale}${item.href}`}
-            onClick={() => setMobileOpen(false)}
-          >
+          <Link key={item.labelKey} href={`/${currentLocale}${item.href}`} onClick={() => setMobileOpen(false)}>
             {t(currentLocale, item.labelKey)}
           </Link>
         ))}

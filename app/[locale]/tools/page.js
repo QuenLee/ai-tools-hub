@@ -2,8 +2,9 @@
 import { useState } from 'react';
 import { canUseTool, recordUsage, isPaidUser, getUser, saveUser, logout, PAID_PRICES, getFreeLimitDisplay } from '@/lib/usage';
 import { ALL_TOOLS } from '@/lib/tools-registry';
-import { useParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import { useEffect } from 'react';
 
 // 动态导入工具组件
 import { AITextDetect } from '@/components/tools/AITextDetect';
@@ -36,10 +37,12 @@ const TOOL_COMPONENTS = {
 
 export default function ToolsPage() {
   const { locale } = useParams();
+
   const [activeTab, setActiveTab] = useState('all');
   const [activeTool, setActiveTool] = useState(null);
   const [showLogin, setShowLogin] = useState(false);
   const [showPay, setShowPay] = useState(false);
+  useEffect(() => { if (typeof window !== "undefined") { const params = new URLSearchParams(window.location.search); const tp = params.get("tool"); if (tp && TOOL_COMPONENTS[tp]) setActiveTool(tp); } }, []);
 
   const filteredTools = activeTab === 'all' ? ALL_TOOLS :
     activeTab === 'high' ? ALL_TOOLS.filter(t => t.cat === 'high') :
