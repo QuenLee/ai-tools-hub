@@ -3,18 +3,28 @@
 import { useState, useRef } from 'react';
 import { tools, categories, getToolsByCategory, getScoreColor } from '@/lib/data';
 import { topics } from '@/lib/topics';
+import { tutorials } from '@/lib/tutorials';
 import { t } from '@/lib/i18n';
 import Favicon from '@/components/Favicon';
-import { IconStar, IconFire, IconFree, IconPaid, IconChevronRight, IconGift, IconChevronLeft, IconCode, IconRocket, IconBrain, IconImage, IconVideo, IconChat, IconSearch } from '@/components/icons/Icons';
+import { IconStar, IconFire, IconFree, IconPaid, IconChevronRight, IconGift, IconChevronLeft, IconCode, IconRocket, IconBrain, IconImage, IconVideo, IconChat, IconSearch, IconWrite } from '@/components/icons/Icons';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 
-// "大家都在用"标签页配置
+// Inline IconMusic (not in Icons.js yet)
+function IconMusic({ size = 18 }) {
+  return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>;
+}
+
+// "大家都在用"标签页配置 — 增加更多分类
 const toolTabs = [
   { id: 'hot', label: '热门工具', icon: IconFire, color: 'var(--red)' },
   { id: 'code', label: '开发必备', icon: IconCode, color: 'var(--cyan)' },
+  { id: 'chat', label: '对话助手', icon: IconChat, color: 'var(--accent2)' },
+  { id: 'writing', label: '写作工具', icon: IconWrite, color: 'var(--pink)' },
   { id: 'image', label: '图像工具', icon: IconImage, color: 'var(--pink)' },
   { id: 'video', label: '视频工具', icon: IconVideo, color: 'var(--yellow)' },
+  { id: 'music', label: '音乐工具', icon: IconMusic, color: 'var(--green)' },
+  { id: 'search', label: 'AI搜索', icon: IconSearch, color: 'var(--blue)' },
   { id: 'deploy', label: '免费部署', icon: IconRocket, color: 'var(--green)' },
   { id: 'train', label: '模型训练', icon: IconBrain, color: 'var(--accent2)' },
 ];
@@ -35,6 +45,24 @@ const trainTools = [
   { name: 'Hugging Face', domain: 'huggingface.co', desc: '模型训练微调' },
 ];
 
+const searchTools = [
+  { name: '秘塔AI搜索', domain: 'metaso.cn', desc: '无广告深度搜索' },
+  { name: 'Perplexity', domain: 'perplexity.ai', desc: 'AI问答式搜索' },
+  { name: 'Genspark', domain: 'genspark.ai', desc: 'AI引擎搜索' },
+];
+
+const writingTools = [
+  { name: 'ChatGPT', domain: 'chatgpt.com', desc: '通用AI写作' },
+  { name: 'Claude', domain: 'claude.ai', desc: '长文本写作最强' },
+  { name: 'Kimi', domain: 'kimi.moonshot.cn', desc: '中文写作好手' },
+  { name: '通义千问', domain: 'tongyi.aliyun.com', desc: '阿里AI助手' },
+];
+
+const musicTools = [
+  { name: 'Suno', domain: 'suno.com', desc: 'AI音乐生成' },
+  { name: 'Udio', domain: 'udio.com', desc: 'AI歌曲创作' },
+];
+
 // 免费白嫖数据
 const freeDeals = [
   { name: 'DeepSeek', domain: 'chat.deepseek.com', price: '完全免费', tag: '永久免费', id: 'deepseek' },
@@ -53,68 +81,48 @@ export default function Home() {
   const { locale } = useParams();
   const [activeTab, setActiveTab] = useState('hot');
   const topicScrollRef = useRef(null);
+  const moneyScrollRef = useRef(null);
 
   const hotIds = ['deepseek', 'doubao', 'chatgpt', 'kimi', 'cursor', 'suno'];
   const hotTools = hotIds.map(id => tools.find(tool => tool.id === id)).filter(Boolean);
 
-  const topicScroll = (dir) => {
-    if (topicScrollRef.current) {
-      topicScrollRef.current.scrollBy({ left: dir * 320, behavior: 'smooth' });
-    }
+  const scrollRef = (ref, dir) => {
+    if (ref.current) ref.current.scrollBy({ left: dir * 320, behavior: 'smooth' });
   };
 
   // 获取当前标签的工具列表
   const getCurrentTools = () => {
     if (activeTab === 'hot') return hotTools;
-    if (activeTab === 'deploy') return null; // 特殊处理
-    if (activeTab === 'train') return null; // 特殊处理
+    if (['deploy', 'train', 'search', 'writing', 'music'].includes(activeTab)) return null;
     return getToolsByCategory(activeTab);
   };
-
   const currentTools = getCurrentTools();
-  const isSpecialTab = activeTab === 'deploy' || activeTab === 'train';
+  const isSpecialTab = ['deploy', 'train', 'search', 'writing', 'music'].includes(activeTab);
+  const getSpecialData = () => {
+    if (activeTab === 'deploy') return deployPlatforms;
+    if (activeTab === 'train') return trainTools;
+    if (activeTab === 'search') return searchTools;
+    if (activeTab === 'writing') return writingTools;
+    if (activeTab === 'music') return musicTools;
+    return [];
+  };
+
+  // 变现攻略数据：取前8篇教程
+  const moneyTutorials = tutorials.slice(0, 8);
 
   return (
     <div className="page">
-      {/* ==================== Hero：只保留统计数字 ==================== */}
-      <section style={{ marginBottom: 24, display: 'flex', gap: 20, justifyContent: 'center' }}>
-        <div className="hero-stat-card" style={{ '--i': 0, textAlign: 'center', padding: '10px 24px', background: 'var(--surface)', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)', minWidth: 100, transition: 'all 0.3s' }}>
-          <div className="stat-gradient stat-num" style={{ fontSize: '1.4rem', fontWeight: 800 }}>{tools.length}+</div>
-          <div style={{ fontSize: '0.72rem', color: 'var(--text3)' }}>工具评测</div>
-        </div>
-        <div className="hero-stat-card" style={{ '--i': 1, textAlign: 'center', padding: '10px 24px', background: 'var(--surface)', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)', minWidth: 100, transition: 'all 0.3s' }}>
-          <div className="stat-gradient stat-num" style={{ fontSize: '1.4rem', fontWeight: 800 }}>{tools.filter(t => t.pricing.free).length}</div>
-          <div style={{ fontSize: '0.72rem', color: 'var(--text3)' }}>免费可用</div>
-        </div>
-        <div className="hero-stat-card" style={{ '--i': 2, textAlign: 'center', padding: '10px 24px', background: 'var(--surface)', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)', minWidth: 100, transition: 'all 0.3s' }}>
-          <div className="stat-gradient stat-num" style={{ fontSize: '1.4rem', fontWeight: 800 }}>{categories.length + 1}</div>
-          <div style={{ fontSize: '0.72rem', color: 'var(--text3)' }}>分类</div>
-        </div>
-      </section>
-
-      {/* ==================== 热门专题 — 横向轮播 ==================== */}
+      {/* ==================== 热门专题 — 横向轮播（一屏4个，卡片更矮更长）==================== */}
       <section className="section">
         <div className="section-header">
           <h2 className="section-title"><IconStar size={18} style={{ color: '#fbbf24' }} /> 热门专题</h2>
           <Link href={`/${locale}/compare`} className="section-more">更多专题 <IconChevronRight size={12} /></Link>
         </div>
         <div style={{ position: 'relative' }}>
-          <button onClick={() => topicScroll(-1)} style={{
-            position: 'absolute', left: -8, top: '50%', transform: 'translateY(-50%)',
-            width: 32, height: 32, borderRadius: '50%', border: '1px solid var(--border)',
-            background: 'var(--surface)', color: 'var(--text2)', cursor: 'pointer',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            zIndex: 2, boxShadow: 'var(--shadow-card)',
-          }}>
+          <button onClick={() => scrollRef(topicScrollRef, -1)} className="scroll-arrow" style={{ left: -8 }}>
             <IconChevronLeft size={14} />
           </button>
-          <button onClick={() => topicScroll(1)} style={{
-            position: 'absolute', right: -8, top: '50%', transform: 'translateY(-50%)',
-            width: 32, height: 32, borderRadius: '50%', border: '1px solid var(--border)',
-            background: 'var(--surface)', color: 'var(--text2)', cursor: 'pointer',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            zIndex: 2, boxShadow: 'var(--shadow-card)',
-          }}>
+          <button onClick={() => scrollRef(topicScrollRef, 1)} className="scroll-arrow" style={{ right: -8 }}>
             <IconChevronRight size={14} />
           </button>
           <div ref={topicScrollRef} style={{
@@ -122,11 +130,22 @@ export default function Home() {
             padding: '4px 36px', scrollbarWidth: 'none', msOverflowStyle: 'none',
           }}>
             {topics.map(topic => (
-              <Link key={topic.id} href={`/${locale}/topic/${topic.slug}`} style={{ flex: '0 0 280px', scrollSnapAlign: 'start', textDecoration: 'none' }}>
-                <div className="topic-card" style={{ height: '100%', margin: 0 }}>
-                  <div className="topic-badge" style={{ background: topic.badgeBg, color: topic.badgeColor }}>{topic.badge}</div>
-                  <div className="topic-title">{topic.title}</div>
-                  <div className="topic-desc">{topic.desc.slice(0, 40)}… →</div>
+              <Link key={topic.id} href={`/${locale}/topic/${topic.slug}`} style={{ flex: '0 0 calc(25% - 11px)', scrollSnapAlign: 'start', textDecoration: 'none', minWidth: 260 }}>
+                <div style={{
+                  background: 'var(--surface)', border: '1px solid var(--border)',
+                  borderRadius: 'var(--radius-sm)', padding: '16px 18px',
+                  boxShadow: 'var(--shadow-card)', transition: 'all 0.3s',
+                  height: '100%', position: 'relative', overflow: 'hidden',
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                    <span style={{
+                      fontSize: '0.62rem', padding: '2px 8px', borderRadius: 6,
+                      background: topic.badgeBg, color: topic.badgeColor, fontWeight: 600,
+                    }}>{topic.badge}</span>
+                    <span style={{ fontSize: '0.68rem', color: 'var(--text3)' }}>{topic.date}</span>
+                  </div>
+                  <div style={{ fontSize: '0.88rem', fontWeight: 700, lineHeight: 1.4, marginBottom: 4, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{topic.title}</div>
+                  <div style={{ fontSize: '0.74rem', color: 'var(--text2)', lineHeight: 1.5, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{topic.desc}</div>
                 </div>
               </Link>
             ))}
@@ -134,12 +153,12 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ==================== 大家都在用 — 标签切换 ==================== */}
+      {/* ==================== 大家都在用 — 标签切换（更多分类+更多产品入口）==================== */}
       <section className="section">
         <div className="section-header">
           <h2 className="section-title"><IconFire size={18} style={{ color: 'var(--red)' }} /> 大家都在用</h2>
+          <Link href={`/${locale}/products`} className="section-more">更多产品 <IconChevronRight size={12} /></Link>
         </div>
-        {/* 标签栏 */}
         <div style={{ display: 'flex', gap: 4, marginBottom: 18, overflowX: 'auto', paddingBottom: 4 }}>
           {toolTabs.map(tab => {
             const TabIcon = tab.icon;
@@ -158,12 +177,9 @@ export default function Home() {
             );
           })}
         </div>
-
-        {/* 标签内容 */}
         {isSpecialTab ? (
-          // 部署/训练：用卡片列表
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 10 }}>
-            {(activeTab === 'deploy' ? deployPlatforms : trainTools).map(item => (
+            {getSpecialData().map(item => (
               <a key={item.domain} href={`https://${item.domain}`} target="_blank" rel="noopener noreferrer" style={{
                 display: 'flex', alignItems: 'center', gap: 10, padding: '12px 14px',
                 background: 'var(--surface)', border: '1px solid var(--border)',
@@ -180,7 +196,6 @@ export default function Home() {
             ))}
           </div>
         ) : (
-          // 工具类：用法卡片网格
           <div className="usage-grid">
             {currentTools.map(tool => (
               <Link key={tool.id} href={`/${locale}/tool/${tool.id}`} className="usage-card">
@@ -195,37 +210,53 @@ export default function Home() {
         )}
       </section>
 
-      {/* ==================== AI变现攻略 ==================== */}
+      {/* ==================== AI变现攻略 — 横向轮播 ==================== */}
       <section className="section">
         <div className="section-header">
           <h2 className="section-title"><IconFire size={18} style={{ color: 'var(--red)' }} /> AI变现攻略</h2>
-          <Link href={`/${locale}/tutorials`} className="section-more">更多教程 <IconChevronRight size={12} /></Link>
+          <Link href={`/${locale}/tutorials`} className="section-more">更多攻略 <IconChevronRight size={12} /></Link>
         </div>
-        <div className="money-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))' }}>
-          <Link href={`/${locale}/tutorial/ai-ip-monetization`} className="money-card" style={{ borderLeft: '3px solid var(--pink)' }}>
-            <div className="money-badge" style={{ background: 'rgba(244,114,182,0.1)', color: 'var(--pink)' }}>内容创作</div>
-            <div className="money-title">AI二创IP变现：从流量爆款到实物变现</div>
-            <div className="money-views">12.3K 阅读 · 入门级</div>
-          </Link>
-          <Link href={`/${locale}/tutorial/ai-saas-build`} className="money-card" style={{ borderLeft: '3px solid var(--cyan)' }}>
-            <div className="money-badge" style={{ background: 'rgba(34,211,238,0.1)', color: 'var(--cyan)' }}>开发变现</div>
-            <div className="money-title">利用AI自动化搭建SaaS，实现日入$200</div>
-            <div className="money-views">49.0K 阅读 · 专业级</div>
-          </Link>
-          <Link href={`/${locale}/tutorial/ai-video-account`} className="money-card" style={{ borderLeft: '3px solid var(--yellow)' }}>
-            <div className="money-badge" style={{ background: 'rgba(251,191,36,0.1)', color: 'var(--yellow)' }}>自媒体</div>
-            <div className="money-title">AI视频起号：零粉到万粉爆款玩法</div>
-            <div className="money-views">32.6K 阅读 · 入门级</div>
-          </Link>
-          <Link href={`/${locale}/tutorial/cursor-freelance`} className="money-card" style={{ borderLeft: '3px solid var(--accent2)' }}>
-            <div className="money-badge" style={{ background: 'rgba(124,92,252,0.1)', color: 'var(--accent2)' }}>自由职业</div>
-            <div className="money-title">用Cursor做自由职业：接单实战攻略</div>
-            <div className="money-views">22.8K 阅读 · 进阶级</div>
-          </Link>
+        <div style={{ position: 'relative' }}>
+          <button onClick={() => scrollRef(moneyScrollRef, -1)} className="scroll-arrow" style={{ left: -8 }}>
+            <IconChevronLeft size={14} />
+          </button>
+          <button onClick={() => scrollRef(moneyScrollRef, 1)} className="scroll-arrow" style={{ right: -8 }}>
+            <IconChevronRight size={14} />
+          </button>
+          <div ref={moneyScrollRef} style={{
+            display: 'flex', gap: 14, overflowX: 'auto', scrollSnapType: 'x mandatory',
+            padding: '4px 36px', scrollbarWidth: 'none', msOverflowStyle: 'none',
+          }}>
+            {moneyTutorials.map(tut => (
+              <Link key={tut.slug} href={`/${locale}/tutorial/${tut.slug}`} style={{ flex: '0 0 calc(25% - 11px)', scrollSnapAlign: 'start', textDecoration: 'none', minWidth: 240 }}>
+                <div style={{
+                  background: 'var(--surface)', border: '1px solid var(--border)',
+                  borderRadius: 'var(--radius-sm)', padding: '16px 18px',
+                  boxShadow: 'var(--shadow-card)', transition: 'all 0.3s',
+                  borderLeft: `3px solid ${tut.catColor}`,
+                  height: '100%',
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                    <span style={{
+                      fontSize: '0.62rem', padding: '2px 8px', borderRadius: 6,
+                      background: tut.catColor === 'var(--pink)' ? 'rgba(244,114,182,0.1)' : tut.catColor === 'var(--cyan)' ? 'rgba(34,211,238,0.1)' : tut.catColor === 'var(--yellow)' ? 'rgba(251,191,36,0.1)' : tut.catColor === 'var(--accent2)' ? 'rgba(124,92,252,0.1)' : 'rgba(52,211,153,0.1)',
+                      color: tut.catColor, fontWeight: 600,
+                    }}>{tut.cat}</span>
+                    <span style={{ fontSize: '0.62rem', padding: '2px 6px', borderRadius: 4, fontWeight: 600,
+                      background: tut.difficulty === '入门级' ? 'rgba(52,211,153,0.08)' : tut.difficulty === '进阶级' ? 'rgba(251,191,36,0.08)' : 'rgba(124,92,252,0.08)',
+                      color: tut.difficulty === '入门级' ? 'var(--green)' : tut.difficulty === '进阶级' ? 'var(--yellow)' : 'var(--accent2)',
+                    }}>{tut.difficulty}</span>
+                  </div>
+                  <div style={{ fontSize: '0.88rem', fontWeight: 700, lineHeight: 1.4, marginBottom: 4, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{tut.title}</div>
+                  <div style={{ fontSize: '0.74rem', color: 'var(--text3)' }}>{tut.views} 阅读 · {tut.time}</div>
+                </div>
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* ==================== 免费白嫖指南 — 重新布局 ==================== */}
+      {/* ==================== 免费白嫖指南 ==================== */}
       <section className="section">
         <div className="section-header">
           <h2 className="section-title"><IconGift size={18} style={{ color: 'var(--green)' }} /> 免费白嫖指南</h2>
@@ -243,8 +274,7 @@ export default function Home() {
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontWeight: 600, fontSize: '0.88rem', display: 'flex', alignItems: 'center', gap: 6 }}>
                   {deal.name}
-                  <span style={{
-                    fontSize: '0.62rem', padding: '1px 6px', borderRadius: 4, fontWeight: 600,
+                  <span style={{ fontSize: '0.62rem', padding: '1px 6px', borderRadius: 4, fontWeight: 600,
                     background: deal.tag === '永久免费' ? 'rgba(52,211,153,0.1)' : 'rgba(251,191,36,0.1)',
                     color: deal.tag === '永久免费' ? 'var(--green)' : 'var(--yellow)',
                   }}>{deal.tag}</span>
@@ -255,7 +285,6 @@ export default function Home() {
           ))}
         </div>
       </section>
-
     </div>
   );
 }
