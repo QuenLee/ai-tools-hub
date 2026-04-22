@@ -26,6 +26,16 @@ const ALL_TOOLS = [
   { id: 'data-analysis', name: '数据分析助手', desc: '描述问题→分析框架+思路', icon: '📊', price: '9.9元/月', cat: 'pro', apiTool: true },
   { id: 'interview-prep', name: '面试准备助手', desc: '岗位→20高频问题+参考答案', icon: '🎯', price: '19.9元/月', cat: 'pro', apiTool: true },
 
+  // ===== 🌟 补充高需求工具（AI驱动）=====
+  { id: 'blog-writer', name: '博客文章生成', desc: '主题→深度博客长文', icon: '📝', price: '9.9元/月', cat: 'pro', apiTool: true },
+  { id: 'summary-gen', name: '智能摘要生成', desc: '粘贴长文→精炼摘要', icon: '📋', price: '免费', cat: 'office', apiTool: true },
+  { id: 'story-gen', name: 'AI故事创作', desc: '设定→完整故事', icon: '📖', price: '9.9元/月', cat: 'social', apiTool: true },
+  { id: 'study-plan', name: '学习计划生成', desc: '目标→系统学习计划', icon: '📚', price: '9.9元/月', cat: 'office', apiTool: true },
+  { id: 'brainstorm', name: '创意头脑风暴', desc: '问题→20+创意想法', icon: '💡', price: '免费', cat: 'pro', apiTool: true },
+  { id: 'translate-polish', name: '翻译+润色', desc: '文本翻译或语言润色', icon: '🌐', price: '免费', cat: 'office', apiTool: true },
+  { id: 'name-gen', name: '品牌命名+Slogan', desc: '产品描述→品牌名+口号', icon: '🏷️', price: '9.9元/月', cat: 'pro', apiTool: true },
+  { id: 'api-doc', name: 'API文档生成', desc: 'API描述→完整接口文档', icon: '🔧', price: '9.9元/月', cat: 'pro', apiTool: true },
+
   // ===== 📄 基础工具（前端本地）=====
   { id: 'ai-text-detect', name: 'AI文本检测', desc: '检测文本是否AI生成', icon: '🔍', price: '9.9元/月', cat: 'basic' },
   { id: 'ai-watermark', name: 'AI去水印', desc: '上传图片智能去除水印', icon: '🖼️', price: '19.9元/月', cat: 'basic' },

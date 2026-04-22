@@ -23,6 +23,15 @@ const FREE_LIMITS = {
   'contract-review': { daily: 1 },
   'data-analysis': { daily: 2 },
   'interview-prep': { daily: 1 },
+  // 🌟 补充工具
+  'blog-writer': { daily: 2 },
+  'summary-gen': { daily: 5 },
+  'story-gen': { daily: 2 },
+  'study-plan': { daily: 2 },
+  'brainstorm': { daily: 3 },
+  'translate-polish': { daily: 5 },
+  'name-gen': { daily: 2 },
+  'api-doc': { daily: 2 },
   // 📄 基础工具
   'ai-text-detect': { daily: 3 },
   'ai-watermark': { daily: 1 },

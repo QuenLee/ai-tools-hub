@@ -54,6 +54,14 @@ const TOOL_COMPONENTS = {
   'contract-review': (props) => <AIToolWrapper toolId="contract-review" {...props} />,
   'data-analysis': (props) => <AIToolWrapper toolId="data-analysis" {...props} />,
   'interview-prep': (props) => <AIToolWrapper toolId="interview-prep" {...props} />,
+  'blog-writer': (props) => <AIToolWrapper toolId="blog-writer" {...props} />,
+  'summary-gen': (props) => <AIToolWrapper toolId="summary-gen" {...props} />,
+  'story-gen': (props) => <AIToolWrapper toolId="story-gen" {...props} />,
+  'study-plan': (props) => <AIToolWrapper toolId="study-plan" {...props} />,
+  'brainstorm': (props) => <AIToolWrapper toolId="brainstorm" {...props} />,
+  'translate-polish': (props) => <AIToolWrapper toolId="translate-polish" {...props} />,
+  'name-gen': (props) => <AIToolWrapper toolId="name-gen" {...props} />,
+  'api-doc': (props) => <AIToolWrapper toolId="api-doc" {...props} />,
   // 📄 基础工具（前端本地）
   'ai-text-detect': AITextDetect,
   'ai-watermark': AIWatermarkRemover,
@@ -114,7 +122,7 @@ export default function ToolsPage() {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12, marginBottom: 6 }}>
           <div>
             <h1 style={{ fontSize: '1.6rem', fontWeight: 800, marginBottom: 6 }}>AI工具箱</h1>
-            <p style={{ color: 'var(--text2)', fontSize: '0.88rem' }}>32款在线工具 · 20款AI驱动 · 自媒体+职场+专业全覆盖</p>
+            <p style={{ color: 'var(--text2)', fontSize: '0.88rem' }}>40款在线工具 · 28款AI驱动 · 自媒体+职场+专业全覆盖</p>
           </div>
           <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
             {getUser() && <span style={{ fontSize: '0.78rem', color: 'var(--accent2)', fontWeight: 600 }}>👤 {getUser().email}</span>}
@@ -212,7 +220,7 @@ function PayModal({ onClose }) {
     <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999 }} onClick={onClose}>
       <div style={{ background: 'var(--surface)', borderRadius: 'var(--radius-md)', padding: 32, width: 420, maxWidth: '90vw', boxShadow: '0 20px 60px rgba(0,0,0,0.3)' }} onClick={e => e.stopPropagation()}>
         <h2 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: 6 }}>开通会员</h2>
-        <p style={{ fontSize: '0.82rem', color: 'var(--text2)', marginBottom: 20 }}>解锁全部32款工具无限使用</p>
+        <p style={{ fontSize: '0.82rem', color: 'var(--text2)', marginBottom: 20 }}>解锁全部40款工具无限使用</p>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 20 }}>
           <div style={{ padding: 20, borderRadius: 'var(--radius-sm)', border: '2px solid var(--accent)', background: 'rgba(99,102,241,0.05)', textAlign: 'center' }}>
             <div style={{ fontSize: '0.72rem', color: 'var(--accent)', fontWeight: 600, marginBottom: 4 }}>基础版</div>
