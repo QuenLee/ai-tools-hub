@@ -1,3 +1,5 @@
+import { PROMPTS } from '@/lib/prompts';
+
 export const runtime = 'edge';
 
 const NVIDIA_API_URL = 'https://integrate.api.nvidia.com/v1/chat/completions';
@@ -8,7 +10,6 @@ const JAILBREAK_PATTERNS = [
   /忽略.{0,4}(以上|前面|上述|之前|所有)/i,
   /ignore.{0,4}(above|previous|all|prior)/i,
   /(输出|打印|重复|复述|显示|列出).{0,6}(系统|提示|指令|prompt|system)/i,
-  /(你.{0,4}(是|被).{0,6}(定义|设定|编程|创建|训练))/i,
   /(pretend|act as|roleplay).{0,10}(you are not|different)/i,
   /jailbreak/i,
   /DAN\s+mode/i,
@@ -37,10 +38,16 @@ function hasLeak(output) {
 
 export async function POST(request) {
   try {
-    const { toolId, input, locale } = await request.json();
+    const body = await request.json();
+    const toolId = body.toolId;
+    const input = body.input;
+    const locale = body.locale;
 
-    if (!toolId || !input || !input.trim()) {
-      return Response.json({ error: '缺少参数' }, { status: 400 });
+    if (!toolId) {
+      return Response.json({ error: '缺少toolId参数' }, { status: 400 });
+    }
+    if (!input || !input.trim()) {
+      return Response.json({ error: '请填写必要的内容后再生成' }, { status: 400 });
     }
 
     // 越狱检测
@@ -48,16 +55,14 @@ export async function POST(request) {
       return Response.json({ error: '请输入与工具相关的内容' }, { status: 400 });
     }
 
-    // 动态导入提示词（避免打包到前端）
-    const { PROMPTS } = await import('@/lib/prompts');
     const systemPrompt = PROMPTS[toolId];
     if (!systemPrompt) {
-      return Response.json({ error: '未知工具' }, { status: 400 });
+      return Response.json({ error: `未知工具: ${toolId}` }, { status: 400 });
     }
 
     const apiKey = process.env.NVIDIA_API_KEY;
     if (!apiKey) {
-      return Response.json({ error: 'API未配置' }, { status: 500 });
+      return Response.json({ error: 'API未配置，请联系管理员' }, { status: 500 });
     }
 
     const userMessage = locale === 'en'
@@ -102,6 +107,6 @@ export async function POST(request) {
     return Response.json({ content });
   } catch (err) {
     console.error('Generate API error:', err);
-    return Response.json({ error: '服务器错误' }, { status: 500 });
+    return Response.json({ error: `服务器错误: ${err.message}` }, { status: 500 });
   }
 }
