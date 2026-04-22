@@ -5,6 +5,7 @@ import { topics } from '@/lib/topics';
 import { tutorials } from '@/lib/tutorials';
 import { t } from '@/lib/i18n';
 import { ALL_TOOLS } from '@/lib/tools-registry';
+import { getFreeLimitDisplay } from '@/lib/usage';
 import Favicon from '@/components/Favicon';
 import { IconStar, IconFire, IconFree, IconGift, IconChevronRight, IconChevronLeft, IconCode, IconRocket, IconBrain, IconImage, IconVideo, IconChat, IconSearch, IconWrite } from '@/components/icons/Icons';
 import Link from 'next/link';
@@ -98,6 +99,7 @@ export default function Home() {
   const moneyTutorials = tutorials.slice(0, 8);
 
   // 12个在线工具分组
+  const socialTools = ALL_TOOLS.filter(t => t.cat === 'social');
   const highTools = ALL_TOOLS.filter(t => t.cat === 'high');
   const midTools = ALL_TOOLS.filter(t => t.cat === 'mid');
   const existingTools = ALL_TOOLS.filter(t => t.cat === 'existing');
@@ -114,7 +116,23 @@ export default function Home() {
           <span style={{ fontWeight: 600, fontSize: '0.88rem' }}>12款在线工具免费使用，开通会员无限解锁</span>
           <Link href={`/${locale}/tools`} style={{ padding: '7px 18px', borderRadius: 'var(--radius-2xs)', background: 'var(--accent)', color: '#fff', fontSize: '0.82rem', fontWeight: 600, textDecoration: 'none' }}>🔓 ¥9.9/月开通</Link>
         </div>
-        {/* 高优先工具 */}
+        {/* 自媒体神器 */}
+        <div style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--text2)', marginBottom: 8 }}>📱 自媒体神器 <span style={{ fontSize: '0.68rem', color: 'var(--accent)', fontWeight: 400, marginLeft: 6 }}>AI驱动·真实输出</span></div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 10, marginBottom: 16 }}>
+          {socialTools.map(tool => (
+            <Link key={tool.id} href={`/${locale}/tools?tool=${tool.id}`} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 16px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', textDecoration: 'none', color: 'var(--text)', boxShadow: 'var(--shadow-card)', transition: 'all 0.3s', position: 'relative', overflow: 'hidden' }}>
+              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: 'linear-gradient(90deg, #FF2442, var(--accent))' }} />
+              <span style={{ fontSize: '1.4rem' }}>{tool.icon}</span>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontWeight: 700, fontSize: '0.88rem', display: 'flex', alignItems: 'center', gap: 4 }}>{tool.name} {tool.apiTool && <span style={{ fontSize: '0.56rem', padding: '1px 5px', borderRadius: 3, background: 'rgba(99,102,241,0.1)', color: 'var(--accent)', fontWeight: 600 }}>AI</span>}</div>
+                <div style={{ fontSize: '0.72rem', color: 'var(--text3)', marginTop: 2 }}>{tool.desc}</div>
+              </div>
+              <span style={{ fontSize: '0.62rem', padding: '2px 6px', borderRadius: 4, background: tool.price === '免费' ? 'rgba(52,211,153,0.1)' : 'rgba(251,191,36,0.1)', color: tool.price === '免费' ? 'var(--green)' : 'var(--yellow)', fontWeight: 600, whiteSpace: 'nowrap' }}>{getFreeLimitDisplay(tool.id)}</span>
+            </Link>
+          ))}
+        </div>
+
+        {/* 高频刚需 */}
         <div style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--text2)', marginBottom: 8 }}>🔥 高频刚需</div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 10, marginBottom: 16 }}>
           {highTools.map(tool => (
