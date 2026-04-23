@@ -66,7 +66,7 @@ export function LimitBlocked({ onBack }) {
     <div style={{ maxWidth: 480, margin: '0 auto', textAlign: 'center', padding: '60px 20px' }}>
       <div style={{ fontSize: '3rem', marginBottom: 16 }}>⏰</div>
       <div style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: 8 }}>今日免费次数已用完</div>
-      <div style={{ color: 'var(--text2)', fontSize: '0.88rem', marginBottom: 20, lineHeight: 1.6 }}>明天0点自动重置，每天可免费使用<br/>试试其他免费工具吧</div>
+      <div style={{ color: 'var(--text2)', fontSize: '0.88rem', marginBottom: 20, lineHeight: 1.6 }}>明天0点自动重置，每天可免费使用<br/>💡 每日签到可获得额外AI次数哦！</div>
       <button onClick={onBack} style={{ padding: '10px 24px', borderRadius: 10, background: 'var(--accent)', color: '#fff', fontWeight: 600, border: 'none', cursor: 'pointer', fontSize: '0.88rem' }}>返回工具箱</button>
     </div>
   );

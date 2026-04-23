@@ -1,0 +1,24 @@
+{
+  "name": "AI工具箱 - 60款免费在线AI工具",
+  "short_name": "AI工具箱",
+  "description": "60款免费在线工具，34款AI驱动，无需注册即开即用",
+  "start_url": "/zh/tools",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#6366f1",
+  "orientation": "portrait-primary",
+  "lang": "zh-CN",
+  "icons": [
+    {
+      "src": "/android-icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/android-icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "categories": ["utilities", "productivity"]
+}

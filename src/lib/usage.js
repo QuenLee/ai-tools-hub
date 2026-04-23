@@ -1,4 +1,5 @@
 // 使用次数管理 — 纯免费限次模式，无登录/付费
+import { getBonusUses, consumeBonusUse } from './checkin';
 
 const FREE_LIMITS = {
   // 📱 自媒体AI工具
@@ -68,6 +69,10 @@ const FREE_LIMITS = {
   'ai-copywriter': { daily: 5 },
   'image-convert': { daily: 10 },
   'markdown-editor': { unlimited: true },
+  // 🔥 高搜索量SEO工具
+  'image-compress': { unlimited: true },
+  'id-photo': { unlimited: true },
+  'pdf-merge': { unlimited: true },
 };
 
 function getTodayKey() {
@@ -110,14 +115,22 @@ export function canUseTool(toolId) {
   const today = getTodayKey();
   const toolData = data[toolId] || {};
   const usedToday = toolData[today] || 0;
-  return { allowed: usedToday < limit.daily, remaining: Math.max(0, limit.daily - usedToday) };
+  const bonus = getBonusUses();
+  const totalAvailable = limit.daily - usedToday + bonus;
+  return { allowed: totalAvailable > 0, remaining: Math.max(0, totalAvailable), bonus };
 }
 
 export function recordUsage(toolId) {
   const data = getUsageData();
   const today = getTodayKey();
   if (!data[toolId]) data[toolId] = {};
-  data[toolId][today] = (data[toolId][today] || 0) + 1;
+  const usedToday = data[toolId][today] || 0;
+  const limit = FREE_LIMITS[toolId];
+  if (limit && !limit.unlimited && usedToday >= limit.daily) {
+    // Daily limit reached, consume bonus use
+    consumeBonusUse();
+  }
+  data[toolId][today] = usedToday + 1;
   saveUsageData(data);
 }
 

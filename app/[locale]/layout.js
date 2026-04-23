@@ -1,6 +1,7 @@
 import { locales } from '@/lib/i18n';
 import Script from 'next/script';
 import ThemeToggle from '@/components/ThemeToggle';
+import CheckinWidget from '@/components/CheckinWidget';
 import './globals.css';
 
 export function generateStaticParams() {
@@ -29,6 +30,8 @@ export async function generateMetadata({ params }) {
       ],
       apple: '/apple-touch-icon.png',
     },
+    manifest: '/manifest.json',
+    themeColor: '#6366f1',
     openGraph: {
       title: titles[locale] || titles['zh'],
       description: descriptions[locale] || descriptions['zh'],
@@ -69,6 +72,7 @@ export default async function LocaleLayout({ children, params }) {
           <a href={`/${locale}/terms`} style={{ color: 'var(--text3)', textDecoration: 'none' }}>服务条款</a>
           <ThemeToggle />
         </footer>
+        <CheckinWidget />
       </body>
       {/* Google Analytics */}
       {GA_ID && (
