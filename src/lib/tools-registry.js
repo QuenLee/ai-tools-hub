@@ -36,6 +36,28 @@ const ALL_TOOLS = [
   { id: 'name-gen', name: '品牌命名+Slogan', desc: '产品描述→品牌名+口号', icon: '🏷️', price: '9.9元/月', cat: 'pro', apiTool: true },
   { id: 'api-doc', name: 'API文档生成', desc: 'API描述→完整接口文档', icon: '🔧', price: '9.9元/月', cat: 'pro', apiTool: true },
 
+  // ===== 💻 开发者工具（前端本地，免费无限）=====
+  { id: 'json-formatter', name: 'JSON格式化', desc: 'JSON美化/压缩/校验', icon: '{ }', price: '免费', cat: 'dev', apiTool: false },
+  { id: 'json-to-yaml', name: 'JSON转YAML', desc: 'JSON↔YAML互转', icon: '📋', price: '免费', cat: 'dev', apiTool: false },
+  { id: 'base64-tool', name: 'Base64编解码', desc: '文本/文件Base64编解码', icon: '🔐', price: '免费', cat: 'dev', apiTool: false },
+  { id: 'url-encode', name: 'URL编解码', desc: 'URL编码/解码', icon: '🔗', price: '免费', cat: 'dev', apiTool: false },
+  { id: 'hash-gen', name: '哈希生成器', desc: 'MD5/SHA1/SHA256哈希', icon: '#️⃣', price: '免费', cat: 'dev', apiTool: false },
+  { id: 'regex-tester', name: '正则表达式测试', desc: '正则实时匹配测试', icon: '🎯', price: '免费', cat: 'dev', apiTool: false },
+  { id: 'timestamp-tool', name: '时间戳转换', desc: 'Unix时间戳↕日期互转', icon: '⏱️', price: '免费', cat: 'dev', apiTool: false },
+  { id: 'uuid-gen', name: 'UUID生成器', desc: '批量生成UUID v4', icon: '🆔', price: '免费', cat: 'dev', apiTool: false },
+  { id: 'color-tool', name: '颜色转换器', desc: 'HEX↔RGB↔HSL互转', icon: '🎨', price: '免费', cat: 'dev', apiTool: false },
+  { id: 'text-diff', name: '文本对比', desc: '两段文本差异高亮对比', icon: '📝', price: '免费', cat: 'dev', apiTool: false },
+  { id: 'jwt-parser', name: 'JWT解析器', desc: '解码JWT Token查看内容', icon: '🔑', price: '免费', cat: 'dev', apiTool: false },
+  { id: 'qr-code', name: '二维码生成器', desc: '文本/链接→二维码', icon: '📱', price: '免费', cat: 'dev', apiTool: false },
+  // ===== 🎁 免费粘性工具（引流+SEO）=====
+  { id: 'word-count', name: '字数统计', desc: '字数/词数/行数/字符统计', icon: '📊', price: '免费', cat: 'free', apiTool: false },
+  { id: 'text-replace', name: '批量文本替换', desc: '查找替换+正则替换', icon: '🔄', price: '免费', cat: 'free', apiTool: false },
+  { id: 'lorem-ipsum', name: '占位文本生成', desc: '中英文占位文本Lorem', icon: '📃', price: '免费', cat: 'free', apiTool: false },
+  { id: 'slug-gen', name: 'URL Slug生成', desc: '中文标题→URL友好slug', icon: '🌐', price: '免费', cat: 'free', apiTool: false },
+  { id: 'markdown-preview', name: 'Markdown预览', desc: '实时Markdown渲染预览', icon: '👁️', price: '免费', cat: 'free', apiTool: false },
+  { id: 'emoji-picker', name: 'Emoji选择器', desc: '搜索复制Emoji表情', icon: '😊', price: '免费', cat: 'free', apiTool: false },
+  { id: 'password-gen', name: '密码生成器', desc: '安全随机密码生成', icon: '🔐', price: '免费', cat: 'free', apiTool: false },
+  { id: 'html-entity', name: 'HTML实体转换', desc: 'HTML特殊字符编码解码', icon: '&amp;', price: '免费', cat: 'free', apiTool: false },
   // ===== 📄 基础工具（前端本地）=====
   { id: 'ai-text-detect', name: 'AI文本检测', desc: '检测文本是否AI生成', icon: '🔍', price: '9.9元/月', cat: 'basic' },
   { id: 'ai-watermark', name: 'AI去水印', desc: '上传图片智能去除水印', icon: '🖼️', price: '19.9元/月', cat: 'basic' },

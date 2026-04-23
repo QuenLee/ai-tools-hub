@@ -1,11 +1,12 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { canUseTool, recordUsage, isPaidUser, getFreeLimitDisplay } from '@/lib/usage';
 
 export function useToolGuard(toolId) {
   const [blocked, setBlocked] = useState(false);
-  const [remaining, setRemaining] = useState(0);
+  const [remaining, setRemaining] = useState(-1); // -1表示尚未初始化
   const paid = typeof window !== 'undefined' && isPaidUser();
+
   const check = () => {
     if (paid) { setRemaining(Infinity); setBlocked(false); return true; }
     const { allowed, remaining: r } = canUseTool(toolId);
@@ -13,7 +14,12 @@ export function useToolGuard(toolId) {
     if (!allowed) { setBlocked(true); return false; }
     return true;
   };
+
   const useOnce = () => { recordUsage(toolId); check(); };
+
+  // 首次挂载时初始化次数
+  useEffect(() => { check(); }, [toolId]);
+
   return { blocked, remaining, paid, check, useOnce };
 }
 
@@ -26,7 +32,7 @@ export function ToolWrapper({ title, desc, icon, onBack, remaining, children }) 
         <h1 style={{ fontSize: '1.3rem', fontWeight: 800 }}>{title}</h1>
       </div>
       <p style={{ color: 'var(--text2)', fontSize: '0.88rem', marginBottom: 4 }}>{desc}</p>
-      {remaining !== undefined && remaining !== Infinity && <p style={{ color: 'var(--green)', fontSize: '0.78rem', fontWeight: 600, marginBottom: 16 }}>今日剩余免费次数：{remaining}</p>}
+      {remaining >= 0 && remaining !== Infinity && <p style={{ color: 'var(--green)', fontSize: '0.78rem', fontWeight: 600, marginBottom: 16 }}>今日剩余免费次数：{remaining}</p>}
       {remaining === Infinity && <p style={{ color: 'var(--accent2)', fontSize: '0.78rem', fontWeight: 600, marginBottom: 16 }}>👑 会员无限使用</p>}
       <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', padding: 24, textAlign: 'left' }}>
         {children}

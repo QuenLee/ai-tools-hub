@@ -22,6 +22,11 @@ import { PDFConverter } from '@/components/tools/PDFConverter';
 import { AICopywriter } from '@/components/tools/AICopywriter';
 import { ImageConverter } from '@/components/tools/ImageConverter';
 import { MarkdownEditor } from '@/components/tools/MarkdownEditor';
+// 开发者工具
+import { JSONFormatter, JSONToYAML, Base64Tool, URLEncode } from '@/components/tools/dev/DevTools1';
+import { HashGen, RegexTester, TimestampTool, UUIDGen, ColorTool, TextDiff, JWTParser, QRCode } from '@/components/tools/dev/DevTools2';
+// 免费粘性工具
+import { WordCount, TextReplace, LoremIpsum, SlugGen, MarkdownPreview, EmojiPicker, PasswordGen, HtmlEntity } from '@/components/tools/free/FreeTools';
 
 // AI工具动态包装器
 function AIToolWrapper({ toolId, onBack, locale }) {
@@ -62,6 +67,28 @@ const TOOL_COMPONENTS = {
   'translate-polish': (props) => <AIToolWrapper toolId="translate-polish" {...props} />,
   'name-gen': (props) => <AIToolWrapper toolId="name-gen" {...props} />,
   'api-doc': (props) => <AIToolWrapper toolId="api-doc" {...props} />,
+  // 💻 开发者工具
+  'json-formatter': JSONFormatter,
+  'json-to-yaml': JSONToYAML,
+  'base64-tool': Base64Tool,
+  'url-encode': URLEncode,
+  'hash-gen': HashGen,
+  'regex-tester': RegexTester,
+  'timestamp-tool': TimestampTool,
+  'uuid-gen': UUIDGen,
+  'color-tool': ColorTool,
+  'text-diff': TextDiff,
+  'jwt-parser': JWTParser,
+  'qr-code': QRCode,
+  // 🎁 免费粘性工具
+  'word-count': WordCount,
+  'text-replace': TextReplace,
+  'lorem-ipsum': LoremIpsum,
+  'slug-gen': SlugGen,
+  'markdown-preview': MarkdownPreview,
+  'emoji-picker': EmojiPicker,
+  'password-gen': PasswordGen,
+  'html-entity': HtmlEntity,
   // 📄 基础工具（前端本地）
   'ai-text-detect': AITextDetect,
   'ai-watermark': AIWatermarkRemover,
@@ -87,10 +114,11 @@ const TABS = [
 
 export default function ToolsPage() {
   const { locale } = useParams();
-  const [activeTab, setActiveTab] = useState('social');
+  const [activeTab, setActiveTab] = useState('all');
   const [activeTool, setActiveTool] = useState(null);
   const [showLogin, setShowLogin] = useState(false);
   const [showPay, setShowPay] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -100,7 +128,18 @@ export default function ToolsPage() {
     }
   }, []);
 
-  const filteredTools = activeTab === 'all' ? ALL_TOOLS : ALL_TOOLS.filter(t => t.cat === activeTab);
+  const filteredTools = (() => {
+    let tools = activeTab === 'all' ? ALL_TOOLS : ALL_TOOLS.filter(t => t.cat === activeTab);
+    if (searchQuery.trim()) {
+      const q = searchQuery.trim().toLowerCase();
+      tools = tools.filter(t => 
+        t.name.toLowerCase().includes(q) || 
+        t.desc.toLowerCase().includes(q) || 
+        t.id.toLowerCase().includes(q)
+      );
+    }
+    return tools;
+  })();
 
   if (activeTool) {
     const ToolComponent = TOOL_COMPONENTS[activeTool];
@@ -122,7 +161,7 @@ export default function ToolsPage() {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12, marginBottom: 6 }}>
           <div>
             <h1 style={{ fontSize: '1.6rem', fontWeight: 800, marginBottom: 6 }}>AI工具箱</h1>
-            <p style={{ color: 'var(--text2)', fontSize: '0.88rem' }}>40款在线工具 · 28款AI驱动 · 自媒体+职场+专业全覆盖</p>
+            <p style={{ color: 'var(--text2)', fontSize: '0.88rem' }}>60款在线工具 · 28款AI驱动 · 12开发者 · 8免费粘性</p>
           </div>
           <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
             {getUser() && <span style={{ fontSize: '0.78rem', color: 'var(--accent2)', fontWeight: 600 }}>👤 {getUser().email}</span>}
@@ -136,7 +175,23 @@ export default function ToolsPage() {
           <button onClick={() => setShowPay(true)} style={{ padding: '7px 18px', borderRadius: 'var(--radius-2xs)', background: 'var(--accent)', color: '#fff', fontSize: '0.82rem', fontWeight: 600, border: 'none', cursor: 'pointer' }}>开通会员</button>
         </div>
 
-        {/* Tab */}
+        {/* 搜索框 */}
+      <div style={{ position: 'relative', marginBottom: 16 }}>
+        <span style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', fontSize: '1rem', color: 'var(--text3)' }}>🔍</span>
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={e => setSearchQuery(e.target.value)}
+          placeholder="搜索工具名称或功能..."
+          style={{ width: '100%', padding: '10px 14px 10px 40px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)', background: 'var(--bg)', color: 'var(--text)', fontSize: '0.88rem', boxSizing: 'border-box', outline: 'none', transition: 'border-color 0.2s' }}
+          onFocus={e => e.target.style.borderColor = 'var(--accent)'}
+          onBlur={e => e.target.style.borderColor = 'var(--border)'}
+        />
+        {searchQuery && (
+          <button onClick={() => setSearchQuery('')} style={{ position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: 'var(--text3)', cursor: 'pointer', fontSize: '0.82rem' }}>✕</button>
+        )}
+      </div>
+      {/* Tab */}
         <div style={{ display: 'flex', gap: 6, marginBottom: 20, flexWrap: 'wrap' }}>
           {TABS.map(tab => (
             <button key={tab.id} onClick={() => setActiveTab(tab.id)} style={{ padding: '7px 14px', borderRadius: 'var(--radius-2xs)', fontSize: '0.82rem', border: activeTab === tab.id ? '1px solid var(--accent)' : '1px solid var(--border)', background: activeTab === tab.id ? 'rgba(99,102,241,0.08)' : 'transparent', color: activeTab === tab.id ? 'var(--accent)' : 'var(--text2)', fontWeight: 600, cursor: 'pointer' }}>{tab.emoji} {tab.label} ({tab.id === 'all' ? ALL_TOOLS.length : ALL_TOOLS.filter(t => t.cat === tab.id).length})</button>

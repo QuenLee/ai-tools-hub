@@ -1,7 +1,7 @@
 import { PROMPTS } from '@/lib/prompts';
 
 // Node.js runtime — 60s timeout
-export const maxDuration = 60;
+export const maxDuration = 300;
 
 const NVIDIA_API_URL = 'https://integrate.api.nvidia.com/v1/chat/completions';
 const MODEL = 'deepseek-ai/deepseek-v3.2';
