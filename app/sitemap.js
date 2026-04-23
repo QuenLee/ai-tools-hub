@@ -2,26 +2,24 @@
 export default function sitemap() {
   const base = 'https://ai.quen.us.kg';
   const locale = 'zh';
+  const { ALL_TOOLS } = require('@/lib/tools-registry');
+
   const routes = [
-    '', '/products', '/tools', '/models', '/tutorials', '/deals',
-    '/compare', '/compare/china-ai', '/about', '/privacy', '/terms',
+    '',
+    '/tools',
+    '/privacy',
+    '/terms',
   ];
-  const { tools } = require('@/lib/data');
-  const { topics } = require('@/lib/topics');
-  const { tutorials } = require('@/lib/tutorials');
 
-  const toolRoutes = tools.map(t => `/tool/${t.id}`);
-  const topicRoutes = topics.map(t => `/topic/${t.slug}`);
-  const tutorialRoutes = tutorials.map(t => `/tutorial/${t.slug}`);
-  const catRoutes = [
-    'writing', 'image', 'video', 'code', 'office', 'search', 'marketing', 'design', 'audio', 'chat'
-  ].map(c => `/category/${c}`);
+  // Add individual tool pages
+  const toolRoutes = ALL_TOOLS.map(t => `/tools?tool=${t.id}`);
 
-  const allRoutes = [...routes, ...toolRoutes, ...topicRoutes, ...tutorialRoutes, ...catRoutes];
+  const allRoutes = [...routes, ...toolRoutes];
+
   return allRoutes.map(route => ({
     url: `${base}/${locale}${route}`,
     lastModified: new Date(),
     changeFrequency: route === '' ? 'daily' : 'weekly',
-    priority: route === '' ? 1 : route.includes('/tool/') ? 0.8 : 0.6,
+    priority: route === '' ? 1 : route === '/tools' ? 0.9 : 0.8,
   }));
 }
