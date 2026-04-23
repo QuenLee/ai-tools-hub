@@ -4,6 +4,8 @@ import { useToolGuard, ToolWrapper, LimitBlocked } from './shared';
 
 /**
  * 通用AI驱动工具组件 — 支持流式输出(SSE)
+ * 关键逻辑：check在生成前，useOnce在生成完成后
+ * 只要check通过就允许生成，结果完整展示后才记录使用
  */
 export function AITool({ config, onBack, locale, toolId }) {
   const id = toolId || config.id;
@@ -14,11 +16,19 @@ export function AITool({ config, onBack, locale, toolId }) {
   const [error, setError] = useState('');
   const guard = useToolGuard(id);
   const abortRef = useRef(null);
+  // 记住check时是否允许（生成期间不重新检查，避免结果被挡）
+  const [checkedAllowed, setCheckedAllowed] = useState(true);
 
   const handleGenerate = useCallback(async () => {
     const empty = config.fields.some((f, i) => f.required !== false && !inputs[i].trim());
     if (empty) { setError('请填写必要信息'); return; }
-    if (!guard.check()) return;
+
+    // 生成前检查次数
+    if (!guard.check()) {
+      setCheckedAllowed(false);
+      return;
+    }
+    setCheckedAllowed(true);
 
     setError(''); setLoading(true); setResult('');
     const userPrompt = buildPrompt(inputs);
@@ -42,10 +52,8 @@ export function AITool({ config, onBack, locale, toolId }) {
         return;
       }
 
-      // 检查是否为SSE流
       const contentType = res.headers.get('content-type') || '';
       if (contentType.includes('text/event-stream')) {
-        // 流式读取
         const reader = res.body.getReader();
         const decoder = new TextDecoder();
         let buffer = '';
@@ -74,13 +82,12 @@ export function AITool({ config, onBack, locale, toolId }) {
         }
 
         if (fullText) {
-          guard.useOnce();
+          guard.useOnce(); // 成功后才记录使用
           setResult(fullText);
         } else {
           setError('AI未返回内容，请重试');
         }
       } else {
-        // 非流式fallback
         const data = await res.json();
         if (data.error) { setError(data.error); }
         else { guard.useOnce(); setResult(data.content); }
@@ -96,7 +103,11 @@ export function AITool({ config, onBack, locale, toolId }) {
     }
   }, [inputs, guard, id, locale, config]);
 
-  if (guard.blocked) return <LimitBlocked onBack={onBack} />;
+  // 只有在非生成状态下、且确认不允许使用时才显示限制页
+  // 生成中或已有结果时，不要突然跳到LimitBlocked
+  if (guard.blocked && !loading && !result && !checkedAllowed) {
+    return <LimitBlocked onBack={onBack} />;
+  }
 
   return (
     <ToolWrapper title={title} desc={desc} icon={icon} onBack={onBack} remaining={guard.remaining}>
@@ -140,21 +151,32 @@ export function AITool({ config, onBack, locale, toolId }) {
         </div>
       )}
 
-      {/* 生成按钮 */}
-      <div style={{ display: 'flex', gap: 8 }}>
-        <button onClick={handleGenerate} disabled={loading}
-          style={{ flex: 1, padding: '12px', borderRadius: 'var(--radius-sm)', background: loading ? 'var(--border)' : 'var(--accent)', color: loading ? 'var(--text3)' : '#fff', fontWeight: 700, fontSize: '0.92rem', border: 'none', cursor: loading ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
-          {loading ? (
-            <><span style={{ display: 'inline-block', width: 16, height: 16, border: '2px solid var(--text3)', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} /> AI生成中...</>
-          ) : '🚀 AI生成'}
-        </button>
-        {loading && (
-          <button onClick={() => abortRef.current?.abort()}
-            style={{ padding: '12px 16px', borderRadius: 'var(--radius-sm)', background: 'rgba(239,68,68,0.1)', color: 'var(--red)', fontWeight: 600, fontSize: '0.82rem', border: '1px solid rgba(239,68,68,0.2)', cursor: 'pointer', whiteSpace: 'nowrap' }}>
-            ✕ 取消
+      {/* 生成按钮 — 用完后显示升级提示 */}
+      {guard.blocked && !loading ? (
+        <div style={{ textAlign: 'center', padding: '16px', borderRadius: 'var(--radius-sm)', background: 'rgba(251,191,36,0.06)', border: '1px solid rgba(251,191,36,0.15)' }}>
+          <div style={{ fontSize: '0.88rem', fontWeight: 600, color: 'var(--text)', marginBottom: 4 }}>🔒 今日免费次数已用完</div>
+          <div style={{ fontSize: '0.78rem', color: 'var(--text2)', marginBottom: 10 }}>开通会员即可无限使用全部工具</div>
+          <button onClick={onBack}
+            style={{ padding: '8px 20px', borderRadius: 'var(--radius-sm)', background: 'var(--accent)', color: '#fff', fontWeight: 600, fontSize: '0.82rem', border: 'none', cursor: 'pointer' }}>
+            返回工具箱
           </button>
-        )}
-      </div>
+        </div>
+      ) : (
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button onClick={handleGenerate} disabled={loading}
+            style={{ flex: 1, padding: '12px', borderRadius: 'var(--radius-sm)', background: loading ? 'var(--border)' : 'var(--accent)', color: loading ? 'var(--text3)' : '#fff', fontWeight: 700, fontSize: '0.92rem', border: 'none', cursor: loading ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+            {loading ? (
+              <><span style={{ display: 'inline-block', width: 16, height: 16, border: '2px solid var(--text3)', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} /> AI生成中...</>
+            ) : '🚀 AI生成'}
+          </button>
+          {loading && (
+            <button onClick={() => abortRef.current?.abort()}
+              style={{ padding: '12px 16px', borderRadius: 'var(--radius-sm)', background: 'rgba(239,68,68,0.1)', color: 'var(--red)', fontWeight: 600, fontSize: '0.82rem', border: '1px solid rgba(239,68,68,0.2)', cursor: 'pointer', whiteSpace: 'nowrap' }}>
+              ✕ 取消
+            </button>
+          )}
+        </div>
+      )}
 
       {/* 结果区 — 支持流式实时显示 */}
       {(result || loading) && (
@@ -172,7 +194,6 @@ export function AITool({ config, onBack, locale, toolId }) {
             padding: 20, borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)',
             background: 'var(--bg)', whiteSpace: 'pre-wrap', fontSize: '0.88rem', lineHeight: 1.8,
             color: 'var(--text2)', maxHeight: 500, overflow: 'auto',
-            ...(loading && result ? { minHeight: 100 } : {}),
           }}>
             {result || (loading ? '等待AI响应...' : '')}
             {loading && <span style={{ display: 'inline-block', width: 2, height: '1em', background: 'var(--accent)', marginLeft: 2, animation: 'blink 1s step-end infinite', verticalAlign: 'text-bottom' }} />}
