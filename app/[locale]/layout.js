@@ -40,6 +40,7 @@ export default async function LocaleLayout({ children, params }) {
     <html lang={locale}>
       <head>
         <meta name="msvalidate.01" content="B61D38B6AEB3EAD525BBF30D0C454B69" />
+        <meta name="google-site-verification" content="ukEoNUvpr6BRkzEAYA0kw_nckghHvtOMt-VNggFznUg" />
       </head>
       <body>
         {children}
