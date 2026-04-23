@@ -10,16 +10,16 @@ import Link from 'next/link';
 import { AITool } from '@/components/tools/AITool';
 
 // 基础工具组件
-import { AITextDetect } from '@/components/tools/AITextDetect';
+// (removed) @/components/tools/AITextDetect → now uses AIToolWrapper or new component
 import { AIWatermarkRemover } from '@/components/tools/AIWatermarkRemover';
 import { ShortURLGenerator } from '@/components/tools/ShortURLGenerator';
-import { AITranslateCompare } from '@/components/tools/AITranslateCompare';
-import { AIResumeOptimizer } from '@/components/tools/AIResumeOptimizer';
+// (removed) @/components/tools/AITranslateCompare → now uses AIToolWrapper or new component
+// (removed) @/components/tools/AIResumeOptimizer → now uses AIToolWrapper or new component
 import { PromptTemplates } from '@/components/tools/PromptTemplates';
-import { AICodeReview } from '@/components/tools/AICodeReview';
-import { SEOTitleGen } from '@/components/tools/SEOTitleGen';
+// (removed) @/components/tools/AICodeReview → now uses AIToolWrapper or new component
+// (removed) @/components/tools/SEOTitleGen → now uses AIToolWrapper or new component
 import { PDFConverter } from '@/components/tools/PDFConverter';
-import { AICopywriter } from '@/components/tools/AICopywriter';
+// (removed) @/components/tools/AICopywriter → now uses AIToolWrapper or new component
 import { ImageConverter } from '@/components/tools/ImageConverter';
 import { MarkdownEditor } from '@/components/tools/MarkdownEditor';
 // 开发者工具
@@ -90,16 +90,16 @@ const TOOL_COMPONENTS = {
   'password-gen': PasswordGen,
   'html-entity': HtmlEntity,
   // 📄 基础工具（前端本地）
-  'ai-text-detect': AITextDetect,
+  'ai-text-detect': (props) => <AIToolWrapper toolId="ai-text-detect" {...props} />,
   'ai-watermark': AIWatermarkRemover,
   'short-url': ShortURLGenerator,
-  'ai-translate': AITranslateCompare,
-  'ai-resume': AIResumeOptimizer,
+  'ai-translate': (props) => <AIToolWrapper toolId="ai-translate" {...props} />,
+  'ai-resume': (props) => <AIToolWrapper toolId="ai-resume" {...props} />,
   'prompt-templates': PromptTemplates,
-  'ai-code-review': AICodeReview,
-  'seo-title-gen': SEOTitleGen,
+  'ai-code-review': (props) => <AIToolWrapper toolId="ai-code-review" {...props} />,
+  'seo-title-gen': (props) => <AIToolWrapper toolId="seo-title-gen" {...props} />,
   'pdf-convert': PDFConverter,
-  'ai-copywriter': AICopywriter,
+  'ai-copywriter': (props) => <AIToolWrapper toolId="ai-copywriter" {...props} />,
   'image-convert': ImageConverter,
   'markdown-editor': MarkdownEditor,
 };
