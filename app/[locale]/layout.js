@@ -38,6 +38,9 @@ export default async function LocaleLayout({ children, params }) {
   const { locale } = await params;
   return (
     <html lang={locale}>
+      <head>
+        <meta name="msvalidate.01" content="B61D38B6AEB3EAD525BBF30D0C454B69" />
+      </head>
       <body>
         {children}
         <footer style={{
