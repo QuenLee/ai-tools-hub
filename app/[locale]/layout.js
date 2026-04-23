@@ -22,11 +22,18 @@ export async function generateMetadata({ params }) {
     title: titles[locale] || titles['zh'],
     description: descriptions[locale] || descriptions['zh'],
     keywords: 'AI工具箱,免费AI工具,小红书文案生成器,SEO标题生成,代码审查,AI翻译,在线工具,AI写作',
+    icons: {
+      icon: [
+        { url: '/icon.png', sizes: '32x32', type: 'image/png' },
+      ],
+      apple: '/apple-touch-icon.png',
+    },
     openGraph: {
       title: titles[locale] || titles['zh'],
       description: descriptions[locale] || descriptions['zh'],
       type: 'website',
       locale: locale === 'zh-HK' ? 'zh_HK' : locale === 'en' ? 'en_US' : 'zh_CN',
+      images: [{ url: '/android-icon-192x192.png', width: 192, height: 192 }],
     },
   };
 }
