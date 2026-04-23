@@ -4,22 +4,21 @@ export default function sitemap() {
   const locale = 'zh';
   const { ALL_TOOLS } = require('@/lib/tools-registry');
 
-  const routes = [
-    '',
+  const staticRoutes = [
     '/tools',
     '/privacy',
     '/terms',
   ];
 
-  // Add individual tool pages
-  const toolRoutes = ALL_TOOLS.map(t => `/tools?tool=${t.id}`);
+  // Individual tool pages with SEO-friendly URLs
+  const toolRoutes = ALL_TOOLS.map(t => `/tools/${t.id}`);
 
-  const allRoutes = [...routes, ...toolRoutes];
+  const allRoutes = [...staticRoutes, ...toolRoutes];
 
   return allRoutes.map(route => ({
     url: `${base}/${locale}${route}`,
     lastModified: new Date(),
-    changeFrequency: route === '' ? 'daily' : 'weekly',
-    priority: route === '' ? 1 : route === '/tools' ? 0.9 : 0.8,
+    changeFrequency: route === '/tools' ? 'daily' : 'weekly',
+    priority: route === '/tools' ? 1.0 : 0.8,
   }));
 }

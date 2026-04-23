@@ -1,4 +1,5 @@
 import { locales } from '@/lib/i18n';
+import Script from 'next/script';
 import './globals.css';
 
 export function generateStaticParams() {
@@ -8,9 +9,9 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }) {
   const { locale } = await params;
   const titles = {
-    'zh': 'AI工具箱 - 60款免费在线AI工具 | Quen\'s AI',
-    'zh-HK': 'AI工具箱 - 60款免費在線AI工具 | Quen\'s AI',
-    'en': 'AI Toolbox - 60 Free Online AI Tools | Quen\'s AI',
+    'zh': "AI工具箱 - 60款免费在线AI工具 | Quen's AI",
+    'zh-HK': "AI工具箱 - 60款免費在線AI工具 | Quen's AI",
+    'en': "AI Toolbox - 60 Free Online AI Tools | Quen's AI",
   };
   const descriptions = {
     'zh': '60款免费在线工具，34款AI驱动：小红书文案、周报生成、SEO标题、代码审查、翻译对比等，即开即用，无需注册。',
@@ -29,6 +30,9 @@ export async function generateMetadata({ params }) {
     },
   };
 }
+
+// Google Analytics — replace G-XXXXXXX with real ID after setup
+const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 
 export default async function LocaleLayout({ children, params }) {
   const { locale } = await params;
@@ -52,6 +56,18 @@ export default async function LocaleLayout({ children, params }) {
           <a href={`/${locale}/terms`} style={{ color: 'var(--text3)', textDecoration: 'none' }}>服务条款</a>
         </footer>
       </body>
+      {/* Google Analytics */}
+      {GA_ID && (
+        <>
+          <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="afterInteractive" />
+          <Script id="google-analytics" strategy="afterInteractive">
+            {`window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', '${GA_ID}', { anonymize_ip: true });`}
+          </Script>
+        </>
+      )}
     </html>
   );
 }
