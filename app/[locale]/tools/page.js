@@ -1,6 +1,5 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { canUseTool, recordUsage, isPaidUser, getUser, saveUser, logout, PAID_PRICES, getFreeLimitDisplay } from '@/lib/usage';
 import { ALL_TOOLS } from '@/lib/tools-registry';
 import { TOOL_CONFIGS } from '@/lib/tool-configs';
 import { useParams } from 'next/navigation';
@@ -110,17 +109,17 @@ const CATEGORIES = [
   { id: 'basic', label: '基础工具', emoji: '📄', color: '#64748b' },
 ];
 
-// AI + 免费 badge
-const CAT_BADGE = { social: 'AI', office: 'AI', pro: 'AI', dev: '免费', free: '免费', basic: '' };
+// Free limit display
+function getFreeLimitText(tool) {
+  if (tool.price === '免费' || !tool.apiTool) return '✓ 免费无限';
+  return '每日3次免费';
+}
 
 export default function ToolsPage() {
   const { locale } = useParams();
   const [activeTab, setActiveTab] = useState('all');
   const [activeTool, setActiveTool] = useState(null);
-  const [showLogin, setShowLogin] = useState(false);
-  const [showPay, setShowPay] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -152,7 +151,7 @@ export default function ToolsPage() {
     if (ToolComponent) return (
       <div style={{ padding: '24px 0 80px' }}>
         <div style={{ maxWidth: 960, margin: '0 auto', padding: '0 24px' }}>
-          {/* 面包屑 */}
+          {/* Breadcrumb */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 20, fontSize: '0.82rem', color: 'var(--text3)' }}>
             <Link href={`/${locale}`} style={{ color: 'var(--text3)', textDecoration: 'none' }}>首页</Link>
             <span>›</span>
@@ -163,7 +162,7 @@ export default function ToolsPage() {
             <span style={{ color: 'var(--text)' }}>{toolInfo?.name}</span>
           </div>
 
-          {/* 工具标题栏 */}
+          {/* Tool header */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20, padding: '16px 20px', borderRadius: 12, background: 'var(--surface)', border: '1px solid var(--border)' }}>
             <span style={{ fontSize: '2rem' }}>{toolInfo?.icon}</span>
             <div style={{ flex: 1 }}>
@@ -172,15 +171,20 @@ export default function ToolsPage() {
             </div>
             <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
               {toolInfo?.apiTool && <span style={{ fontSize: '0.68rem', padding: '2px 8px', borderRadius: 6, background: 'rgba(99,102,241,0.1)', color: 'var(--accent)', fontWeight: 700 }}>🤖 AI驱动</span>}
-              <span style={{ fontSize: '0.68rem', padding: '2px 8px', borderRadius: 6, background: toolInfo?.price === '免费' ? 'rgba(16,185,129,0.1)' : 'rgba(245,158,11,0.1)', color: toolInfo?.price === '免费' ? 'var(--green)' : 'var(--yellow)', fontWeight: 700 }}>{toolInfo?.price === '免费' ? '✓ 免费' : toolInfo?.price}</span>
+              <span style={{ fontSize: '0.68rem', padding: '2px 8px', borderRadius: 6, background: 'rgba(16,185,129,0.1)', color: 'var(--green)', fontWeight: 700 }}>{toolInfo?.price === '免费' || !toolInfo?.apiTool ? '✓ 免费' : '每日免费'}</span>
             </div>
           </div>
 
           <ToolComponent onBack={() => setActiveTool(null)} locale={locale} />
 
-          {/* 相关工具推荐 */}
+          {/* Ad placeholder — will be activated when traffic > 200 UV/day */}
+          <div className="ad-slot-result" style={{ marginTop: 24, minHeight: 90, borderRadius: 10, border: '1px dashed var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text3)', fontSize: '0.72rem' }}>
+            广告位
+          </div>
+
+          {/* Related tools */}
           {toolInfo && (
-            <div style={{ marginTop: 32 }}>
+            <div style={{ marginTop: 24 }}>
               <div style={{ fontSize: '0.92rem', fontWeight: 700, marginBottom: 12 }}>📌 相关工具</div>
               <div style={{ display: 'flex', gap: 10, overflowX: 'auto', paddingBottom: 8 }}>
                 {ALL_TOOLS.filter(t => t.cat === toolInfo.cat && t.id !== toolInfo.id).slice(0, 4).map(t => (
@@ -203,23 +207,21 @@ export default function ToolsPage() {
 
   // ========== Tools listing page ==========
   const aiCount = ALL_TOOLS.filter(t => t.apiTool).length;
-  const freeCount = ALL_TOOLS.filter(t => t.price === '免费').length;
+  const freeCount = ALL_TOOLS.filter(t => t.price === '免费' || !t.apiTool).length;
 
   return (
     <div style={{ padding: '24px 0 80px' }}>
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px' }}>
 
-        {/* ===== Hero Section ===== */}
+        {/* Hero Section */}
         <div style={{ textAlign: 'center', marginBottom: 32 }}>
           <h1 style={{ fontSize: '2rem', fontWeight: 900, marginBottom: 8, background: 'linear-gradient(135deg, var(--accent), var(--accent2))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
             AI工具箱
           </h1>
           <p style={{ color: 'var(--text2)', fontSize: '0.92rem', marginBottom: 20 }}>
-            {ALL_TOOLS.length}款在线工具 · {aiCount}款AI驱动 · {freeCount}款完全免费
+            {ALL_TOOLS.length}款在线工具 · {aiCount}款AI驱动 · 全部免费
           </p>
-
-          {/* Stats row */}
-          <div style={{ display: 'flex', justifyContent: 'center', gap: 24, marginBottom: 24 }}>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: 24 }}>
             {[
               { num: ALL_TOOLS.length, label: '在线工具', color: 'var(--accent)' },
               { num: aiCount, label: 'AI驱动', color: '#10b981' },
@@ -233,8 +235,8 @@ export default function ToolsPage() {
           </div>
         </div>
 
-        {/* ===== Search bar (sticky) ===== */}
-        <div style={{ position: 'sticky', top: 56, zIndex: 100, background: 'var(--bg)', padding: '12px 0', borderBottom: '1px solid var(--border)', marginBottom: 20, borderRadius: '0 0 12px 12px' }}>
+        {/* Sticky search */}
+        <div style={{ position: 'sticky', top: 56, zIndex: 100, background: 'var(--bg)', padding: '12px 0', borderBottom: '1px solid var(--border)', marginBottom: 20 }}>
           <div style={{ position: 'relative', maxWidth: 600, margin: '0 auto' }}>
             <span style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', fontSize: '1rem', color: 'var(--text3)' }}>🔍</span>
             <input type="text" value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
@@ -249,27 +251,7 @@ export default function ToolsPage() {
           </div>
         </div>
 
-        {/* ===== Member CTA Banner ===== */}
-        {!getUser() && (
-          <div style={{ margin: '0 0 24px', padding: '16px 24px', borderRadius: 12, background: 'linear-gradient(135deg, rgba(99,102,241,0.06), rgba(124,92,252,0.06))', border: '1px solid rgba(99,102,241,0.15)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 10 }}>
-            <div>
-              <span style={{ fontWeight: 700, fontSize: '0.92rem' }}>🔓 解锁全部AI工具无限使用</span>
-              <span style={{ fontSize: '0.78rem', color: 'var(--text2)', marginLeft: 8 }}>基础版 ¥{PAID_PRICES.monthly}/月 · 专业版 ¥{PAID_PRICES.pro_monthly}/月</span>
-            </div>
-            <div style={{ display: 'flex', gap: 8 }}>
-              <button onClick={() => setShowLogin(true)} style={{ padding: '7px 16px', borderRadius: 20, background: 'transparent', color: 'var(--accent)', fontSize: '0.82rem', fontWeight: 600, border: '1px solid var(--accent)', cursor: 'pointer' }}>登录</button>
-              <button onClick={() => setShowPay(true)} style={{ padding: '7px 16px', borderRadius: 20, background: 'var(--accent)', color: '#fff', fontSize: '0.82rem', fontWeight: 600, border: 'none', cursor: 'pointer' }}>开通会员</button>
-            </div>
-          </div>
-        )}
-        {getUser() && (
-          <div style={{ margin: '0 0 24px', padding: '10px 20px', borderRadius: 12, background: 'var(--surface)', border: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ fontSize: '0.82rem', color: 'var(--text2)' }}>👤 {getUser().email} {isPaidUser() && <span style={{ color: 'var(--accent)', fontWeight: 600, marginLeft: 6 }}>⭐ 会员</span>}</span>
-            <button onClick={logout} style={{ padding: '4px 12px', borderRadius: 12, background: 'var(--border)', color: 'var(--text2)', fontSize: '0.72rem', border: 'none', cursor: 'pointer' }}>退出</button>
-          </div>
-        )}
-
-        {/* ===== Category Tabs ===== */}
+        {/* Category Tabs */}
         <div style={{ display: 'flex', gap: 6, marginBottom: 24, flexWrap: 'wrap', justifyContent: 'center' }}>
           {CATEGORIES.map(cat => {
             const count = cat.id === 'all' ? ALL_TOOLS.length : ALL_TOOLS.filter(t => t.cat === cat.id).length;
@@ -289,7 +271,7 @@ export default function ToolsPage() {
           })}
         </div>
 
-        {/* ===== Tool Cards Grid ===== */}
+        {/* Tool Cards Grid */}
         {filteredTools.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--text3)' }}>
             <div style={{ fontSize: '2.4rem', marginBottom: 12 }}>🔍</div>
@@ -315,18 +297,9 @@ export default function ToolsPage() {
                   onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = `0 8px 24px rgba(0,0,0,0.08), 0 0 0 1px ${catInfo?.color}22`; e.currentTarget.style.borderColor = `${catInfo?.color}44`; }}
                   onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.borderColor = 'var(--border)'; }}
                 >
-                  {/* Category color strip */}
                   <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: `linear-gradient(90deg, ${catInfo?.color || '#6366f1'}, ${catInfo?.color || '#6366f1'}88)` }} />
-
-                  {/* Icon + Title row */}
                   <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 10 }}>
-                    <div style={{
-                      width: 44, height: 44, borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.4rem',
-                      background: `${catInfo?.color || '#6366f1'}10`,
-                      flexShrink: 0,
-                    }}>
-                      {tool.icon}
-                    </div>
+                    <div style={{ width: 44, height: 44, borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.4rem', background: `${catInfo?.color || '#6366f1'}10`, flexShrink: 0 }}>{tool.icon}</div>
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 2 }}>
                         <span style={{ fontWeight: 700, fontSize: '0.96rem' }}>{tool.name}</span>
@@ -335,111 +308,21 @@ export default function ToolsPage() {
                       <div style={{ fontSize: '0.78rem', color: 'var(--text2)', lineHeight: 1.4, overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>{tool.desc}</div>
                     </div>
                   </div>
-
-                  {/* Bottom: price + free limit */}
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 10, borderTop: '1px solid var(--border)' }}>
-                    <span style={{ fontSize: '0.72rem', color: 'var(--green)', fontWeight: 600 }}>{getFreeLimitDisplay(tool.id)}</span>
-                    {tool.price !== '免费' ? (
-                      <span style={{ fontSize: '0.68rem', padding: '2px 8px', borderRadius: 6, background: 'rgba(245,158,11,0.08)', color: 'var(--yellow)', fontWeight: 600 }}>{tool.price}</span>
-                    ) : (
-                      <span style={{ fontSize: '0.68rem', padding: '2px 8px', borderRadius: 6, background: 'rgba(16,185,129,0.08)', color: 'var(--green)', fontWeight: 600 }}>✓ 免费</span>
-                    )}
+                    <span style={{ fontSize: '0.72rem', color: 'var(--green)', fontWeight: 600 }}>{getFreeLimitText(tool)}</span>
+                    <span style={{ fontSize: '0.68rem', padding: '2px 8px', borderRadius: 6, background: tool.price === '免费' || !tool.apiTool ? 'rgba(16,185,129,0.08)' : 'rgba(99,102,241,0.08)', color: tool.price === '免费' || !tool.apiTool ? 'var(--green)' : 'var(--accent)', fontWeight: 600 }}>
+                      {tool.price === '免费' || !tool.apiTool ? '✓ 免费' : 'AI驱动'}
+                    </span>
                   </div>
                 </div>
               );
             })}
           </div>
         )}
-      </div>
 
-      {showLogin && <LoginModal onClose={() => setShowLogin(false)} onSuccess={() => setShowLogin(false)} />}
-      {showPay && <PayModal onClose={() => setShowPay(false)} />}
-    </div>
-  );
-}
-
-/* ===== 登录弹窗 ===== */
-function LoginModal({ onClose, onSuccess }) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [isRegister, setIsRegister] = useState(false);
-  const [error, setError] = useState('');
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!email || !password) { setError('请填写邮箱和密码'); return; }
-    if (password.length < 6) { setError('密码至少6位'); return; }
-    const existingUsers = JSON.parse(localStorage.getItem('quen_users') || '{}');
-    if (isRegister) {
-      if (existingUsers[email]) { setError('该邮箱已注册'); return; }
-      existingUsers[email] = { email, password, createdAt: new Date().toISOString(), paidUntil: null };
-      localStorage.setItem('quen_users', JSON.stringify(existingUsers));
-      saveUser({ email, paidUntil: null });
-      onSuccess();
-    } else {
-      if (!existingUsers[email] || existingUsers[email].password !== password) { setError('邮箱或密码错误'); return; }
-      saveUser({ email, paidUntil: existingUsers[email].paidUntil || null });
-      onSuccess();
-    }
-  };
-
-  return (
-    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999, backdropFilter: 'blur(4px)' }} onClick={onClose}>
-      <div style={{ background: 'var(--surface)', borderRadius: 16, padding: 32, width: 400, maxWidth: '90vw', boxShadow: '0 24px 80px rgba(0,0,0,0.2)' }} onClick={e => e.stopPropagation()}>
-        <h2 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: 4 }}>{isRegister ? '注册账号' : '登录'}</h2>
-        <p style={{ fontSize: '0.82rem', color: 'var(--text2)', marginBottom: 20 }}>开通会员，解锁全部AI工具</p>
-        {error && <div style={{ padding: '8px 12px', borderRadius: 8, background: 'rgba(239,68,68,0.08)', color: 'var(--red)', fontSize: '0.82rem', marginBottom: 12 }}>{error}</div>}
-        <form onSubmit={handleSubmit}>
-          <label style={{ fontSize: '0.82rem', fontWeight: 600, display: 'block', marginBottom: 4 }}>邮箱</label>
-          <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="your@email.com" style={{ width: '100%', padding: '10px 14px', borderRadius: 10, border: '1px solid var(--border)', background: 'var(--bg)', color: 'var(--text)', fontSize: '0.88rem', marginBottom: 12, boxSizing: 'border-box' }} />
-          <label style={{ fontSize: '0.82rem', fontWeight: 600, display: 'block', marginBottom: 4 }}>密码</label>
-          <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="至少6位" style={{ width: '100%', padding: '10px 14px', borderRadius: 10, border: '1px solid var(--border)', background: 'var(--bg)', color: 'var(--text)', fontSize: '0.88rem', marginBottom: 16, boxSizing: 'border-box' }} />
-          <button type="submit" style={{ width: '100%', padding: '12px', borderRadius: 10, background: 'var(--accent)', color: '#fff', fontWeight: 700, fontSize: '0.92rem', border: 'none', cursor: 'pointer', marginBottom: 12 }}>{isRegister ? '注册' : '登录'}</button>
-        </form>
-        <div style={{ textAlign: 'center', fontSize: '0.82rem', color: 'var(--text2)' }}>
-          {isRegister ? '已有账号？' : '没有账号？'}
-          <button onClick={() => { setIsRegister(!isRegister); setError(''); }} style={{ background: 'none', border: 'none', color: 'var(--accent)', fontWeight: 600, cursor: 'pointer', fontSize: '0.82rem' }}>{isRegister ? '登录' : '注册'}</button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ===== 付费弹窗 ===== */
-function PayModal({ onClose }) {
-  return (
-    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999, backdropFilter: 'blur(4px)' }} onClick={onClose}>
-      <div style={{ background: 'var(--surface)', borderRadius: 16, padding: 32, width: 460, maxWidth: '90vw', boxShadow: '0 24px 80px rgba(0,0,0,0.2)' }} onClick={e => e.stopPropagation()}>
-        <h2 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: 4 }}>开通会员</h2>
-        <p style={{ fontSize: '0.82rem', color: 'var(--text2)', marginBottom: 20 }}>解锁全部AI工具无限使用</p>
-
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 20 }}>
-          <div style={{ padding: 20, borderRadius: 12, border: '2px solid var(--accent)', background: 'rgba(99,102,241,0.04)', textAlign: 'center' }}>
-            <div style={{ fontSize: '0.72rem', color: 'var(--accent)', fontWeight: 600, marginBottom: 4 }}>基础版</div>
-            <div style={{ fontSize: '1.6rem', fontWeight: 800 }}>¥9.9<span style={{ fontSize: '0.72rem', fontWeight: 400 }}>/月</span></div>
-            <div style={{ fontSize: '0.72rem', color: 'var(--text3)', marginTop: 6 }}>自媒体+职场AI工具<br/>免费工具无限</div>
-          </div>
-          <div style={{ padding: 20, borderRadius: 12, border: '2px solid var(--accent2)', background: 'rgba(124,92,252,0.04)', textAlign: 'center', position: 'relative' }}>
-            <div style={{ position: 'absolute', top: -8, right: -8, background: 'var(--accent2)', color: '#fff', fontSize: '0.6rem', padding: '2px 8px', borderRadius: 8, fontWeight: 600 }}>推荐</div>
-            <div style={{ fontSize: '0.72rem', color: 'var(--accent2)', fontWeight: 600, marginBottom: 4 }}>专业版</div>
-            <div style={{ fontSize: '1.6rem', fontWeight: 800 }}>¥19.9<span style={{ fontSize: '0.72rem', fontWeight: 400 }}>/月</span></div>
-            <div style={{ fontSize: '0.72rem', color: 'var(--text3)', marginTop: 6 }}>全部AI工具无限<br/>含专业+合同/面试等</div>
-          </div>
-        </div>
-
-        <div style={{ textAlign: 'center', marginBottom: 16 }}>
-          <div style={{ fontSize: '0.88rem', fontWeight: 600, marginBottom: 8 }}>扫码支付</div>
-          <div style={{ display: 'flex', gap: 16, justifyContent: 'center', marginBottom: 8 }}>
-            <div style={{ textAlign: 'center' }}>
-              <img src="/pay/wechat.png" alt="微信收款码" style={{ width: 140, height: 140, borderRadius: 10, border: '1px solid var(--border)', objectFit: 'contain' }} />
-              <div style={{ fontSize: '0.72rem', color: 'var(--text3)', marginTop: 4 }}>微信支付</div>
-            </div>
-            <div style={{ textAlign: 'center' }}>
-              <img src="/pay/alipay.png" alt="支付宝收款码" style={{ width: 140, height: 140, borderRadius: 10, border: '1px solid var(--border)', objectFit: 'contain' }} />
-              <div style={{ fontSize: '0.72rem', color: 'var(--text3)', marginTop: 4 }}>支付宝</div>
-            </div>
-          </div>
-          <div style={{ fontSize: '0.72rem', color: 'var(--text3)', marginTop: 8 }}>付款后发送截图至 quen@ai.tools<br/>1小时内手动开通会员</div>
+        {/* Ad placeholder at bottom of tool list */}
+        <div className="ad-slot-list" style={{ marginTop: 32, minHeight: 90, borderRadius: 10, border: '1px dashed var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text3)', fontSize: '0.72rem' }}>
+          广告位
         </div>
       </div>
     </div>

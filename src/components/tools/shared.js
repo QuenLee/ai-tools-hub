@@ -1,14 +1,12 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { canUseTool, recordUsage, isPaidUser, getFreeLimitDisplay } from '@/lib/usage';
+import { canUseTool, recordUsage, getFreeLimitDisplay } from '@/lib/usage';
 
 export function useToolGuard(toolId) {
   const [blocked, setBlocked] = useState(false);
   const [remaining, setRemaining] = useState(-1);
-  const paid = typeof window !== 'undefined' && isPaidUser();
 
   const check = () => {
-    if (paid) { setRemaining(Infinity); setBlocked(false); return true; }
     const { allowed, remaining: r } = canUseTool(toolId);
     setRemaining(r);
     if (!allowed) { setBlocked(true); return false; }
@@ -19,7 +17,7 @@ export function useToolGuard(toolId) {
 
   useEffect(() => { check(); }, [toolId]);
 
-  return { blocked, remaining, paid, check, useOnce };
+  return { blocked, remaining, check, useOnce };
 }
 
 export function ToolWrapper({ title, desc, icon, onBack, remaining, children }) {
@@ -48,8 +46,8 @@ export function ToolWrapper({ title, desc, icon, onBack, remaining, children }) 
             </span>
           )}
           {remaining === Infinity && (
-            <span style={{ fontSize: '0.72rem', padding: '2px 10px', borderRadius: 12, background: 'rgba(124,92,252,0.08)', color: 'var(--accent2)', fontWeight: 600 }}>
-              👑 会员无限
+            <span style={{ fontSize: '0.72rem', padding: '2px 10px', borderRadius: 12, background: 'rgba(16,185,129,0.08)', color: 'var(--green)', fontWeight: 600 }}>
+              ✓ 免费无限
             </span>
           )}
         </div>
@@ -66,13 +64,10 @@ export function ToolWrapper({ title, desc, icon, onBack, remaining, children }) 
 export function LimitBlocked({ onBack }) {
   return (
     <div style={{ maxWidth: 480, margin: '0 auto', textAlign: 'center', padding: '60px 20px' }}>
-      <div style={{ fontSize: '3rem', marginBottom: 16 }}>🔒</div>
+      <div style={{ fontSize: '3rem', marginBottom: 16 }}>⏰</div>
       <div style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: 8 }}>今日免费次数已用完</div>
-      <div style={{ color: 'var(--text2)', fontSize: '0.88rem', marginBottom: 20, lineHeight: 1.6 }}>开通会员即可无限使用全部AI工具<br/>基础版 ¥9.9/月 · 专业版 ¥19.9/月</div>
-      <div style={{ display: 'flex', gap: 10, justifyContent: 'center' }}>
-        <button onClick={onBack} style={{ padding: '10px 24px', borderRadius: 10, background: 'var(--border)', color: 'var(--text2)', fontWeight: 600, border: 'none', cursor: 'pointer', fontSize: '0.88rem' }}>返回工具箱</button>
-        <button onClick={onBack} style={{ padding: '10px 24px', borderRadius: 10, background: 'var(--accent)', color: '#fff', fontWeight: 600, border: 'none', cursor: 'pointer', fontSize: '0.88rem' }}>开通会员</button>
-      </div>
+      <div style={{ color: 'var(--text2)', fontSize: '0.88rem', marginBottom: 20, lineHeight: 1.6 }}>明天0点自动重置，每天可免费使用<br/>试试其他免费工具吧</div>
+      <button onClick={onBack} style={{ padding: '10px 24px', borderRadius: 10, background: 'var(--accent)', color: '#fff', fontWeight: 600, border: 'none', cursor: 'pointer', fontSize: '0.88rem' }}>返回工具箱</button>
     </div>
   );
 }

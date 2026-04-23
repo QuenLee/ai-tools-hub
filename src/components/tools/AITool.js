@@ -156,8 +156,8 @@ export function AITool({ config, onBack, locale, toolId }) {
           {guard.blocked && !loading ? (
             <div style={{ textAlign: 'center', padding: 14, borderRadius: 10, background: 'rgba(251,191,36,0.06)', border: '1px solid rgba(251,191,36,0.15)' }}>
               <div style={{ fontSize: '0.82rem', fontWeight: 600, marginBottom: 4 }}>🔒 今日免费次数已用完</div>
-              <div style={{ fontSize: '0.72rem', color: 'var(--text2)', marginBottom: 8 }}>开通会员即可无限使用</div>
-              <button onClick={onBack} style={{ padding: '6px 16px', borderRadius: 8, background: 'var(--accent)', color: '#fff', fontWeight: 600, fontSize: '0.78rem', border: 'none', cursor: 'pointer' }}>返回工具箱</button>
+              <div style={{ fontSize: '0.72rem', color: 'var(--text2)', marginBottom: 8 }}>明天0点自动重置</div>
+              <button onClick={onBack} style={{ padding: '6px 16px', borderRadius: 8, background: 'var(--accent)', color: '#fff', fontWeight: 600, fontSize: '0.78rem', border: 'none', cursor: 'pointer' }}>← 更多免费工具</button>
             </div>
           ) : (
             <div style={{ display: 'flex', gap: 8 }}>

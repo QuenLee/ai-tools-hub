@@ -15,7 +15,7 @@ const TOOL_CONFIGS = {
       { label: '护肤品', values: ['一款烟酰胺美白精华', '3%烟酰胺浓度，28天淡斑，敏感肌可用', '女生'] },
       { label: 'AI工具', values: ['Cursor编程助手', 'AI写代码，自然语言描述需求自动生成代码', '上班族'] },
     ],
-    buildPrompt: (inputs) => `产品：${inputs[0]}\n卖点：${inputs[1]}\n目标人群：${inputs[2] || '所有人'}\n\n请为这个产品生成一篇小红书种草笔记。`,
+    buildPrompt: (inputs) => `产品：${inputs[0]}\n卖点：${inputs[1]}\n目标人群：${inputs[2] || '所有人'}\n\n请为这个产品生成一篇小红书种草笔记。`
   },
 
   'douyin-script': {
@@ -31,7 +31,7 @@ const TOOL_CONFIGS = {
       { label: '效率技巧', values: ['5个效率翻倍的手机技巧', '知识科普', '节奏要快'] },
       { label: '产品种草', values: ['分享一个让我月省500元的APP', '产品种草', ''] },
     ],
-    buildPrompt: (inputs) => `视频主题：${inputs[0]}\n内容类型：${inputs[1]}\n额外要求：${inputs[2] || '无'}\n\n请生成完整的抖音短视频脚本。`,
+    buildPrompt: (inputs) => `视频主题：${inputs[0]}\n内容类型：${inputs[1]}\n额外要求：${inputs[2] || '无'}\n\n请生成完整的抖音短视频脚本。`
   },
 
   'live-script': {
@@ -46,7 +46,7 @@ const TOOL_CONFIGS = {
     examples: [
       { label: '美妆直播', values: ['美妆护肤', '洁面乳59元，精华液129元，面霜89元，体验装9.9元', '2小时'] },
     ],
-    buildPrompt: (inputs) => `主营产品：${inputs[0]}\n产品清单：${inputs[1]}\n直播时长：${inputs[2]}\n\n请生成完整的直播话术脚本和排品表。`,
+    buildPrompt: (inputs) => `主营产品：${inputs[0]}\n产品清单：${inputs[1]}\n直播时长：${inputs[2]}\n\n请生成完整的直播话术脚本和排品表。`
   },
 
   'comment-reply': {
@@ -60,7 +60,7 @@ const TOOL_CONFIGS = {
     examples: [
       { label: '好评差评混合', values: ['真的好用吗？\n太贵了不值得\n已下单期待', '温暖亲切'] },
     ],
-    buildPrompt: (inputs) => `以下是需要回复的评论：\n${inputs[0]}\n\n回复风格：${inputs[1] || '温暖亲切'}\n\n请为每条评论生成1-2个回复选项。`,
+    buildPrompt: (inputs) => `以下是需要回复的评论：\n${inputs[0]}\n\n回复风格：${inputs[1] || '温暖亲切'}\n\n请为每条评论生成1-2个回复选项。`
   },
 
   'wechat-article': {
@@ -75,7 +75,7 @@ const TOOL_CONFIGS = {
     examples: [
       { label: '职场效率', values: ['2026年职场人必备的5个AI效率工具', '职场白领', '1.DeepSeek 2.Cursor 3.秘塔AI搜索'] },
     ],
-    buildPrompt: (inputs) => `文章主题：${inputs[0]}\n目标读者：${inputs[1]}\n核心要点：${inputs[2] || '由你发挥'}\n\n请生成一篇完整的公众号文章。`,
+    buildPrompt: (inputs) => `文章主题：${inputs[0]}\n目标读者：${inputs[1]}\n核心要点：${inputs[2] || '由你发挥'}\n\n请生成一篇完整的公众号文章。`
   },
 
   'bili-script': {
@@ -90,7 +90,7 @@ const TOOL_CONFIGS = {
     examples: [
       { label: 'AI话题', values: ['AI到底会不会取代程序员？', '科技区', '要有数据支撑'] },
     ],
-    buildPrompt: (inputs) => `视频主题：${inputs[0]}\n分区：${inputs[1]}\n补充要求：${inputs[2] || '无'}\n\n请生成完整的B站视频脚本，包含弹幕触发点设计。`,
+    buildPrompt: (inputs) => `视频主题：${inputs[0]}\n分区：${inputs[1]}\n补充要求：${inputs[2] || '无'}\n\n请生成完整的B站视频脚本，包含弹幕触发点设计。`
   },
 
   'private-domain': {
@@ -106,7 +106,7 @@ const TOOL_CONFIGS = {
       { label: '欢迎新人', values: ['新成员入群欢迎', 'AI工具交流群', '鼓励大家自我介绍'] },
       { label: '活动通知', values: ['限时活动通知', '副业赚钱群', '限时48小时，AI写作课程5折'] },
     ],
-    buildPrompt: (inputs) => `文案场景：${inputs[0]}\n社群主题：${inputs[1]}\n具体内容：${inputs[2] || '由你发挥'}\n\n请生成社群运营文案。`,
+    buildPrompt: (inputs) => `文案场景：${inputs[0]}\n社群主题：${inputs[1]}\n具体内容：${inputs[2] || '由你发挥'}\n\n请生成社群运营文案。`
   },
 
   // ===== 职场办公 =====
@@ -123,7 +123,7 @@ const TOOL_CONFIGS = {
       { label: '程序员周报', values: ['周报', '完成首页改版，修复3个bug，对齐V2.0需求', '下周重点：支付模块'] },
       { label: '运营日报', values: ['日报', '发了2篇小红书笔记，回复30条评论，社群新增15人', ''] },
     ],
-    buildPrompt: (inputs) => `报告类型：${inputs[0]}\n工作内容：${inputs[1]}\n额外补充：${inputs[2] || '无'}\n\n请生成格式规范的专业${inputs[0]}。`,
+    buildPrompt: (inputs) => `报告类型：${inputs[0]}\n工作内容：${inputs[1]}\n额外补充：${inputs[2] || '无'}\n\n请生成格式规范的专业${inputs[0]}。`
   },
 
   'meeting-notes': {
@@ -137,7 +137,7 @@ const TOOL_CONFIGS = {
     examples: [
       { label: '产品评审', values: ['Q2产品路线图评审', '张总说Q2重点做AI功能，决定AI优先社区延后Q3，王工负责技术方案'] },
     ],
-    buildPrompt: (inputs) => `会议主题：${inputs[0]}\n会议内容：${inputs[1]}\n\n请生成结构化的会议纪要。`,
+    buildPrompt: (inputs) => `会议主题：${inputs[0]}\n会议内容：${inputs[1]}\n\n请生成结构化的会议纪要。`
   },
 
   'email-writer': {
@@ -153,7 +153,7 @@ const TOOL_CONFIGS = {
       { label: '请假', values: ['请示审批', '直属领导', '申请下周五请假1天，原因家中有事，工作已安排小明代管'] },
       { label: '催办', values: ['催办跟进', '合作方项目经理', '上次说的API对接方案已经一周未回复，能否这周五前给回复'] },
     ],
-    buildPrompt: (inputs) => `邮件场景：${inputs[0]}\n收件人：${inputs[1]}\n邮件要点：${inputs[2]}\n\n请生成完整的商务邮件。`,
+    buildPrompt: (inputs) => `邮件场景：${inputs[0]}\n收件人：${inputs[1]}\n邮件要点：${inputs[2]}\n\n请生成完整的商务邮件。`
   },
 
   'ppt-outline': {
@@ -168,7 +168,7 @@ const TOOL_CONFIGS = {
     examples: [
       { label: '季度汇报', values: ['2026年Q1营销策略', '工作汇报', '去年复盘，市场分析，Q1策略，预算分配，KPI目标'] },
     ],
-    buildPrompt: (inputs) => `PPT主题：${inputs[0]}\n用途：${inputs[1]}\n核心内容：${inputs[2] || '由你规划'}\n\n请生成完整的PPT大纲。`,
+    buildPrompt: (inputs) => `PPT主题：${inputs[0]}\n用途：${inputs[1]}\n核心内容：${inputs[2] || '由你规划'}\n\n请生成完整的PPT大纲。`
   },
 
   'speech-writer': {
@@ -183,7 +183,7 @@ const TOOL_CONFIGS = {
     examples: [
       { label: '年会发言', values: ['公司年会', '5分钟', '回顾团队一年成长，3个项目里程碑，感谢团队，明年展望'] },
     ],
-    buildPrompt: (inputs) => `演讲场景：${inputs[0]}\n时长：${inputs[1]}\n核心观点：${inputs[2]}\n\n请生成完整的演讲稿。`,
+    buildPrompt: (inputs) => `演讲场景：${inputs[0]}\n时长：${inputs[1]}\n核心观点：${inputs[2]}\n\n请生成完整的演讲稿。`
   },
 
   'excel-formula': {
@@ -197,7 +197,7 @@ const TOOL_CONFIGS = {
       { label: '条件求和', values: ['A列是部门，B列是工资，想求技术部的工资总和'] },
       { label: '查找匹配', values: ['Sheet1的A列是学号B列是姓名，Sheet2的A列也是学号，想在Sheet2的B列自动填入姓名'] },
     ],
-    buildPrompt: (inputs) => `我的Excel需求：${inputs[0]}\n\n请给出推荐的公式方案。`,
+    buildPrompt: (inputs) => `我的Excel需求：${inputs[0]}\n\n请给出推荐的公式方案。`
   },
 
   'competitor-analysis': {
@@ -212,7 +212,7 @@ const TOOL_CONFIGS = {
     examples: [
       { label: 'AI编程', values: ['Cursor', 'GitHub Copilot, Windsurf, Codeium', '功能对比'] },
     ],
-    buildPrompt: (inputs) => `我的产品：${inputs[0]}\n竞品：${inputs[1]}\n分析重点：${inputs[2] || '全面分析'}\n\n请生成竞品分析报告。`,
+    buildPrompt: (inputs) => `我的产品：${inputs[0]}\n竞品：${inputs[1]}\n分析重点：${inputs[2] || '全面分析'}\n\n请生成竞品分析报告。`
   },
 
   // ===== 专业工具 =====
@@ -228,7 +228,7 @@ const TOOL_CONFIGS = {
     examples: [
       { label: 'AI工具', values: ['AI写作工具推荐', '面向国内用户，推荐免费和低价工具', '3000字'] },
     ],
-    buildPrompt: (inputs) => `目标关键词：${inputs[0]}\n文章方向：${inputs[1]}\n目标字数：${inputs[2] || '2000字'}\n\n请生成完整的SEO优化文章。`,
+    buildPrompt: (inputs) => `目标关键词：${inputs[0]}\n文章方向：${inputs[1]}\n目标字数：${inputs[2] || '2000字'}\n\n请生成完整的SEO优化文章。`
   },
 
   'product-desc': {
@@ -243,7 +243,7 @@ const TOOL_CONFIGS = {
     examples: [
       { label: '耳机', values: ['无线降噪耳机Pro', '主动降噪40dB，续航30小时，蓝牙5.3，299元', '淘宝/天猫'] },
     ],
-    buildPrompt: (inputs) => `产品：${inputs[0]}\n卖点：${inputs[1]}\n投放平台：${inputs[2] || '通用'}\n\n请生成电商详情页文案。`,
+    buildPrompt: (inputs) => `产品：${inputs[0]}\n卖点：${inputs[1]}\n投放平台：${inputs[2] || '通用'}\n\n请生成电商详情页文案。`
   },
 
   'ad-copy': {
@@ -259,7 +259,7 @@ const TOOL_CONFIGS = {
     examples: [
       { label: 'APP推广', values: ['AI英语学习APP', '抖音信息流', '应用下载', 'AI口语对话，每天15分钟，首月免费'] },
     ],
-    buildPrompt: (inputs) => `广告产品：${inputs[0]}\n投放平台：${inputs[1]}\n广告目标：${inputs[2]}\n产品亮点：${inputs[3] || '由你提炼'}\n\n请生成多套广告文案。`,
+    buildPrompt: (inputs) => `广告产品：${inputs[0]}\n投放平台：${inputs[1]}\n广告目标：${inputs[2]}\n产品亮点：${inputs[3] || '由你提炼'}\n\n请生成多套广告文案。`
   },
 
   'contract-review': {
@@ -274,7 +274,7 @@ const TOOL_CONFIGS = {
     examples: [
       { label: '劳动合同', values: ['劳动合同', '乙方（服务/提供方）', '合同期限3年试用期6个月，竞业限制2年补偿金工资30%，违约金10万元'] },
     ],
-    buildPrompt: (inputs) => `合同类型：${inputs[0]}\n我的身份：${inputs[1]}\n合同文本：${inputs[2]}\n\n请审查合同风险并给出修改建议。`,
+    buildPrompt: (inputs) => `合同类型：${inputs[0]}\n我的身份：${inputs[1]}\n合同文本：${inputs[2]}\n\n请审查合同风险并给出修改建议。`
   },
 
   'data-analysis': {
@@ -288,7 +288,7 @@ const TOOL_CONFIGS = {
     examples: [
       { label: '转化率下降', values: ['电商网站，日均1万UV', '转化率从3%降到2%，有漏斗数据，想找出问题环节'] },
     ],
-    buildPrompt: (inputs) => `分析背景：${inputs[0]}\n分析问题：${inputs[1]}\n\n请给出数据分析框架和建议。`,
+    buildPrompt: (inputs) => `分析背景：${inputs[0]}\n分析问题：${inputs[1]}\n\n请给出数据分析框架和建议。`
   },
 
   'interview-prep': {
@@ -303,7 +303,7 @@ const TOOL_CONFIGS = {
     examples: [
       { label: '产品经理', values: ['字节跳动-产品经理', '3年产品经验，做过电商和社交产品', '全部准备'] },
     ],
-    buildPrompt: (inputs) => `目标岗位：${inputs[0]}\n我的背景：${inputs[1]}\n面试轮次：${inputs[2] || '全部准备'}\n\n请生成面试准备方案。`,
+    buildPrompt: (inputs) => `目标岗位：${inputs[0]}\n我的背景：${inputs[1]}\n面试轮次：${inputs[2] || '全部准备'}\n\n请生成面试准备方案。`
   },
 
   // ===== 补充高需求工具 =====
@@ -319,7 +319,7 @@ const TOOL_CONFIGS = {
     examples: [
       { label: 'AI趋势', values: ['2026年AI Agent发展趋势', '技术深度', 'Agent将取代传统SaaS，多Agent协作是未来'] },
     ],
-    buildPrompt: (inputs) => `文章主题：${inputs[0]}\n风格：${inputs[1]}\n核心观点：${inputs[2] || '由你发挥'}\n\n请生成一篇深度博客文章。`,
+    buildPrompt: (inputs) => `文章主题：${inputs[0]}\n风格：${inputs[1]}\n核心观点：${inputs[2] || '由你发挥'}\n\n请生成一篇深度博客文章。`
   },
 
   'summary-gen': {
@@ -333,7 +333,7 @@ const TOOL_CONFIGS = {
     examples: [
       { label: '新闻摘要', values: ['OpenAI发布了最新模型GPT-5，在推理能力和多模态理解方面大幅提升，数学推理超过人类专家水平。CEO表示GPT-5标志着AI进入新阶段。', '中文'] },
     ],
-    buildPrompt: (inputs) => `请为以下文本生成摘要：${inputs[0]} 输出语言：${inputs[1] || '原文语言'} 请生成三个层级的摘要：1.一句话总结 2.核心要点(100字内) 3.详细摘要(300字内)`,
+    buildPrompt: (inputs) => `请为以下文本生成摘要：${inputs[0]} 输出语言：${inputs[1] || '原文语言'} 请生成三个层级的摘要：1.一句话总结 2.核心要点(100字内) 3.详细摘要(300字内)`
   },
 
   'story-gen': {
@@ -347,7 +347,7 @@ const TOOL_CONFIGS = {
     examples: [
       { label: '品牌故事', values: ['品牌故事', '一家做AI工具的创业公司，价值观：让AI人人可用，困境：大厂压境如何突围'] },
     ],
-    buildPrompt: (inputs) => `故事类型：${inputs[0]}\n故事设定：${inputs[1]}\n\n请创作一个完整的故事。`,
+    buildPrompt: (inputs) => `故事类型：${inputs[0]}\n故事设定：${inputs[1]}\n\n请创作一个完整的故事。`
   },
 
   'study-plan': {
@@ -364,7 +364,7 @@ const TOOL_CONFIGS = {
       { label: 'Python入门', values: ['学会Python编程', '完全零基础', '每天1小时', '希望3个月能写简单项目'] },
       { label: 'AI工程师', values: ['成为AI应用工程师', '有一些了解', '每天2小时', '有编程基础，想学AI Agent开发'] },
     ],
-    buildPrompt: (inputs) => `学习目标：${inputs[0]}\n当前水平：${inputs[1]}\n可用时间：${inputs[2]}\n补充：${inputs[3] || '无'}\n\n请生成系统化的学习计划。`,
+    buildPrompt: (inputs) => `学习目标：${inputs[0]}\n当前水平：${inputs[1]}\n可用时间：${inputs[2]}\n补充：${inputs[3] || '无'}\n\n请生成系统化的学习计划。`
   },
 
   'brainstorm': {
@@ -379,7 +379,7 @@ const TOOL_CONFIGS = {
       { label: '传统文化', values: ['如何让更多年轻人了解传统文化？', '预算1万以内，目标人群大学生'] },
       { label: '产品创新', values: ['如何让AI工具的日活用户翻倍？', ''] },
     ],
-    buildPrompt: (inputs) => `问题/主题：${inputs[0]}\n方向限制：${inputs[1] || '无限制，越有创意越好'}\n\n请进行头脑风暴，先发散出至少20个想法，然后分类、评估、推荐TOP5。`,
+    buildPrompt: (inputs) => `问题/主题：${inputs[0]}\n方向限制：${inputs[1] || '无限制，越有创意越好'}\n\n请进行头脑风暴，先发散出至少20个想法，然后分类、评估、推荐TOP5。`
   },
 
   'translate-polish': {
@@ -395,7 +395,7 @@ const TOOL_CONFIGS = {
       { label: '中译英', values: ['中→英翻译', '我们公司专注于AI工具开发，致力于让每个人都能使用人工智能提升工作效率。', '商务邮件'] },
       { label: '中文润色', values: ['中文润色', '这个东西很好用，用了之后效率提高了不少', '营销文案'] },
     ],
-    buildPrompt: (inputs) => `功能：${inputs[0]}\n使用场景：${inputs[2] || '通用'}\n原文：${inputs[1]}\n\n请${inputs[0]}。`,
+    buildPrompt: (inputs) => `功能：${inputs[0]}\n使用场景：${inputs[2] || '通用'}\n原文：${inputs[1]}\n\n请${inputs[0]}。`
   },
 
   'name-gen': {
@@ -411,7 +411,7 @@ const TOOL_CONFIGS = {
       { label: 'AI工具', values: ['一款AI编程助手', '科技感', '要好记，2-3个字'] },
       { label: '茶饮品牌', values: ['新式茶饮品牌，主打健康低糖', '国潮风', '要有诗意'] },
     ],
-    buildPrompt: (inputs) => `产品/品牌：${inputs[0]}\n命名风格：${inputs[1]}\n补充要求：${inputs[2] || '无'}\n\n请生成10个品牌命名方案，每个配一个Slogan。`,
+    buildPrompt: (inputs) => `产品/品牌：${inputs[0]}\n命名风格：${inputs[1]}\n补充要求：${inputs[2] || '无'}\n\n请生成10个品牌命名方案，每个配一个Slogan。`
   },
 
   'api-doc': {
@@ -426,8 +426,68 @@ const TOOL_CONFIGS = {
     examples: [
       { label: '用户管理', values: ['用户管理API', 'POST /users 创建用户(name,email)，GET /users/:id 获取用户，PUT /users/:id 更新用户，DELETE /users/:id 删除用户', 'Python'] },
     ],
-    buildPrompt: (inputs) => `API名称：${inputs[0]}\n功能描述：${inputs[1]}\n代码示例语言：${inputs[2] || 'Python + cURL'}\n\n请生成完整的API文档。`,
+    buildPrompt: (inputs) => `API名称：${inputs[0]}\n功能描述：${inputs[1]}\n代码示例语言：${inputs[2] || 'Python + cURL'}\n\n请生成完整的API文档。`
   },
+  // ===== 基础AI工具（升级为真AI）=====
+  'ai-text-detect': {
+    title: 'AI文本检测器', desc: '粘贴文本，AI判断是否由AI生成', icon: '🔍',
+    fields: [
+      { label: '待检测文本', type: 'textarea', placeholder: '粘贴要检测的文本（建议100字以上）...', minHeight: 150, required: true },
+    ],
+    examples: [{ label: 'AI文风', values: ['随着人工智能技术的快速发展，越来越多的行业开始拥抱数字化转型。'] }],
+    buildPrompt: (inputs) => '请分析以下文本是否由AI生成，给出：1）AI生成概率（0-100%）2）判断依据 3）具体可疑点。\n\n文本内容：\n' + inputs[0]
+  },
+  'ai-translate': {
+    title: 'AI翻译对比', desc: '一段文本多语言翻译', icon: '🌐',
+    fields: [
+      { label: '待翻译文本', type: 'textarea', placeholder: '输入要翻译的文本...', minHeight: 100, required: true },
+      { label: '目标语言', type: 'select', options: ['英语', '日语', '韩语', '法语', '德语', '西班牙语', '俄语', '繁体中文'], required: true },
+      { label: '翻译风格', type: 'select', options: ['专业正式', '日常口语', '文学优美', '简洁明快'], required: false },
+    ],
+    examples: [{ label: '商务', values: ['感谢贵司的合作意向，我们将在三个工作日内回复详细方案。', '英语', '专业正式'] }],
+    buildPrompt: (inputs) => '请将以下文本翻译为' + inputs[1] + '，风格：' + (inputs[2] || '专业正式') + '。\n\n提供：1）翻译结果 2）关键词汇注释 3）翻译要点\n\n原文：\n' + inputs[0]
+  },
+  'ai-resume': {
+    title: 'AI简历优化器', desc: '粘贴简历，AI给出修改建议和改写版本', icon: '💼',
+    fields: [
+      { label: '简历内容', type: 'textarea', placeholder: '粘贴你的简历内容...', minHeight: 200, required: true },
+      { label: '目标岗位', placeholder: '例如：前端开发工程师', required: true },
+      { label: '优化重点', type: 'select', options: ['全面优化', '量化成果', '突出技术栈', '优化排版表述', '匹配JD关键词'], required: false },
+    ],
+    examples: [{ label: '开发', values: ['张三，3年前端开发经验，负责公司官网维护，使用React和Vue。', '前端开发工程师', '量化成果'] }],
+    buildPrompt: (inputs) => '目标岗位：' + inputs[1] + '\n优化重点：' + (inputs[2] || '全面优化') + '\n\n请给出：1）5条优化建议 2）改写后的关键段落 3）加分项建议\n\n简历：\n' + inputs[0]
+  },
+  'ai-code-review': {
+    title: 'AI代码审查', desc: '粘贴代码，AI找出Bug和安全漏洞', icon: '💻',
+    fields: [
+      { label: '编程语言', type: 'select', options: ['JavaScript', 'Python', 'Java', 'Go', 'TypeScript', 'Rust', 'C++', 'PHP'], required: true },
+      { label: '代码内容', type: 'textarea', placeholder: '粘贴你的代码...', minHeight: 200, required: true },
+      { label: '审查重点', type: 'select', options: ['全面审查', '安全漏洞', '性能优化', '代码风格', '最佳实践'], required: false },
+    ],
+    examples: [{ label: 'SQL注入', values: ['JavaScript', 'function getUser(id) {\n  const user = db.query("SELECT * FROM users WHERE id=" + id);\n  return user.name;\n}', '安全漏洞'] }],
+    buildPrompt: (inputs) => '编程语言：' + inputs[0] + '\n审查重点：' + (inputs[2] || '全面审查') + '\n\n请审查代码，给出：1）Bug和安全问题 2）优化建议 3）改写后代码\n\n代码：\n' + inputs[1]
+  },
+  'seo-title-gen': {
+    title: 'SEO标题生成器', desc: '批量生成高点击率SEO标题', icon: '📈',
+    fields: [
+      { label: '文章主题', placeholder: '例如：AI写作工具', required: true },
+      { label: '关键词', placeholder: '例如：免费、2026、对比', required: true },
+      { label: '标题数量', type: 'select', options: ['5个', '10个', '15个', '20个'], required: false },
+    ],
+    examples: [{ label: 'AI工具', values: ['AI写作工具', '免费、2026最新、对比', '10个'] }],
+    buildPrompt: (inputs) => '主题：' + inputs[0] + '\n关键词：' + inputs[1] + '\n数量：' + (inputs[2] || '10个') + '\n\n请生成SEO友好标题，包含关键词、30字内、多种句式。'
+  },
+  'ai-copywriter': {
+    title: 'AI文案生成器', desc: '输入产品信息，AI生成多平台营销文案', icon: '✍️',
+    fields: [
+      { label: '产品/服务名称', placeholder: '例如：AI工具箱', required: true },
+      { label: '产品描述/卖点', type: 'textarea', placeholder: '描述产品功能和卖点...', minHeight: 80, required: true },
+      { label: '文案平台', type: 'select', options: ['通用', '小红书', '抖音', '微信朋友圈', '淘宝详情页', '公众号推文', '广告投放'], required: true },
+      { label: '语气风格', type: 'select', options: ['专业', '活泼', '温暖', '高级感', '接地气'], required: false },
+    ],
+    examples: [{ label: '小红书', values: ['AI工具箱', '60款在线工具，28款AI驱动，免费可用', '小红书', '活泼'] }],
+    buildPrompt: (inputs) => '产品：' + inputs[0] + '\n卖点：' + inputs[1] + '\n平台：' + inputs[2] + '\n风格：' + (inputs[3] || '专业') + '\n\n请生成3套' + inputs[2] + '文案，每套含标题和正文。'
+  }
 };
 
 module.exports = { TOOL_CONFIGS };
