@@ -71,6 +71,10 @@ const ALL_TOOLS = [
   { id: 'ai-copywriter', name: 'AI文案生成器', desc: '多平台营销文案一键生成', icon: '✍️', price: '9.9元/月', cat: 'basic', apiTool: true },
   { id: 'image-convert', name: '图片格式转换', desc: 'WebP/PNG/JPG互转', icon: '🔄', price: '免费', cat: 'basic' },
   { id: 'markdown-editor', name: 'Markdown编辑器', desc: '实时预览+导出HTML', icon: '📝', price: '免费', cat: 'basic' },
+  // ===== 🔥 高搜索量SEO工具（前端本地，免费无限）=====
+  { id: 'image-compress', name: '图片压缩', desc: '在线压缩图片体积，保持清晰', icon: '🖼️', price: '免费', cat: 'free', apiTool: false },
+  { id: 'id-photo', name: '证件照换底色', desc: '一键换白底/蓝底/红底', icon: '🪪', price: '免费', cat: 'free', apiTool: false },
+  { id: 'pdf-merge', name: 'PDF合并', desc: '多个PDF合并为一个文件', icon: '📄', price: '免费', cat: 'free', apiTool: false },
 ];
 
 module.exports = { ALL_TOOLS };

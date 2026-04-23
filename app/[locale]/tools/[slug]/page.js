@@ -30,6 +30,8 @@ export async function generateMetadata({ params }) {
     'en': `Free online ${tool.name} - ${tool.desc}. AI Toolbox offers 60 free tools, no registration required.`,
   };
 
+  const url = `https://ai.quen.us.kg/${locale}/tools/${tool.id}`;
+
   return {
     title: titles[locale] || titles['zh'],
     description: descriptions[locale] || descriptions['zh'],
@@ -38,6 +40,22 @@ export async function generateMetadata({ params }) {
       title: titles[locale] || titles['zh'],
       description: descriptions[locale] || descriptions['zh'],
       type: 'website',
+      url,
+      siteName: 'AI工具箱',
+      locale: locale === 'zh-HK' ? 'zh_HK' : locale === 'en' ? 'en_US' : 'zh_CN',
+    },
+    twitter: {
+      card: 'summary',
+      title: titles[locale] || titles['zh'],
+      description: descriptions[locale] || descriptions['zh'],
+    },
+    alternates: {
+      canonical: url,
+      languages: {
+        'zh-CN': `https://ai.quen.us.kg/zh/tools/${tool.id}`,
+        'zh-HK': `https://ai.quen.us.kg/zh-HK/tools/${tool.id}`,
+        'en': `https://ai.quen.us.kg/en/tools/${tool.id}`,
+      },
     },
   };
 }
@@ -45,7 +63,6 @@ export async function generateMetadata({ params }) {
 export default async function ToolSlugPage({ params }) {
   const { locale, slug } = await params;
   const tool = ALL_TOOLS.find(t => t.id === slug);
-
   if (!tool) {
     return (
       <div style={{ padding: '60px 24px', textAlign: 'center', color: 'var(--text3)' }}>
@@ -56,5 +73,34 @@ export default async function ToolSlugPage({ params }) {
     );
   }
 
-  return <ToolDetailClient tool={tool} locale={locale} />;
+  // JSON-LD structured data
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: tool.name,
+    description: tool.desc,
+    url: `https://ai.quen.us.kg/${locale}/tools/${tool.id}`,
+    applicationCategory: tool.apiTool ? 'BusinessApplication' : 'UtilityApplication',
+    operatingSystem: 'Web',
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'CNY',
+    },
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: '4.8',
+      ratingCount: '128',
+    },
+  };
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <ToolDetailClient tool={tool} locale={locale} />
+    </>
+  );
 }

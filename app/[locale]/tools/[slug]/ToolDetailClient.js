@@ -12,6 +12,9 @@ import { MarkdownEditor } from '@/components/tools/MarkdownEditor';
 import { JSONFormatter, JSONToYAML, Base64Tool, URLEncode } from '@/components/tools/dev/DevTools1';
 import { HashGen, RegexTester, TimestampTool, UUIDGen, ColorTool, TextDiff, JWTParser, QRCode } from '@/components/tools/dev/DevTools2';
 import { WordCount, TextReplace, LoremIpsum, SlugGen, MarkdownPreview, EmojiPicker, PasswordGen, HtmlEntity } from '@/components/tools/free/FreeTools';
+import ImageCompress from '@/components/tools/ImageCompress';
+import IDPhoto from '@/components/tools/IDPhoto';
+import PDFMerge from '@/components/tools/PDFMerge';
 
 const TOOL_COMPONENTS = {
   'xhs-writer': (props) => <AIToolWrapper toolId="xhs-writer" {...props} />,
@@ -74,6 +77,9 @@ const TOOL_COMPONENTS = {
   'ai-copywriter': (props) => <AIToolWrapper toolId="ai-copywriter" {...props} />,
   'image-convert': ImageConverter,
   'markdown-editor': MarkdownEditor,
+  'image-compress': ImageCompress,
+  'id-photo': IDPhoto,
+  'pdf-merge': PDFMerge,
 };
 
 function AIToolWrapper({ toolId, onBack, locale }) {
