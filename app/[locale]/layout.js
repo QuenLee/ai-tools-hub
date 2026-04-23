@@ -70,7 +70,6 @@ export default async function LocaleLayout({ children, params }) {
           <a href={`/${locale}/faq`} style={{ color: 'var(--text3)', textDecoration: 'none' }}>常见问题</a>
           <a href={`/${locale}/privacy`} style={{ color: 'var(--text3)', textDecoration: 'none' }}>隐私政策</a>
           <a href={`/${locale}/terms`} style={{ color: 'var(--text3)', textDecoration: 'none' }}>服务条款</a>
-          <ThemeToggle />
         </footer>
         <CheckinWidget />
       </body>

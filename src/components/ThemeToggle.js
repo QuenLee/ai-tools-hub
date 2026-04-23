@@ -5,7 +5,6 @@ export default function ThemeToggle() {
   const [isDark, setIsDark] = useState(true);
 
   useEffect(() => {
-    // Check system preference on mount
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     const saved = localStorage.getItem('theme');
     if (saved) {
@@ -27,32 +26,36 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={toggle}
-      aria-label="Toggle theme"
+      aria-label="切换日间/夜间模式"
       style={{
-        background: 'var(--surface)',
+        position: 'fixed',
+        top: 16,
+        right: 16,
+        zIndex: 1000,
+        width: 40,
+        height: 40,
+        borderRadius: '50%',
+        background: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.06)',
         border: '1px solid var(--border)',
-        borderRadius: 8,
-        padding: '5px 10px',
         cursor: 'pointer',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         color: 'var(--text2)',
-        transition: 'all 0.2s',
-        lineHeight: 0,
+        transition: 'all 0.3s',
+        backdropFilter: 'blur(8px)',
+        fontSize: '1.1rem',
+      }}
+      onMouseEnter={e => {
+        e.currentTarget.style.transform = 'scale(1.1)';
+        e.currentTarget.style.borderColor = 'var(--accent)';
+      }}
+      onMouseLeave={e => {
+        e.currentTarget.style.transform = 'scale(1)';
+        e.currentTarget.style.borderColor = 'var(--border)';
       }}
     >
-      {isDark ? (
-        // Sun icon
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
-        </svg>
-      ) : (
-        // Moon icon
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-        </svg>
-      )}
+      {isDark ? '☀️' : '🌙'}
     </button>
   );
 }
