@@ -25,9 +25,7 @@ export async function generateMetadata({ params }) {
     description: descriptions[locale] || descriptions['zh'],
     keywords: 'AI工具箱,免费AI工具,小红书文案生成器,SEO标题生成,代码审查,AI翻译,在线工具,AI写作',
     icons: {
-      icon: [
-        { url: '/icon.png', sizes: '32x32', type: 'image/png' },
-      ],
+      icon: [{ url: '/icon.png', sizes: '32x32', type: 'image/png' }],
       apple: '/apple-touch-icon.png',
     },
     manifest: '/manifest.json',
@@ -42,7 +40,6 @@ export async function generateMetadata({ params }) {
   };
 }
 
-// Google Analytics — replace G-XXXXXXX with real ID after setup
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 
 export default async function LocaleLayout({ children, params }) {
@@ -53,38 +50,89 @@ export default async function LocaleLayout({ children, params }) {
         <meta name="msvalidate.01" content="B61D38B6AEB3EAD525BBF30D0C454B69" />
         <meta name="google-site-verification" content="ukEoNUvpr6BRkzEAYA0kw_nckghHvtOMt-VNggFznUg" />
       </head>
-      <body>
+      <body style={{ margin: 0, padding: 0 }}>
+        {/* ── 顶部导航栏 ── */}
+        <nav style={{
+          position: 'sticky', top: 0, zIndex: 200,
+          background: 'var(--bg)',
+          borderBottom: '1px solid var(--border)',
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+        }}>
+          <div style={{
+            maxWidth: 1200, margin: '0 auto', padding: '0 24px',
+            height: 56,
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          }}>
+            {/* Logo */}
+            <a href={`/${locale}/tools`} style={{
+              textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 8,
+            }}>
+              <span style={{
+                width: 32, height: 32, borderRadius: 10,
+                background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: '1rem', color: '#fff', fontWeight: 900,
+              }}>⚔️</span>
+              <span style={{
+                fontWeight: 900, fontSize: '1.1rem',
+                background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
+                WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+              }}>AI工具箱</span>
+            </a>
+
+            {/* Nav links */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+              <a href={`/${locale}/tools`} style={{
+                fontSize: '0.85rem', color: 'var(--text2)', textDecoration: 'none',
+                fontWeight: 600,
+              }}>全部工具</a>
+              <a href={`/${locale}/faq`} style={{
+                fontSize: '0.85rem', color: 'var(--text2)', textDecoration: 'none',
+                fontWeight: 600,
+              }}>常见问题</a>
+              <ThemeToggle />
+            </div>
+          </div>
+        </nav>
+
+        {/* ── 页面内容 ── */}
         {children}
+
+        {/* ── 页脚 ── */}
         <footer style={{
           borderTop: '1px solid var(--border)',
-          padding: '20px 24px',
-          textAlign: 'center',
-          fontSize: '0.72rem',
-          color: 'var(--text3)',
-          display: 'flex',
-          justifyContent: 'center',
-          gap: 16,
-          flexWrap: 'wrap',
+          padding: '24px', textAlign: 'center',
+          background: 'var(--surface)',
         }}>
-          <span>© 2026 AI工具箱</span>
-          <a href={`/${locale}/faq`} style={{ color: 'var(--text3)', textDecoration: 'none' }}>常见问题</a>
-          <a href={`/${locale}/privacy`} style={{ color: 'var(--text3)', textDecoration: 'none' }}>隐私政策</a>
-          <a href={`/${locale}/terms`} style={{ color: 'var(--text3)', textDecoration: 'none' }}>服务条款</a>
+          <div style={{
+            maxWidth: 1200, margin: '0 auto',
+            display: 'flex', justifyContent: 'center', gap: 20,
+            flexWrap: 'wrap',
+            fontSize: '0.72rem', color: 'var(--text3)',
+          }}>
+            <span>© 2026 AI工具箱 — 免费在线AI工具集合</span>
+            <a href={`/${locale}/faq`} style={{ color: 'var(--text3)', textDecoration: 'none' }}>常见问题</a>
+            <a href={`/${locale}/privacy`} style={{ color: 'var(--text3)', textDecoration: 'none' }}>隐私政策</a>
+            <a href={`/${locale}/terms`} style={{ color: 'var(--text3)', textDecoration: 'none' }}>服务条款</a>
+          </div>
         </footer>
+
         <CheckinWidget />
+
+        {/* Google Analytics */}
+        {GA_ID && (
+          <>
+            <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="afterInteractive" />
+            <Script id="google-analytics" strategy="afterInteractive">
+              {`window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', '${GA_ID}', { anonymize_ip: true });`}
+            </Script>
+          </>
+        )}
       </body>
-      {/* Google Analytics */}
-      {GA_ID && (
-        <>
-          <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="afterInteractive" />
-          <Script id="google-analytics" strategy="afterInteractive">
-            {`window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', '${GA_ID}', { anonymize_ip: true });`}
-          </Script>
-        </>
-      )}
     </html>
   );
 }

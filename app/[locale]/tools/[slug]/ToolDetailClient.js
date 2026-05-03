@@ -1,4 +1,5 @@
 'use client';
+
 import { useState } from 'react';
 import { ALL_TOOLS } from '@/lib/tools-registry';
 import { TOOL_CONFIGS } from '@/lib/tool-configs';
@@ -97,109 +98,181 @@ const CATEGORIES = [
   { id: 'basic', label: '基础工具', emoji: '📄', color: '#64748b' },
 ];
 
-function AdSidebar({ position }) {
+function AdSlot({ position }) {
   return (
     <div className={`ad-slot-${position}`} style={{
-      width: '100%', minHeight: 250, borderRadius: 10, border: '1px dashed var(--border)',
+      width: '100%', minHeight: 250, borderRadius: 12,
+      border: '1px dashed var(--border)',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
-      color: 'var(--text3)', fontSize: '0.68rem', position: 'sticky', top: 20,
-    }}>
-      广告位
-    </div>
+      color: 'var(--text3)', fontSize: '0.68rem',
+      position: 'sticky', top: 80,
+    }}>广告位</div>
   );
 }
 
 export default function ToolDetailClient({ tool, locale }) {
   const ToolComponent = TOOL_COMPONENTS[tool.id];
   const catInfo = CATEGORIES.find(c => c.id === tool.cat);
+  const isFree = tool.price === '免费' || !tool.apiTool;
+
+  // 同分类相关工具
+  const relatedTools = ALL_TOOLS.filter(t => t.cat === tool.cat && t.id !== tool.id).slice(0, 6);
 
   return (
-    <div style={{ padding: '24px 0 80px' }}>
-      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '160px 1fr 160px', gap: 20, alignItems: 'start' }}>
-          {/* Left ad */}
-          <div className="ad-sidebar-left" style={{ position: 'sticky', top: 20 }}>
-            <AdSidebar position="left" />
+    <div style={{ minHeight: '100vh' }}>
+      {/* ═══ 工具详情顶部 ═══ */}
+      <div style={{
+        background: `linear-gradient(135deg, ${(catInfo?.color || '#6366f1')}dd, ${(catInfo?.color || '#6366f1')}88)`,
+        padding: '32px 24px 40px',
+      }}>
+        <div style={{ maxWidth: 800, margin: '0 auto' }}>
+          {/* 面包屑 */}
+          <div style={{
+            display: 'flex', alignItems: 'center', gap: 6,
+            marginBottom: 20, fontSize: '0.82rem',
+          }}>
+            <a href={`/${locale}/tools`} style={{
+              color: 'rgba(255,255,255,0.8)', textDecoration: 'none', fontWeight: 600,
+            }}>← 返回工具箱</a>
+            <span style={{ color: 'rgba(255,255,255,0.4)' }}>›</span>
+            {catInfo && <span style={{ color: 'rgba(255,255,255,0.7)' }}>{catInfo.emoji} {catInfo.label}</span>}
+            <span style={{ color: 'rgba(255,255,255,0.4)' }}>›</span>
+            <span style={{ color: '#fff' }}>{tool.name}</span>
           </div>
 
-          {/* Main content */}
-          <div>
-            {/* Back + Breadcrumb */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 20, fontSize: '0.82rem' }}>
-              <a href={`/${locale}/tools`} style={{ color: 'var(--accent)', textDecoration: 'none', fontWeight: 600 }}>
-                ← 返回工具箱
-              </a>
-              <span style={{ color: 'var(--text3)' }}>›</span>
-              {catInfo && <span style={{ color: catInfo.color }}>{catInfo.label}</span>}
-              <span style={{ color: 'var(--text3)' }}>›</span>
-              <span style={{ color: 'var(--text)' }}>{tool.name}</span>
-            </div>
-
-            {/* Tool header — SEO-friendly H1 */}
-            <h1 style={{
-              display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20,
-              padding: '16px 20px', borderRadius: 12, background: 'var(--surface)', border: '1px solid var(--border)',
-              fontSize: '1.3rem', fontWeight: 800,
-            }}>
-              <span style={{ fontSize: '2rem' }}>{tool.icon}</span>
-              <span>{tool.name}</span>
-              {tool.apiTool && (
-                <span style={{ fontSize: '0.68rem', padding: '2px 8px', borderRadius: 6, background: 'rgba(99,102,241,0.1)', color: 'var(--accent)', fontWeight: 700 }}>🤖 AI驱动</span>
-              )}
-              <span style={{ fontSize: '0.68rem', padding: '2px 8px', borderRadius: 6, background: 'rgba(16,185,129,0.1)', color: 'var(--green)', fontWeight: 700 }}>
-                {!tool.apiTool ? '✓ 免费无限' : '每日3次免费'}
-              </span>
-            </h1>
-
-            {/* Tool desc for SEO */}
-            <p style={{ fontSize: '0.88rem', color: 'var(--text2)', marginBottom: 20, lineHeight: 1.6 }}>
-              {tool.desc} — 免费在线使用，无需注册，即开即用。
-            </p>
-
-            {/* Tool component */}
-            {ToolComponent ? (
-              <ToolComponent onBack={() => { if (typeof window !== 'undefined') window.location.href = `/${locale}/tools`; }} locale={locale} />
-            ) : (
-              <div style={{ padding: 40, textAlign: 'center', color: 'var(--text3)' }}>工具加载中...</div>
-            )}
-
-            {/* Ad below result */}
-            <div className="ad-slot-result" style={{
-              marginTop: 24, minHeight: 90, borderRadius: 10, border: '1px dashed var(--border)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text3)', fontSize: '0.72rem',
-            }}>
-              广告位
-            </div>
-
-            {/* Related tools */}
-            <div style={{ marginTop: 24 }}>
-              <h2 style={{ fontSize: '0.92rem', fontWeight: 700, marginBottom: 12 }}>📌 相关工具</h2>
-              <div style={{ display: 'flex', gap: 10, overflowX: 'auto', paddingBottom: 8 }}>
-                {ALL_TOOLS.filter(t => t.cat === tool.cat && t.id !== tool.id).slice(0, 6).map(t => (
-                  <a key={t.id} href={`/${locale}/tools/${t.id}`}
-                    style={{ flex: '0 0 auto', width: 150, padding: 14, borderRadius: 10, border: '1px solid var(--border)', background: 'var(--surface)', textDecoration: 'none', color: 'inherit', transition: 'all 0.2s' }}
-                    onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-                    onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.transform = 'none'; }}>
-                    <div style={{ fontSize: '1.2rem', marginBottom: 6 }}>{t.icon}</div>
-                    <div style={{ fontSize: '0.82rem', fontWeight: 700, marginBottom: 2 }}>{t.name}</div>
-                    <div style={{ fontSize: '0.68rem', color: 'var(--text3)', lineHeight: 1.3 }}>{t.desc}</div>
-                  </a>
-                ))}
+          {/* 工具标题 */}
+          <h1 style={{
+            display: 'flex', alignItems: 'center', gap: 14,
+            marginBottom: 8,
+          }}>
+            <span style={{
+              width: 56, height: 56, borderRadius: 16,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: '2rem', background: 'rgba(255,255,255,0.15)',
+            }}>{tool.icon}</span>
+            <div>
+              <span style={{ fontSize: '1.6rem', fontWeight: 900, color: '#fff' }}>{tool.name}</span>
+              <div style={{ display: 'flex', gap: 8, marginTop: 6 }}>
+                {tool.apiTool && (
+                  <span style={{
+                    fontSize: '0.68rem', padding: '3px 10px', borderRadius: 6,
+                    background: 'rgba(255,255,255,0.2)', color: '#fff', fontWeight: 700,
+                  }}>🤖 AI驱动</span>
+                )}
+                <span style={{
+                  fontSize: '0.68rem', padding: '3px 10px', borderRadius: 6,
+                  background: isFree ? 'rgba(52,211,153,0.3)' : 'rgba(251,191,36,0.3)',
+                  color: '#fff', fontWeight: 700,
+                }}>{isFree ? '✓ 免费无限' : '每日3次免费'}</span>
               </div>
             </div>
-          </div>
+          </h1>
 
-          {/* Right ad */}
-          <div className="ad-sidebar-right" style={{ position: 'sticky', top: 20 }}>
-            <AdSidebar position="right" />
-          </div>
+          {/* SEO描述 */}
+          <p style={{
+            fontSize: '0.92rem', color: 'rgba(255,255,255,0.75)',
+            lineHeight: 1.6, marginTop: 12,
+          }}>
+            {tool.desc} — 免费在线使用，无需注册，即开即用。
+          </p>
         </div>
       </div>
 
+      {/* ═══ 工具主内容 ═══ */}
+      <div style={{
+        maxWidth: 1200, margin: '0 auto', padding: '28px 24px 80px',
+        display: 'grid',
+        gridTemplateColumns: '160px 1fr 160px',
+        gap: 24, alignItems: 'start',
+      }}>
+        {/* 左广告 */}
+        <div className="ad-sidebar-left">
+          <AdSlot position="left" />
+        </div>
+
+        {/* 主区 */}
+        <div>
+          {/* 工具组件 */}
+          <div style={{
+            background: 'var(--surface)',
+            border: '1px solid var(--border)',
+            borderRadius: 16,
+            overflow: 'hidden',
+          }}>
+            {ToolComponent ? (
+              <ToolComponent
+                onBack={() => { if (typeof window !== 'undefined') window.location.href = `/${locale}/tools`; }}
+                locale={locale}
+              />
+            ) : (
+              <div style={{ padding: 60, textAlign: 'center', color: 'var(--text3)' }}>工具加载中...</div>
+            )}
+          </div>
+
+          {/* 结果下方广告 */}
+          <div className="ad-slot-result" style={{
+            marginTop: 24, minHeight: 90, borderRadius: 12,
+            border: '1px dashed var(--border)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            color: 'var(--text3)', fontSize: '0.72rem',
+          }}>广告位</div>
+
+          {/* 相关工具 */}
+          {relatedTools.length > 0 && (
+            <div style={{ marginTop: 32 }}>
+              <h2 style={{
+                fontSize: '1.05rem', fontWeight: 800, marginBottom: 16,
+                display: 'flex', alignItems: 'center', gap: 8,
+              }}>📌 相关工具</h2>
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))',
+                gap: 12,
+              }}>
+                {relatedTools.map(t => {
+                  const tCat = CATEGORIES.find(c => c.id === t.cat);
+                  const tFree = t.price === '免费' || !t.apiTool;
+                  return (
+                    <a key={t.id} href={`/${locale}/tools/${t.id}`} style={{
+                      padding: '16px', borderRadius: 12,
+                      border: '1px solid var(--border)', background: 'var(--surface)',
+                      textDecoration: 'none', color: 'inherit',
+                      transition: 'all 0.2s',
+                    }}
+                    onMouseEnter={e => {
+                      e.currentTarget.style.borderColor = tCat?.color || '#6366f1';
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                    }}
+                    onMouseLeave={e => {
+                      e.currentTarget.style.borderColor = 'var(--border)';
+                      e.currentTarget.style.transform = 'none';
+                    }}>
+                      <div style={{ fontSize: '1.3rem', marginBottom: 8 }}>{t.icon}</div>
+                      <div style={{ fontSize: '0.85rem', fontWeight: 700, marginBottom: 4 }}>{t.name}</div>
+                      <div style={{
+                        fontSize: '0.62rem', padding: '2px 6px', borderRadius: 4,
+                        background: tFree ? 'rgba(16,185,129,0.1)' : 'rgba(99,102,241,0.1)',
+                        color: tFree ? 'var(--green)' : 'var(--accent)',
+                        fontWeight: 700, display: 'inline-block',
+                      }}>{tFree ? '✓ 免费' : '🤖 AI'}</div>
+                    </a>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* 右广告 */}
+        <div className="ad-sidebar-right">
+          <AdSlot position="right" />
+        </div>
+      </div>
+
+      {/* 响应式 */}
       <style>{`
         @media (max-width: 900px) {
           .ad-sidebar-left, .ad-sidebar-right { display: none !important; }
-          div[style*="grid-template-columns: 160px"] { grid-template-columns: 1fr !important; }
         }
       `}</style>
     </div>
