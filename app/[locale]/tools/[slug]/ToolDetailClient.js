@@ -114,22 +114,20 @@ export default function ToolDetailClient({ tool, locale }) {
   const ToolComponent = TOOL_COMPONENTS[tool.id];
   const catInfo = CATEGORIES.find(c => c.id === tool.cat);
   const isFree = tool.price === '免费' || !tool.apiTool;
-
-  // 同分类相关工具
   const relatedTools = ALL_TOOLS.filter(t => t.cat === tool.cat && t.id !== tool.id).slice(0, 6);
 
   return (
     <div style={{ minHeight: '100vh' }}>
       {/* ═══ 工具详情顶部 ═══ */}
-      <div style={{
+      <div className="detail-header" style={{
         background: `linear-gradient(135deg, ${(catInfo?.color || '#6366f1')}dd, ${(catInfo?.color || '#6366f1')}88)`,
-        padding: '32px 24px 40px',
+        padding: '28px 20px 36px',
       }}>
         <div style={{ maxWidth: 800, margin: '0 auto' }}>
           {/* 面包屑 */}
           <div style={{
             display: 'flex', alignItems: 'center', gap: 6,
-            marginBottom: 20, fontSize: '0.82rem',
+            marginBottom: 16, fontSize: '0.78rem',
           }}>
             <a href={`/${locale}/tools`} style={{
               color: 'rgba(255,255,255,0.8)', textDecoration: 'none', fontWeight: 600,
@@ -141,26 +139,25 @@ export default function ToolDetailClient({ tool, locale }) {
           </div>
 
           {/* 工具标题 */}
-          <h1 style={{
-            display: 'flex', alignItems: 'center', gap: 14,
-            marginBottom: 8,
+          <h1 className="detail-title" style={{
+            display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8,
           }}>
-            <span style={{
-              width: 56, height: 56, borderRadius: 16,
+            <span className="detail-icon" style={{
+              width: 52, height: 52, borderRadius: 14,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: '2rem', background: 'rgba(255,255,255,0.15)',
+              fontSize: '1.8rem', background: 'rgba(255,255,255,0.15)', flexShrink: 0,
             }}>{tool.icon}</span>
             <div>
-              <span style={{ fontSize: '1.6rem', fontWeight: 900, color: '#fff' }}>{tool.name}</span>
-              <div style={{ display: 'flex', gap: 8, marginTop: 6 }}>
+              <span className="detail-name" style={{ fontSize: '1.5rem', fontWeight: 900, color: '#fff' }}>{tool.name}</span>
+              <div style={{ display: 'flex', gap: 8, marginTop: 6, flexWrap: 'wrap' }}>
                 {tool.apiTool && (
                   <span style={{
-                    fontSize: '0.68rem', padding: '3px 10px', borderRadius: 6,
+                    fontSize: '0.65rem', padding: '3px 8px', borderRadius: 6,
                     background: 'rgba(255,255,255,0.2)', color: '#fff', fontWeight: 700,
                   }}>🤖 AI驱动</span>
                 )}
                 <span style={{
-                  fontSize: '0.68rem', padding: '3px 10px', borderRadius: 6,
+                  fontSize: '0.65rem', padding: '3px 8px', borderRadius: 6,
                   background: isFree ? 'rgba(52,211,153,0.3)' : 'rgba(251,191,36,0.3)',
                   color: '#fff', fontWeight: 700,
                 }}>{isFree ? '✓ 免费无限' : '每日3次免费'}</span>
@@ -169,9 +166,9 @@ export default function ToolDetailClient({ tool, locale }) {
           </h1>
 
           {/* SEO描述 */}
-          <p style={{
-            fontSize: '0.92rem', color: 'rgba(255,255,255,0.75)',
-            lineHeight: 1.6, marginTop: 12,
+          <p className="detail-desc" style={{
+            fontSize: '0.88rem', color: 'rgba(255,255,255,0.75)',
+            lineHeight: 1.6, marginTop: 10,
           }}>
             {tool.desc} — 免费在线使用，无需注册，即开即用。
           </p>
@@ -179,16 +176,14 @@ export default function ToolDetailClient({ tool, locale }) {
       </div>
 
       {/* ═══ 工具主内容 ═══ */}
-      <div style={{
-        maxWidth: 1200, margin: '0 auto', padding: '28px 24px 80px',
+      <div className="detail-grid" style={{
+        maxWidth: 1200, margin: '0 auto', padding: '24px 16px 80px',
         display: 'grid',
         gridTemplateColumns: '160px 1fr 160px',
         gap: 24, alignItems: 'start',
       }}>
         {/* 左广告 */}
-        <div className="ad-sidebar-left">
-          <AdSlot position="left" />
-        </div>
+        <div className="ad-sidebar-left"><AdSlot position="left" /></div>
 
         {/* 主区 */}
         <div>
@@ -211,7 +206,7 @@ export default function ToolDetailClient({ tool, locale }) {
 
           {/* 结果下方广告 */}
           <div className="ad-slot-result" style={{
-            marginTop: 24, minHeight: 90, borderRadius: 12,
+            marginTop: 20, minHeight: 90, borderRadius: 12,
             border: '1px dashed var(--border)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             color: 'var(--text3)', fontSize: '0.72rem',
@@ -219,22 +214,22 @@ export default function ToolDetailClient({ tool, locale }) {
 
           {/* 相关工具 */}
           {relatedTools.length > 0 && (
-            <div style={{ marginTop: 32 }}>
+            <div style={{ marginTop: 28 }}>
               <h2 style={{
-                fontSize: '1.05rem', fontWeight: 800, marginBottom: 16,
+                fontSize: '1rem', fontWeight: 800, marginBottom: 14,
                 display: 'flex', alignItems: 'center', gap: 8,
               }}>📌 相关工具</h2>
-              <div style={{
+              <div className="related-grid" style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))',
-                gap: 12,
+                gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))',
+                gap: 10,
               }}>
                 {relatedTools.map(t => {
                   const tCat = CATEGORIES.find(c => c.id === t.cat);
                   const tFree = t.price === '免费' || !t.apiTool;
                   return (
                     <a key={t.id} href={`/${locale}/tools/${t.id}`} style={{
-                      padding: '16px', borderRadius: 12,
+                      padding: '14px', borderRadius: 12,
                       border: '1px solid var(--border)', background: 'var(--surface)',
                       textDecoration: 'none', color: 'inherit',
                       transition: 'all 0.2s',
@@ -247,14 +242,14 @@ export default function ToolDetailClient({ tool, locale }) {
                       e.currentTarget.style.borderColor = 'var(--border)';
                       e.currentTarget.style.transform = 'none';
                     }}>
-                      <div style={{ fontSize: '1.3rem', marginBottom: 8 }}>{t.icon}</div>
-                      <div style={{ fontSize: '0.85rem', fontWeight: 700, marginBottom: 4 }}>{t.name}</div>
-                      <div style={{
-                        fontSize: '0.62rem', padding: '2px 6px', borderRadius: 4,
+                      <div style={{ fontSize: '1.2rem', marginBottom: 6 }}>{t.icon}</div>
+                      <div style={{ fontSize: '0.82rem', fontWeight: 700, marginBottom: 4 }}>{t.name}</div>
+                      <span style={{
+                        fontSize: '0.58rem', padding: '2px 6px', borderRadius: 4,
                         background: tFree ? 'rgba(16,185,129,0.1)' : 'rgba(99,102,241,0.1)',
                         color: tFree ? 'var(--green)' : 'var(--accent)',
                         fontWeight: 700, display: 'inline-block',
-                      }}>{tFree ? '✓ 免费' : '🤖 AI'}</div>
+                      }}>{tFree ? '✓ 免费' : '🤖 AI'}</span>
                     </a>
                   );
                 })}
@@ -264,15 +259,27 @@ export default function ToolDetailClient({ tool, locale }) {
         </div>
 
         {/* 右广告 */}
-        <div className="ad-sidebar-right">
-          <AdSlot position="right" />
-        </div>
+        <div className="ad-sidebar-right"><AdSlot position="right" /></div>
       </div>
 
-      {/* 响应式 */}
+      {/* ═══ 响应式 ═══ */}
       <style>{`
         @media (max-width: 900px) {
           .ad-sidebar-left, .ad-sidebar-right { display: none !important; }
+          .detail-grid { grid-template-columns: 1fr !important; }
+        }
+        @media (max-width: 640px) {
+          .detail-header { padding: 20px 14px 28px !important; }
+          .detail-title { gap: 10px !important; }
+          .detail-icon { width: 42px !important; height: 42px !important; border-radius: 11px !important; font-size: 1.4rem !important; }
+          .detail-name { font-size: 1.2rem !important; }
+          .detail-desc { font-size: 0.8rem !important; margin-top: 8px !important; }
+          .detail-grid { padding: 16px 12px 60px !important; }
+          .related-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 8px !important; }
+        }
+        @media (max-width: 380px) {
+          .detail-name { font-size: 1.05rem !important; }
+          .related-grid { grid-template-columns: 1fr !important; }
         }
       `}</style>
     </div>
