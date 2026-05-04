@@ -5,12 +5,12 @@ import { useParams } from 'next/navigation';
 
 /* ── 分类配置 ── */
 const CATEGORIES = [
-  { id: 'all', label: '全部工具', emoji: '🛠', color: '#6366f1' },
+  { id: 'all', label: '全部', emoji: '✨', color: '#6366f1' },
   { id: 'social', label: '自媒体', emoji: '📱', color: '#FF2442' },
   { id: 'office', label: '办公', emoji: '💼', color: '#f59e0b' },
   { id: 'pro', label: '专业', emoji: '🔧', color: '#10b981' },
   { id: 'dev', label: '开发', emoji: '💻', color: '#3b82f6' },
-  { id: 'free', label: '热搜工具', emoji: '🎁', color: '#8b5cf6' },
+  { id: 'free', label: '热搜', emoji: '🎁', color: '#8b5cf6' },
 ];
 
 /* ── 热门工具 ── */
@@ -20,42 +20,38 @@ const HOT_TOOLS = [
   'qr-code', 'pdf-split'
 ];
 
-/* ── 分类图标背景色 ── */
-const catGradients = {
-  social: 'linear-gradient(135deg, #FF2442, #ff6b81)',
-  office: 'linear-gradient(135deg, #f59e0b, #fbbf24)',
-  pro: 'linear-gradient(135deg, #10b981, #34d399)',
-  dev: 'linear-gradient(135deg, #3b82f6, #60a5fa)',
-  free: 'linear-gradient(135deg, #8b5cf6, #a78bfa)',
+/* ── 分类配色 ── */
+const catColors = {
+  social: { bg: '#FF2442', light: 'rgba(255,36,66,0.08)', text: '#FF2442' },
+  office: { bg: '#f59e0b', light: 'rgba(245,158,11,0.08)', text: '#f59e0b' },
+  pro:    { bg: '#10b981', light: 'rgba(16,185,129,0.08)', text: '#10b981' },
+  dev:    { bg: '#3b82f6', light: 'rgba(59,130,246,0.08)', text: '#3b82f6' },
+  free:   { bg: '#8b5cf6', light: 'rgba(139,92,246,0.08)', text: '#8b5cf6' },
 };
 
 /* ── 工具卡片 ── */
 function ToolCard({ tool, href, hot }) {
-  const isFree = tool.price === '免费' || !tool.apiTool;
-  const gradient = catGradients[tool.cat] || 'linear-gradient(135deg, #6366f1, #818cf8)';
+  const isLocal = !tool.apiTool;
+  const cc = catColors[tool.cat] || catColors.free;
 
   return (
     <a href={href} className="tool-card">
-      {/* Icon + Info */}
-      <div className="tc-top">
-        <div className="tc-icon" style={{ background: gradient }}>
-          <span>{tool.icon}</span>
-        </div>
-        <div className="tc-info">
-          <div className="tc-name">
-            {tool.name}
-            {hot && <span className="tc-hot">HOT</span>}
-          </div>
-          <div className="tc-desc">{tool.desc}</div>
-        </div>
+      <div className="tc-icon-wrap" style={{ background: cc.light }}>
+        <span className="tc-icon-emoji">{tool.icon}</span>
       </div>
-      {/* Footer tags */}
-      <div className="tc-bottom">
-        <span className={`tc-price ${isFree ? 'free' : 'ai'}`}>
-          {isFree ? '✓ 免费无限' : '🤖 AI驱动'}
+      <div className="tc-body">
+        <div className="tc-name-row">
+          <span className="tc-name">{tool.name}</span>
+          {hot && <span className="tc-badge-hot">🔥</span>}
+        </div>
+        <p className="tc-desc">{tool.desc}</p>
+      </div>
+      <div className="tc-tags">
+        <span className="tc-tag-type" style={{ color: cc.text, background: cc.light }}>
+          {isLocal ? '⚡ 本地' : '🤖 AI'}
         </span>
-        <span className="tc-cat">
-          {CATEGORIES.find(c => c.id === tool.cat)?.label || ''}
+        <span className="tc-tag-free">
+          {isLocal ? '免费无限' : '3次/天'}
         </span>
       </div>
     </a>
@@ -69,7 +65,6 @@ export default function ToolsPage() {
   const [searchQuery, setSearchQuery] = useState('');
 
   const aiCount = ALL_TOOLS.filter(t => t.apiTool).length;
-  const freeCount = ALL_TOOLS.filter(t => t.price === '免费' || !t.apiTool).length;
 
   const filteredTools = useMemo(() => {
     let tools = activeTab === 'all' ? ALL_TOOLS : ALL_TOOLS.filter(t => t.cat === activeTab);
@@ -85,22 +80,40 @@ export default function ToolsPage() {
   }, [activeTab, searchQuery]);
 
   const hotToolList = useMemo(
-    () => HOT_TOOLS.map(id => ALL_TOOLS.find(t => t.id === id)).filter(Boolean),
-    []
+    () => HOT_TOOLS.map(id => ALL_TOOLS.find(t => t.id === id)).filter(Boolean), []
   );
+
+  /* 分组显示：非"全部"时按分类子标题分块 */
+  const groupedTools = useMemo(() => {
+    if (activeTab !== 'all') return [{ cat: activeTab, tools: filteredTools }];
+    const groups = [];
+    for (const cat of CATEGORIES) {
+      if (cat.id === 'all') continue;
+      const catTools = filteredTools.filter(t => t.cat === cat.id);
+      if (catTools.length) groups.push({ cat: cat.id, tools: catTools });
+    }
+    return groups;
+  }, [activeTab, filteredTools]);
 
   return (
     <div className="tools-page">
-      {/* ═══ Hero: 简洁紧凑 ═══ */}
+
+      {/* ═══ Hero: 紧凑精致 ═══ */}
       <section className="tools-hero">
         <div className="hero-inner">
-          <h1 className="hero-title">AI工具箱</h1>
-          <p className="hero-sub">
-            <strong>{ALL_TOOLS.length}</strong> 款工具 · <strong>{aiCount}</strong> 款AI驱动 · 全部免费
-          </p>
-          {/* 搜索框 */}
+          <div className="hero-brand">
+            <span className="hero-logo">⚔️</span>
+            <h1 className="hero-title">AI工具箱</h1>
+          </div>
+          <div className="hero-stats">
+            <span className="hs-item"><b>{ALL_TOOLS.length}</b>款工具</span>
+            <span className="hs-dot">·</span>
+            <span className="hs-item"><b>{aiCount}</b>款AI驱动</span>
+            <span className="hs-dot">·</span>
+            <span className="hs-item hs-free">全部免费</span>
+          </div>
           <div className="hero-search-wrap">
-            <svg className="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            <svg className="hs-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
             <input
               type="text"
               value={searchQuery}
@@ -109,7 +122,7 @@ export default function ToolsPage() {
               className="hero-search-input"
             />
             {searchQuery && (
-              <button className="search-clear" onClick={() => setSearchQuery('')}>✕</button>
+              <button className="hs-clear" onClick={() => setSearchQuery('')}>✕</button>
             )}
           </div>
         </div>
@@ -128,10 +141,9 @@ export default function ToolsPage() {
                 key={cat.id}
                 onClick={() => setActiveTab(cat.id)}
                 className={`cat-tab ${isActive ? 'active' : ''}`}
-                style={isActive ? { '--cat-color': cat.color } : {}}
+                data-cat={cat.id}
               >
-                <span className="cat-emoji">{cat.emoji}</span>
-                {cat.label}
+                {cat.emoji} {cat.label}
                 <span className="cat-count">{count}</span>
               </button>
             );
@@ -139,58 +151,68 @@ export default function ToolsPage() {
         </div>
       </div>
 
-      {/* ═══ 主内容区（单栏满宽） ═══ */}
+      {/* ═══ 主内容 ═══ */}
       <main className="tools-main">
-        {/* 🔥 热门推荐 */}
+
+        {/* 热门推荐（仅全部+无搜索词） */}
         {activeTab === 'all' && !searchQuery.trim() && (
           <section className="tools-section">
-            <div className="section-head">
-              <h2 className="section-title">🔥 热门工具</h2>
-              <span className="section-note">最受欢迎</span>
+            <div className="sec-head">
+              <h2 className="sec-title">🔥 热门工具</h2>
             </div>
-            <div className="tools-grid">
+            <div className="hot-grid">
               {hotToolList.map(tool => (
-                <ToolCard
-                  key={tool.id}
-                  tool={tool}
-                  href={`/${locale}/tools/${tool.id}`}
-                  hot
-                />
+                <ToolCard key={tool.id} tool={tool} href={`/${locale}/tools/${tool.id}`} hot />
               ))}
             </div>
           </section>
         )}
 
-        {/* 分类工具列表 */}
-        <section className="tools-section">
-          <div className="section-head">
-            <h2 className="section-title">
-              {searchQuery.trim()
-                ? `🔍 搜索"${searchQuery}"`
-                : `${CATEGORIES.find(c => c.id === activeTab)?.emoji} ${CATEGORIES.find(c => c.id === activeTab)?.label}`
-              }
-            </h2>
-            <span className="section-note">{filteredTools.length} 款</span>
-          </div>
-
-          {filteredTools.length === 0 ? (
-            <div className="empty-state">
-              <div className="empty-icon">🔍</div>
-              <div className="empty-title">未找到匹配的工具</div>
-              <div className="empty-hint">试试换个关键词？</div>
-            </div>
-          ) : (
-            <div className="tools-grid">
-              {filteredTools.map(tool => (
-                <ToolCard
-                  key={tool.id}
-                  tool={tool}
-                  href={`/${locale}/tools/${tool.id}`}
-                />
-              ))}
-            </div>
-          )}
-        </section>
+        {/* 全部分类时按组显示；单分类时直接列表 */}
+        {activeTab === 'all' && !searchQuery.trim()
+          ? groupedTools.map(group => {
+              const catInfo = CATEGORIES.find(c => c.id === group.cat);
+              return (
+                <section key={group.cat} className="tools-section">
+                  <div className="sec-head">
+                    <h2 className="sec-title">{catInfo?.emoji} {catInfo?.label}</h2>
+                    <span className="sec-count">{group.tools.length}</span>
+                  </div>
+                  <div className="tools-grid">
+                    {group.tools.map(tool => (
+                      <ToolCard key={tool.id} tool={tool} href={`/${locale}/tools/${tool.id}`} />
+                    ))}
+                  </div>
+                </section>
+              );
+            })
+          : (
+            <section className="tools-section">
+              <div className="sec-head">
+                <h2 className="sec-title">
+                  {searchQuery.trim()
+                    ? `🔍 "${searchQuery}" 的搜索结果`
+                    : `${CATEGORIES.find(c => c.id === activeTab)?.emoji} ${CATEGORIES.find(c => c.id === activeTab)?.label}`
+                  }
+                </h2>
+                <span className="sec-count">{filteredTools.length}</span>
+              </div>
+              {filteredTools.length === 0 ? (
+                <div className="empty-state">
+                  <div className="empty-icon">🔍</div>
+                  <div className="empty-title">未找到匹配的工具</div>
+                  <div className="empty-hint">试试换个关键词？</div>
+                </div>
+              ) : (
+                <div className="tools-grid">
+                  {filteredTools.map(tool => (
+                    <ToolCard key={tool.id} tool={tool} href={`/${locale}/tools/${tool.id}`} />
+                  ))}
+                </div>
+              )}
+            </section>
+          )
+        }
       </main>
     </div>
   );

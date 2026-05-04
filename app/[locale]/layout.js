@@ -51,13 +51,12 @@ export default async function LocaleLayout({ children, params }) {
         <meta name="google-site-verification" content="ukEoNUvpr6BRkzEAYA0kw_nckghHvtOMt-VNggFznUg" />
       </head>
       <body style={{ margin: 0, padding: 0 }}>
-        {/* ── 顶部导航栏 ── */}
         <nav className="topnav">
           <div className="topnav-inner">
             <a href={`/${locale}/tools`} className="topnav-logo">
               <span style={{
                 width: 28, height: 28, borderRadius: 8,
-                background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
+                background: 'var(--gradient1)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 fontSize: '0.85rem', color: '#fff',
               }}>⚔️</span>
@@ -68,16 +67,12 @@ export default async function LocaleLayout({ children, params }) {
               <a href={`/${locale}/faq`} className="topnav-link">常见问题</a>
               <ThemeToggle />
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <MobileMenu locale={locale} />
-            </div>
+            <MobileMenu locale={locale} />
           </div>
         </nav>
 
-        {/* ── 页面内容 ── */}
         {children}
 
-        {/* ── 页脚 ── */}
         <footer className="main-footer">
           <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', justifyContent: 'center', gap: 16, flexWrap: 'wrap' }}>
             <span>© 2026 AI工具箱</span>
@@ -89,7 +84,6 @@ export default async function LocaleLayout({ children, params }) {
 
         <CheckinWidget />
 
-        {/* Google Analytics */}
         {GA_ID && (
           <>
             <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="afterInteractive" />
