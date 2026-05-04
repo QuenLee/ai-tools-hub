@@ -11,12 +11,11 @@ const CATEGORIES = [
   { id: 'office', label: '办公', emoji: '💼', color: '#f59e0b', bg: '#f59e0b08' },
   { id: 'pro', label: '专业', emoji: '🔧', color: '#10b981', bg: '#10b98108' },
   { id: 'dev', label: '开发', emoji: '💻', color: '#3b82f6', bg: '#3b82f608' },
-  { id: 'free', label: '免费', emoji: '🎁', color: '#8b5cf6', bg: '#8b5cf608' },
-  { id: 'basic', label: '基础', emoji: '📄', color: '#64748b', bg: '#64748b08' },
+  { id: 'free', label: '热搜工具', emoji: '🎁', color: '#8b5cf6', bg: '#8b5cf608' },
 ];
 
 /* ── 热门工具（首页推荐） ── */
-const HOT_TOOLS = ['image-compress', 'pdf-merge', 'id-photo', 'xhs-writer', 'seo-title-gen', 'qr-code', 'pdf-convert', 'image-convert', 'weekly-report', 'json-formatter'];
+const HOT_TOOLS = ['image-compress', 'pdf-merge', 'id-photo', 'xhs-writer', 'image-crop', 'image-watermark', 'pdf-convert', 'image-convert', 'qr-code', 'pdf-split'];
 
 /* ── 工具卡片 ── */
 function ToolCard({ tool, catInfo, href, hot }) {

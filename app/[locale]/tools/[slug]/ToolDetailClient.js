@@ -4,20 +4,22 @@ import { useState } from 'react';
 import { ALL_TOOLS } from '@/lib/tools-registry';
 import { TOOL_CONFIGS } from '@/lib/tool-configs';
 import { AITool } from '@/components/tools/AITool';
-import { AIWatermarkRemover } from '@/components/tools/AIWatermarkRemover';
-import { ShortURLGenerator } from '@/components/tools/ShortURLGenerator';
-import { PromptTemplates } from '@/components/tools/PromptTemplates';
 import { PDFConverter } from '@/components/tools/PDFConverter';
 import { ImageConverter } from '@/components/tools/ImageConverter';
 import { MarkdownEditor } from '@/components/tools/MarkdownEditor';
 import { JSONFormatter, JSONToYAML, Base64Tool, URLEncode } from '@/components/tools/dev/DevTools1';
 import { HashGen, RegexTester, TimestampTool, UUIDGen, ColorTool, TextDiff, JWTParser, QRCode } from '@/components/tools/dev/DevTools2';
-import { WordCount, TextReplace, LoremIpsum, SlugGen, MarkdownPreview, EmojiPicker, PasswordGen, HtmlEntity } from '@/components/tools/free/FreeTools';
+import { WordCount, TextReplace, PasswordGen } from '@/components/tools/free/FreeTools';
 import ImageCompress from '@/components/tools/ImageCompress';
 import IDPhoto from '@/components/tools/IDPhoto';
 import PDFMerge from '@/components/tools/PDFMerge';
+import { ImageCrop } from '@/components/tools/ImageCrop';
+import { ImageWatermark } from '@/components/tools/ImageWatermark';
+import { ImageResize } from '@/components/tools/ImageResize';
+import { PDFSplit } from '@/components/tools/PDFSplit';
 
 const TOOL_COMPONENTS = {
+  // 📱 自媒体
   'xhs-writer': (props) => <AIToolWrapper toolId="xhs-writer" {...props} />,
   'douyin-script': (props) => <AIToolWrapper toolId="douyin-script" {...props} />,
   'live-script': (props) => <AIToolWrapper toolId="live-script" {...props} />,
@@ -25,27 +27,24 @@ const TOOL_COMPONENTS = {
   'wechat-article': (props) => <AIToolWrapper toolId="wechat-article" {...props} />,
   'bili-script': (props) => <AIToolWrapper toolId="bili-script" {...props} />,
   'private-domain': (props) => <AIToolWrapper toolId="private-domain" {...props} />,
+  // 💼 办公
   'weekly-report': (props) => <AIToolWrapper toolId="weekly-report" {...props} />,
   'meeting-notes': (props) => <AIToolWrapper toolId="meeting-notes" {...props} />,
   'email-writer': (props) => <AIToolWrapper toolId="email-writer" {...props} />,
   'ppt-outline': (props) => <AIToolWrapper toolId="ppt-outline" {...props} />,
-  'speech-writer': (props) => <AIToolWrapper toolId="speech-writer" {...props} />,
   'excel-formula': (props) => <AIToolWrapper toolId="excel-formula" {...props} />,
-  'competitor-analysis': (props) => <AIToolWrapper toolId="competitor-analysis" {...props} />,
+  'summary-gen': (props) => <AIToolWrapper toolId="summary-gen" {...props} />,
+  'translate-polish': (props) => <AIToolWrapper toolId="translate-polish" {...props} />,
   'seo-article': (props) => <AIToolWrapper toolId="seo-article" {...props} />,
+  // 🔧 专业
   'product-desc': (props) => <AIToolWrapper toolId="product-desc" {...props} />,
   'ad-copy': (props) => <AIToolWrapper toolId="ad-copy" {...props} />,
-  'contract-review': (props) => <AIToolWrapper toolId="contract-review" {...props} />,
   'data-analysis': (props) => <AIToolWrapper toolId="data-analysis" {...props} />,
   'interview-prep': (props) => <AIToolWrapper toolId="interview-prep" {...props} />,
-  'blog-writer': (props) => <AIToolWrapper toolId="blog-writer" {...props} />,
-  'summary-gen': (props) => <AIToolWrapper toolId="summary-gen" {...props} />,
-  'story-gen': (props) => <AIToolWrapper toolId="story-gen" {...props} />,
-  'study-plan': (props) => <AIToolWrapper toolId="study-plan" {...props} />,
   'brainstorm': (props) => <AIToolWrapper toolId="brainstorm" {...props} />,
-  'translate-polish': (props) => <AIToolWrapper toolId="translate-polish" {...props} />,
-  'name-gen': (props) => <AIToolWrapper toolId="name-gen" {...props} />,
-  'api-doc': (props) => <AIToolWrapper toolId="api-doc" {...props} />,
+  'seo-title-gen': (props) => <AIToolWrapper toolId="seo-title-gen" {...props} />,
+  'contract-review': (props) => <AIToolWrapper toolId="contract-review" {...props} />,
+  // 💻 开发
   'json-formatter': JSONFormatter,
   'json-to-yaml': JSONToYAML,
   'base64-tool': Base64Tool,
@@ -58,29 +57,20 @@ const TOOL_COMPONENTS = {
   'text-diff': TextDiff,
   'jwt-parser': JWTParser,
   'qr-code': QRCode,
-  'word-count': WordCount,
-  'text-replace': TextReplace,
-  'lorem-ipsum': LoremIpsum,
-  'slug-gen': SlugGen,
-  'markdown-preview': MarkdownPreview,
-  'emoji-picker': EmojiPicker,
-  'password-gen': PasswordGen,
-  'html-entity': HtmlEntity,
-  'ai-text-detect': (props) => <AIToolWrapper toolId="ai-text-detect" {...props} />,
-  'ai-watermark': AIWatermarkRemover,
-  'short-url': ShortURLGenerator,
-  'ai-translate': (props) => <AIToolWrapper toolId="ai-translate" {...props} />,
-  'ai-resume': (props) => <AIToolWrapper toolId="ai-resume" {...props} />,
-  'prompt-templates': PromptTemplates,
-  'ai-code-review': (props) => <AIToolWrapper toolId="ai-code-review" {...props} />,
-  'seo-title-gen': (props) => <AIToolWrapper toolId="seo-title-gen" {...props} />,
-  'pdf-convert': PDFConverter,
-  'ai-copywriter': (props) => <AIToolWrapper toolId="ai-copywriter" {...props} />,
-  'image-convert': ImageConverter,
-  'markdown-editor': MarkdownEditor,
+  // 🎁 热搜易用
   'image-compress': ImageCompress,
   'id-photo': IDPhoto,
   'pdf-merge': PDFMerge,
+  'image-convert': ImageConverter,
+  'pdf-convert': PDFConverter,
+  'image-crop': ImageCrop,
+  'image-watermark': ImageWatermark,
+  'image-resize': ImageResize,
+  'pdf-split': PDFSplit,
+  'word-count': WordCount,
+  'text-replace': TextReplace,
+  'password-gen': PasswordGen,
+  'markdown-editor': MarkdownEditor,
 };
 
 function AIToolWrapper({ toolId, onBack, locale }) {
@@ -94,8 +84,7 @@ const CATEGORIES = [
   { id: 'office', label: '职场办公', emoji: '💼', color: '#f59e0b' },
   { id: 'pro', label: '专业工具', emoji: '🔧', color: '#10b981' },
   { id: 'dev', label: '开发者', emoji: '💻', color: '#3b82f6' },
-  { id: 'free', label: '免费工具', emoji: '🎁', color: '#8b5cf6' },
-  { id: 'basic', label: '基础工具', emoji: '📄', color: '#64748b' },
+  { id: 'free', label: '热搜工具', emoji: '🎁', color: '#8b5cf6' },
 ];
 
 function AdSlot({ position }) {
@@ -165,7 +154,6 @@ export default function ToolDetailClient({ tool, locale }) {
             </div>
           </h1>
 
-          {/* SEO描述 */}
           <p className="detail-desc" style={{
             fontSize: '0.88rem', color: 'rgba(255,255,255,0.75)',
             lineHeight: 1.6, marginTop: 10,
@@ -182,12 +170,8 @@ export default function ToolDetailClient({ tool, locale }) {
         gridTemplateColumns: '160px 1fr 160px',
         gap: 24, alignItems: 'start',
       }}>
-        {/* 左广告 */}
         <div className="ad-sidebar-left"><AdSlot position="left" /></div>
-
-        {/* 主区 */}
         <div>
-          {/* 工具组件 */}
           <div style={{
             background: 'var(--surface)',
             border: '1px solid var(--border)',
@@ -204,7 +188,6 @@ export default function ToolDetailClient({ tool, locale }) {
             )}
           </div>
 
-          {/* 结果下方广告 */}
           <div className="ad-slot-result" style={{
             marginTop: 20, minHeight: 90, borderRadius: 12,
             border: '1px dashed var(--border)',
@@ -212,7 +195,6 @@ export default function ToolDetailClient({ tool, locale }) {
             color: 'var(--text3)', fontSize: '0.72rem',
           }}>广告位</div>
 
-          {/* 相关工具 */}
           {relatedTools.length > 0 && (
             <div style={{ marginTop: 28 }}>
               <h2 style={{
@@ -257,12 +239,9 @@ export default function ToolDetailClient({ tool, locale }) {
             </div>
           )}
         </div>
-
-        {/* 右广告 */}
         <div className="ad-sidebar-right"><AdSlot position="right" /></div>
       </div>
 
-      {/* ═══ 响应式 ═══ */}
       <style>{`
         @media (max-width: 900px) {
           .ad-sidebar-left, .ad-sidebar-right { display: none !important; }
