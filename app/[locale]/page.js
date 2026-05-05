@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation';
 
-export default function LocaleHome({ params }) {
-  redirect(`/${params.locale}/tools`);
+export default async function LocaleHome({ params }) {
+  const { locale } = await params;
+  redirect(`/${locale}/tools`);
 }

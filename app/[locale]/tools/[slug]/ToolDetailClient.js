@@ -1,5 +1,4 @@
 'use client';
-
 import { useState } from 'react';
 import { ALL_TOOLS } from '@/lib/tools-registry';
 import { TOOL_CONFIGS } from '@/lib/tool-configs';
@@ -17,6 +16,7 @@ import { ImageCrop } from '@/components/tools/ImageCrop';
 import { ImageWatermark } from '@/components/tools/ImageWatermark';
 import { ImageResize } from '@/components/tools/ImageResize';
 import { PDFSplit } from '@/components/tools/PDFSplit';
+import { addRecent, isFavorited, toggleFavorite } from '@/lib/user-data';
 
 const TOOL_COMPONENTS = {
   // 📱 自媒体
@@ -75,29 +75,17 @@ const TOOL_COMPONENTS = {
 
 function AIToolWrapper({ toolId, onBack, locale }) {
   const config = TOOL_CONFIGS[toolId];
-  if (!config) return <div style={{padding:40, textAlign:'center', color:'var(--text3)'}}>工具配置未找到</div>;
+  if (!config) return <div className="empty-state">工具配置未找到</div>;
   return <AITool config={config} onBack={onBack} locale={locale} toolId={toolId} />;
 }
 
 const CATEGORIES = [
-  { id: 'social', label: '自媒体神器', emoji: '📱', color: '#FF2442' },
-  { id: 'office', label: '职场办公', emoji: '💼', color: '#f59e0b' },
-  { id: 'pro', label: '专业工具', emoji: '🔧', color: '#10b981' },
-  { id: 'dev', label: '开发者', emoji: '💻', color: '#3b82f6' },
+  { id: 'social', label: '自媒体', emoji: '📱', color: '#FF2442' },
+  { id: 'office', label: '办公', emoji: '💼', color: '#f59e0b' },
+  { id: 'pro', label: '专业', emoji: '🔧', color: '#10b981' },
+  { id: 'dev', label: '开发', emoji: '💻', color: '#3b82f6' },
   { id: 'free', label: '热搜工具', emoji: '🎁', color: '#8b5cf6' },
 ];
-
-function AdSlot({ position }) {
-  return (
-    <div className={`ad-slot-${position}`} style={{
-      width: '100%', minHeight: 250, borderRadius: 12,
-      border: '1px dashed var(--border)',
-      display: 'flex', alignItems: 'center', justifyContent: 'center',
-      color: 'var(--text3)', fontSize: '0.68rem',
-      position: 'sticky', top: 80,
-    }}>广告位</div>
-  );
-}
 
 export default function ToolDetailClient({ tool, locale }) {
   const ToolComponent = TOOL_COMPONENTS[tool.id];
@@ -105,160 +93,155 @@ export default function ToolDetailClient({ tool, locale }) {
   const isFree = tool.price === '免费' || !tool.apiTool;
   const relatedTools = ALL_TOOLS.filter(t => t.cat === tool.cat && t.id !== tool.id).slice(0, 6);
 
+  // 记录最近使用
+  if (typeof window !== 'undefined') {
+    addRecent(tool.id);
+  }
+
+  const [fav, setFav] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return isFavorited(tool.id);
+  });
+
+  const handleFav = () => {
+    const newVal = toggleFavorite(tool.id);
+    setFav(newVal);
+  };
+
   return (
-    <div style={{ minHeight: '100vh' }}>
-      {/* ═══ 工具详情顶部 ═══ */}
-      <div className="detail-header" style={{
-        background: `linear-gradient(135deg, ${(catInfo?.color || '#6366f1')}dd, ${(catInfo?.color || '#6366f1')}88)`,
-        padding: '28px 20px 36px',
-      }}>
-        <div style={{ maxWidth: 800, margin: '0 auto' }}>
-          {/* 面包屑 */}
-          <div style={{
-            display: 'flex', alignItems: 'center', gap: 6,
-            marginBottom: 16, fontSize: '0.78rem',
-          }}>
-            <a href={`/${locale}/tools`} style={{
-              color: 'rgba(255,255,255,0.8)', textDecoration: 'none', fontWeight: 600,
-            }}>← 返回工具箱</a>
-            <span style={{ color: 'rgba(255,255,255,0.4)' }}>›</span>
-            {catInfo && <span style={{ color: 'rgba(255,255,255,0.7)' }}>{catInfo.emoji} {catInfo.label}</span>}
-            <span style={{ color: 'rgba(255,255,255,0.4)' }}>›</span>
-            <span style={{ color: '#fff' }}>{tool.name}</span>
+    <div className="detail-page">
+      {/* 面包屑 */}
+      <div className="breadcrumb">
+        <a href={`/${locale}/tools`}>← 返回工具箱</a>
+        <span>›</span>
+        {catInfo && <span>{catInfo.emoji} {catInfo.label}</span>}
+        <span>›</span>
+        <span style={{ color: 'var(--text)' }}>{tool.name}</span>
+      </div>
+
+      {/* 工具标题区 */}
+      <div className="detail-hero">
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14, flex: 1, minWidth: 0 }}>
+          <span style={{ fontSize: '2rem', flexShrink: 0 }}>{tool.icon}</span>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div className="detail-title">{tool.name}</div>
+            <div className="detail-tagline">{tool.desc}</div>
           </div>
-
-          {/* 工具标题 */}
-          <h1 className="detail-title" style={{
-            display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8,
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
+          <span className="detail-badge" style={{
+            background: isFree ? 'rgba(52,211,153,0.1)' : 'rgba(124,92,252,0.1)',
+            color: isFree ? 'var(--green)' : 'var(--accent2)',
           }}>
-            <span className="detail-icon" style={{
-              width: 52, height: 52, borderRadius: 14,
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: '1.8rem', background: 'rgba(255,255,255,0.15)', flexShrink: 0,
-            }}>{tool.icon}</span>
-            <div>
-              <span className="detail-name" style={{ fontSize: '1.5rem', fontWeight: 900, color: '#fff' }}>{tool.name}</span>
-              <div style={{ display: 'flex', gap: 8, marginTop: 6, flexWrap: 'wrap' }}>
-                {tool.apiTool && (
-                  <span style={{
-                    fontSize: '0.65rem', padding: '3px 8px', borderRadius: 6,
-                    background: 'rgba(255,255,255,0.2)', color: '#fff', fontWeight: 700,
-                  }}>🤖 AI驱动</span>
-                )}
-                <span style={{
-                  fontSize: '0.65rem', padding: '3px 8px', borderRadius: 6,
-                  background: isFree ? 'rgba(52,211,153,0.3)' : 'rgba(251,191,36,0.3)',
-                  color: '#fff', fontWeight: 700,
-                }}>{isFree ? '✓ 免费无限' : '每日3次免费'}</span>
-              </div>
-            </div>
-          </h1>
-
-          <p className="detail-desc" style={{
-            fontSize: '0.88rem', color: 'rgba(255,255,255,0.75)',
-            lineHeight: 1.6, marginTop: 10,
-          }}>
-            {tool.desc} — 免费在线使用，无需注册，即开即用。
-          </p>
+            {isFree ? '✓ 免费无限' : '🤖 AI驱动'}
+          </span>
+          <button
+            onClick={handleFav}
+            className="fav-btn"
+            style={{
+              background: fav ? 'rgba(248,113,113,0.1)' : 'var(--surface2)',
+              border: fav ? '1px solid rgba(248,113,113,0.2)' : '1px solid var(--border)',
+              color: fav ? 'var(--red)' : 'var(--text3)',
+            }}
+          >
+            {fav ? '❤️ 已收藏' : '🤍 收藏'}
+          </button>
         </div>
       </div>
 
-      {/* ═══ 工具主内容 ═══ */}
-      <div className="detail-grid" style={{
-        maxWidth: 1200, margin: '0 auto', padding: '24px 16px 80px',
-        display: 'grid',
-        gridTemplateColumns: '160px 1fr 160px',
-        gap: 24, alignItems: 'start',
+      {/* 工具主内容 */}
+      <div style={{
+        background: 'var(--surface)',
+        border: '1px solid var(--border)',
+        borderRadius: 'var(--radius)',
+        overflow: 'hidden',
+        marginBottom: 24,
       }}>
-        <div className="ad-sidebar-left"><AdSlot position="left" /></div>
+        {ToolComponent ? (
+          <ToolComponent
+            onBack={() => {
+              if (typeof window !== 'undefined') window.location.href = `/${locale}/tools`;
+            }}
+            locale={locale}
+          />
+        ) : (
+          <div className="empty-state">工具加载中...</div>
+        )}
+      </div>
+
+      {/* 相关工具 */}
+      {relatedTools.length > 0 && (
         <div>
-          <div style={{
-            background: 'var(--surface)',
-            border: '1px solid var(--border)',
-            borderRadius: 16,
-            overflow: 'hidden',
-          }}>
-            {ToolComponent ? (
-              <ToolComponent
-                onBack={() => { if (typeof window !== 'undefined') window.location.href = `/${locale}/tools`; }}
-                locale={locale}
-              />
-            ) : (
-              <div style={{ padding: 60, textAlign: 'center', color: 'var(--text3)' }}>工具加载中...</div>
-            )}
+          <h2 style={{ fontSize: '0.95rem', fontWeight: 800, marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
+            📌 相关工具
+          </h2>
+          <div className="related-grid">
+            {relatedTools.map(t => {
+              const tFree = t.price === '免费' || !t.apiTool;
+              return (
+                <a key={t.id} href={`/${locale}/tools/${t.id}`} className="related-card">
+                  <div style={{ fontSize: '1.2rem', marginBottom: 6 }}>{t.icon}</div>
+                  <div style={{ fontSize: '0.82rem', fontWeight: 700, marginBottom: 4 }}>{t.name}</div>
+                  <span className="detail-badge" style={{
+                    background: tFree ? 'rgba(52,211,153,0.1)' : 'rgba(124,92,252,0.1)',
+                    color: tFree ? 'var(--green)' : 'var(--accent2)',
+                    fontSize: '0.6rem',
+                  }}>
+                    {tFree ? '✓ 免费' : '🤖 AI'}
+                  </span>
+                </a>
+              );
+            })}
           </div>
-
-          <div className="ad-slot-result" style={{
-            marginTop: 20, minHeight: 90, borderRadius: 12,
-            border: '1px dashed var(--border)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            color: 'var(--text3)', fontSize: '0.72rem',
-          }}>广告位</div>
-
-          {relatedTools.length > 0 && (
-            <div style={{ marginTop: 28 }}>
-              <h2 style={{
-                fontSize: '1rem', fontWeight: 800, marginBottom: 14,
-                display: 'flex', alignItems: 'center', gap: 8,
-              }}>📌 相关工具</h2>
-              <div className="related-grid" style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))',
-                gap: 10,
-              }}>
-                {relatedTools.map(t => {
-                  const tCat = CATEGORIES.find(c => c.id === t.cat);
-                  const tFree = t.price === '免费' || !t.apiTool;
-                  return (
-                    <a key={t.id} href={`/${locale}/tools/${t.id}`} style={{
-                      padding: '14px', borderRadius: 12,
-                      border: '1px solid var(--border)', background: 'var(--surface)',
-                      textDecoration: 'none', color: 'inherit',
-                      transition: 'all 0.2s',
-                    }}
-                    onMouseEnter={e => {
-                      e.currentTarget.style.borderColor = tCat?.color || '#6366f1';
-                      e.currentTarget.style.transform = 'translateY(-2px)';
-                    }}
-                    onMouseLeave={e => {
-                      e.currentTarget.style.borderColor = 'var(--border)';
-                      e.currentTarget.style.transform = 'none';
-                    }}>
-                      <div style={{ fontSize: '1.2rem', marginBottom: 6 }}>{t.icon}</div>
-                      <div style={{ fontSize: '0.82rem', fontWeight: 700, marginBottom: 4 }}>{t.name}</div>
-                      <span style={{
-                        fontSize: '0.58rem', padding: '2px 6px', borderRadius: 4,
-                        background: tFree ? 'rgba(16,185,129,0.1)' : 'rgba(99,102,241,0.1)',
-                        color: tFree ? 'var(--green)' : 'var(--accent)',
-                        fontWeight: 700, display: 'inline-block',
-                      }}>{tFree ? '✓ 免费' : '🤖 AI'}</span>
-                    </a>
-                  );
-                })}
-              </div>
-            </div>
-          )}
         </div>
-        <div className="ad-sidebar-right"><AdSlot position="right" /></div>
-      </div>
+      )}
 
+      {/* 响应式 */}
       <style>{`
-        @media (max-width: 900px) {
-          .ad-sidebar-left, .ad-sidebar-right { display: none !important; }
-          .detail-grid { grid-template-columns: 1fr !important; }
+        .detail-badge {
+          font-size: 0.68rem;
+          padding: 3px 10px;
+          border-radius: 6px;
+          font-weight: 700;
+          white-space: nowrap;
         }
-        @media (max-width: 640px) {
-          .detail-header { padding: 20px 14px 28px !important; }
-          .detail-title { gap: 10px !important; }
-          .detail-icon { width: 42px !important; height: 42px !important; border-radius: 11px !important; font-size: 1.4rem !important; }
-          .detail-name { font-size: 1.2rem !important; }
-          .detail-desc { font-size: 0.8rem !important; margin-top: 8px !important; }
-          .detail-grid { padding: 16px 12px 60px !important; }
-          .related-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 8px !important; }
+        .fav-btn {
+          padding: 5px 12px;
+          border-radius: var(--radius-xs);
+          font-size: 0.75rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.15s;
+          white-space: nowrap;
         }
-        @media (max-width: 380px) {
-          .detail-name { font-size: 1.05rem !important; }
-          .related-grid { grid-template-columns: 1fr !important; }
+        .fav-btn:hover { opacity: 0.8; }
+        .related-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+          gap: 10px;
+        }
+        .related-card {
+          padding: 14px;
+          border-radius: var(--radius-sm);
+          border: 1px solid var(--border);
+          background: var(--surface);
+          text-decoration: none;
+          color: inherit;
+          transition: all 0.2s;
+        }
+        .related-card:hover {
+          border-color: var(--border2);
+          transform: translateY(-2px);
+          box-shadow: var(--shadow-md);
+          text-decoration: none;
+          color: inherit;
+        }
+        @media (max-width: 768px) {
+          .detail-hero { flex-direction: column; align-items: flex-start !important; gap: 12px !important; }
+          .related-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+        }
+        @media (max-width: 480px) {
+          .related-grid { grid-template-columns: 1fr 1fr; }
         }
       `}</style>
     </div>

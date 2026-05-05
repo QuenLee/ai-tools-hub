@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { doCheckin, getCheckinInfo, canCheckinToday, getBonusUses } from '@/lib/checkin';
+import { doCheckin, getCheckinInfo, canCheckinToday, getBonusUses, getNextMilestone, STREAK_BONUSES } from '@/lib/checkin';
 
 export default function CheckinWidget() {
   const [info, setInfo] = useState(null);
@@ -14,9 +14,18 @@ export default function CheckinWidget() {
     setInfo(checkinInfo);
     setCanCheckin(can);
 
-    // 未签到时显示面板；已签到的只显示连签badge
     const dismissed = sessionStorage.getItem('checkin_dismissed');
     if (!dismissed && can) setShow(true);
+
+    // 全局事件：AI次数用完时自动弹签到面板
+    const handleLimitReached = () => {
+      if (canCheckinToday()) {
+        setShow(true);
+        sessionStorage.removeItem('checkin_dismissed');
+      }
+    };
+    window.addEventListener('ai-limit-reached', handleLimitReached);
+    return () => window.removeEventListener('ai-limit-reached', handleLimitReached);
   }, []);
 
   const handleCheckin = () => {
@@ -31,10 +40,9 @@ export default function CheckinWidget() {
     sessionStorage.setItem('checkin_dismissed', '1');
   };
 
-  // 还没加载
   if (!info) return null;
 
-  // 已签到 & 不显示面板 → 显示连签badge
+  // 已签到 → 连签badge
   if (!show && !canCheckin && info.streak > 0) {
     return (
       <div className="checkin-streak-badge">
@@ -43,7 +51,7 @@ export default function CheckinWidget() {
     );
   }
 
-  // 未签到 & 面板收起 → 显示FAB按钮
+  // 未签到 & 面板收起 → FAB按钮
   if (!show && canCheckin) {
     return (
       <button
@@ -59,23 +67,21 @@ export default function CheckinWidget() {
     );
   }
 
-  // 不需要显示
   if (!show) return null;
 
   // ── 签到面板 ──
+  const nextMs = info.nextMilestone;
+
   return (
     <div className="checkin-panel">
-      {/* Header */}
       <div className="checkin-panel-header">
         <button className="checkin-panel-close" onClick={handleClose}>✕</button>
         <div className="checkin-panel-icon">📅</div>
         <div className="checkin-panel-title">每日签到</div>
       </div>
 
-      {/* Body */}
       <div className="checkin-panel-body">
         {result ? (
-          /* ── 签到成功 ── */
           <div className="checkin-result">
             <div className="checkin-result-icon">✅</div>
             <div className="checkin-result-msg">{result.message}</div>
@@ -87,35 +93,41 @@ export default function CheckinWidget() {
             </div>
           </div>
         ) : (
-          /* ── 签到表单 ── */
           <>
+            {/* 统计 */}
             <div className="checkin-stats-row">
               <div className="checkin-stat">
-                <div className="checkin-stat-val" style={{ color: 'var(--accent2)' }}>
-                  {info.streak}
-                </div>
+                <div className="checkin-stat-val" style={{ color: 'var(--accent2)' }}>{info.streak}</div>
                 <div className="checkin-stat-label">连签天数</div>
               </div>
               <div className="checkin-stat">
-                <div className="checkin-stat-val" style={{ color: '#f59e0b' }}>
-                  {info.monthlyCount}
-                </div>
+                <div className="checkin-stat-val" style={{ color: '#f59e0b' }}>{info.monthlyCount}</div>
                 <div className="checkin-stat-label">本月签到</div>
               </div>
               <div className="checkin-stat">
-                <div className="checkin-stat-val" style={{ color: 'var(--green)' }}>
-                  {getBonusUses()}
-                </div>
+                <div className="checkin-stat-val" style={{ color: 'var(--green)' }}>{getBonusUses()}</div>
                 <div className="checkin-stat-label">奖励次数</div>
               </div>
             </div>
 
+            {/* 里程碑进度条 */}
+            {nextMs && (
+              <div className="checkin-milestone">
+                <div className="cm-label">
+                  🎯 再签 <strong>{nextMs.remaining}</strong> 天 → {nextMs.label} +{nextMs.bonus}次
+                </div>
+                <div className="cm-track">
+                  <div className="cm-fill" style={{ width: `${(info.streak / nextMs.days) * 100}%` }} />
+                </div>
+              </div>
+            )}
+
             <button className="checkin-btn" onClick={handleCheckin}>
-              🎯 签到 +2次AI
+              🎯 签到 +3次AI
             </button>
 
             <div className="checkin-rewards">
-              📌 每日签到+2次 · 连签7天+5次 · 连签30天+10次
+              📌 每日+3次 · 3天+3 · 7天+5 · 14天+10 · 30天+20
             </div>
           </>
         )}
